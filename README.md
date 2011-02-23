@@ -6,6 +6,7 @@ INAppStoreWindow is an NSWindow subclass that mimics the appearance of the main 
 ![INAppStoreWindow](http://i51.tinypic.com/15ydhjk.png)
 
 Features of INAppStoreWindow:
+
 * No use of private APIs, so it should (theoretically) be App Store friendly
 * The title bar view is entirely customizable -- you can add subviews (toolbars, buttons, etc.) as well as customize the title bar itself to give it a different appearance (e.g. Reeder)
 * The height of the title bar is easily adjustable
