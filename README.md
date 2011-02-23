@@ -1,4 +1,4 @@
-What is INAppStoreWindow
+What is INAppStoreWindow?
 ====================
 
 INAppStoreWindow is an NSWindow subclass that mimics the appearance of the main window in the Mac App Store application. These modifications consist of enlarging the title bar, and centring the traffic lights (**note that this subclass does not handle the creation of a toolbar**). The end result looks like this:
@@ -14,9 +14,14 @@ Features of INAppStoreWindow:
 How to use it
 ====================
 
-Using INAppStoreWindow is as easy as changing the class of the NSWindow in Interface Builder, or simply by creating an instance of INAppStoreWindow in code (if you're doing it programatically).
+Using INAppStoreWindow is as easy as changing the class of the NSWindow in Interface Builder, or simply by creating an instance of INAppStoreWindow in code (if you're doing it programatically). I've included a sample project demonstrating how to use INAppStoreWindow.
 
 **NOTE: The title bar height is set to the standard window title height by default. You must set the 'titleBarHeight' property in order to increase the height of the title bar.**
+
+Some people seem to be having an issue where the title bar height property is not set properly when calling the method on an NSWindow without typecasting it to the INAppStoreWindow class. If you are experiencing this issue, do something like this (using a window controller, for example):
+
+    INAppStoreWindow *aWindow = (INAppStoreWindow*)[windowController window];
+    aWindow.titleBarHeight = 60.0;
 
 Who am I?
 ====================
@@ -26,4 +31,4 @@ I'm Indragie Karunaratne, a 16 year old Mac OS X and iOS Developer from Edmonton
 Licensing
 ====================
 
-INAppStoreWindow is licensed the [BSD license](http://www.opensource.org/licenses/bsd-license.php).
+INAppStoreWindow is licensed under the [BSD license](http://www.opensource.org/licenses/bsd-license.php).
