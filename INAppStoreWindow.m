@@ -48,6 +48,7 @@
     [clipPath addClip];
     NSGradient *gradient = [[NSGradient alloc] initWithStartingColor:startColor endingColor:endColor];
     [gradient drawInRect:drawingRect angle:90];
+    [gradient release];
     [NSGraphicsContext restoreGraphicsState];
     
     NSColor *bottomColor = key ? COLOR_KEY_BOTTOM : COLOR_NOTKEY_BOTTOM;
