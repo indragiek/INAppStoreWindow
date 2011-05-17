@@ -37,5 +37,3 @@ Licensing
 ====================
 
 INAppStoreWindow is licensed under the [BSD license](http://www.opensource.org/licenses/bsd-license.php).
-
-// TESTING CHANGES
