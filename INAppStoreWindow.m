@@ -29,6 +29,7 @@
 @interface INAppStoreWindow ()
 - (void)_doInitialWindowSetup;
 - (void)_createTitlebarView;
+- (void)_setupTrafficLightsTrackingArea;
 - (void)_recalculateFrameForTitleBarView;
 - (void)_layoutTrafficLightsAndContent;
 - (float)_minimumTitlebarHeight;
@@ -181,6 +182,7 @@
     [nc addObserver:self selector:@selector(display) name:NSWindowDidResignKeyNotification object:self];
     [nc addObserver:self selector:@selector(display) name:NSWindowDidBecomeKeyNotification object:self];
     [self _createTitlebarView];
+    [self _setupTrafficLightsTrackingArea];
     [self _layoutTrafficLightsAndContent];
     
 }
@@ -217,6 +219,24 @@
 {
     // Create the title bar view
     self.titleBarView = [[[INTitlebarView alloc] initWithFrame:NSZeroRect] autorelease];
+}
+
+// Solution for tracking area issue thanks to @Perspx (Alex Rozanski) <https://gist.github.com/972958>
+- (void)_setupTrafficLightsTrackingArea
+{
+    NSView *themeFrame = [[self contentView] superview];
+    NSArray *trackingAreas = [themeFrame trackingAreas];
+    if (![trackingAreas count]) { return; } // safety in case there are no tracking areas
+    NSTrackingArea *trackingArea = [trackingAreas objectAtIndex:0];
+    NSRect closeFrame = [[self standardWindowButton:NSWindowCloseButton] frame];
+    // Alter the tracking area rectangle    
+    NSRect trackingRect = [trackingArea rect];
+    trackingRect.origin.y = NSMinY(closeFrame);
+    // Create the new tracking area and set it on the window's theme frame view
+    NSTrackingArea *newTrackingArea = [[NSTrackingArea alloc] initWithRect:trackingRect options:[trackingArea options] owner:[trackingArea owner] userInfo:[NSDictionary dictionary]];
+    [themeFrame removeTrackingArea:trackingArea];
+    [themeFrame addTrackingArea:newTrackingArea];
+    [newTrackingArea release];
 }
 
 - (void)_recalculateFrameForTitleBarView
