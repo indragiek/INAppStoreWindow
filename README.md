@@ -28,6 +28,11 @@ Who am I?
 
 I'm Indragie Karunaratne, a 16 year old Mac OS X and iOS Developer from Edmonton AB, Canada. Visit [my website](http://indragie.com) to check out my work, or to get in touch with me.
 
+Other Credits
+====================
+
+Thanks to @Perspx for the [fix](https://gist.github.com/972958) for the traffic lights hover issue!
+
 Licensing
 ====================
 
