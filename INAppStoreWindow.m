@@ -179,12 +179,14 @@
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     [nc addObserver:self selector:@selector(_layoutTrafficLightsAndContent) name:NSWindowDidResizeNotification object:self];
     [nc addObserver:self selector:@selector(_layoutTrafficLightsAndContent) name:NSWindowDidMoveNotification object:self];
+    
     [nc addObserver:self selector:@selector(display) name:NSWindowDidResignKeyNotification object:self];
     [nc addObserver:self selector:@selector(display) name:NSWindowDidBecomeKeyNotification object:self];
-    [self _createTitlebarView];
-    [self _setupTrafficLightsTrackingArea];
-    [self _layoutTrafficLightsAndContent];
+    [nc addObserver:self selector:@selector(_setupTrafficLightsTrackingArea) name:NSWindowDidBecomeKeyNotification object:self];
     
+    [self _createTitlebarView];
+    [self _layoutTrafficLightsAndContent];
+    [self _setupTrafficLightsTrackingArea];
 }
 
 - (void)_layoutTrafficLightsAndContent
