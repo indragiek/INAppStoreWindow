@@ -33,6 +33,7 @@
 - (void)_recalculateFrameForTitleBarView;
 - (void)_layoutTrafficLightsAndContent;
 - (float)_minimumTitlebarHeight;
+- (void)_displayWindowAndTitlebar;
 @end
 
 @implementation INTitlebarView
@@ -138,7 +139,7 @@
         [self _recalculateFrameForTitleBarView];
         [themeFrame addSubview:_titleBarView positioned:NSWindowBelow relativeTo:firstSubview];
         [self _layoutTrafficLightsAndContent];
-        [self display];
+        [self _displayWindowAndTitlebar];
     }
 }
 
@@ -156,7 +157,7 @@
     _titleBarHeight = newTitleBarHeight;
     [self _recalculateFrameForTitleBarView];
     [self _layoutTrafficLightsAndContent];
-    [self display];
+    [self _displayWindowAndTitlebar];
 }
 
 - (float)titleBarHeight
@@ -179,8 +180,8 @@
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     [nc addObserver:self selector:@selector(_layoutTrafficLightsAndContent) name:NSWindowDidResizeNotification object:self];
     [nc addObserver:self selector:@selector(_layoutTrafficLightsAndContent) name:NSWindowDidMoveNotification object:self];
-    [nc addObserver:self selector:@selector(display) name:NSWindowDidResignKeyNotification object:self];
-    [nc addObserver:self selector:@selector(display) name:NSWindowDidBecomeKeyNotification object:self];
+    [nc addObserver:self selector:@selector(_displayWindowAndTitlebar) name:NSWindowDidResignKeyNotification object:self];
+    [nc addObserver:self selector:@selector(_displayWindowAndTitlebar) name:NSWindowDidBecomeKeyNotification object:self];
     [self _createTitlebarView];
     [self _setupTrafficLightsTrackingArea];
     [self _layoutTrafficLightsAndContent];
@@ -257,5 +258,12 @@
         minTitleHeight = (frameRect.size.height - contentRect.size.height);
     }
     return minTitleHeight;
+}
+
+- (void)_displayWindowAndTitlebar
+{
+    // Redraw the window and titlebar
+    [self display];
+    [_titleBarView setNeedsDisplay:YES];
 }
 @end
