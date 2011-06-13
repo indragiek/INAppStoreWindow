@@ -182,10 +182,10 @@
     [nc addObserver:self selector:@selector(_layoutTrafficLightsAndContent) name:NSWindowDidMoveNotification object:self];
     [nc addObserver:self selector:@selector(_displayWindowAndTitlebar) name:NSWindowDidResignKeyNotification object:self];
     [nc addObserver:self selector:@selector(_displayWindowAndTitlebar) name:NSWindowDidBecomeKeyNotification object:self];
+    [nc addObserver:self selector:@selector(_setupTrafficLightsTrackingArea) name:NSWindowDidBecomeKeyNotification object:self];
     [self _createTitlebarView];
-    [self _setupTrafficLightsTrackingArea];
     [self _layoutTrafficLightsAndContent];
-    
+    [self _setupTrafficLightsTrackingArea];
 }
 
 - (void)_layoutTrafficLightsAndContent
