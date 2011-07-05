@@ -27,6 +27,7 @@
 #define CORNER_CLIP_RADIUS 4.0
 
 @interface INAppStoreWindow ()
+@property (copy) NSString *windowMenuTitle;
 - (void)_doInitialWindowSetup;
 - (void)_createTitlebarView;
 - (void)_setupTrafficLightsTrackingArea;
@@ -62,7 +63,7 @@
 // Uses code from NSBezierPath+PXRoundedRectangleAdditions by Andy Matuschak
 // <http://code.andymatuschak.org/pixen/trunk/NSBezierPath+PXRoundedRectangleAdditions.m>
 
-- (NSBezierPath*)clippingPathWithRect:(NSRect)aRect cornerRadius:(float)radius
+- (NSBezierPath*)clippingPathWithRect:(NSRect)aRect cornerRadius:(CGFloat)radius
 {
     NSBezierPath *path = [NSBezierPath bezierPath];
 	NSRect rect = NSInsetRect(aRect, radius, radius);
@@ -79,6 +80,8 @@
 @end
 
 @implementation INAppStoreWindow
+
+@synthesize windowMenuTitle = _windowMenuTitle;
 
 #pragma mark -
 #pragma mark Initialization
@@ -104,6 +107,7 @@
 {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
     [_titleBarView release];
+	[_windowMenuTitle release];
     [super dealloc];
 }
 
@@ -117,10 +121,40 @@
     return @"";
 }
 
-- (void)setTitle:(NSString *)aString
+- (void)setTitle:(NSString*)title
 {
-    return;
+	self.windowMenuTitle = title;
+	if ( ![self isExcludedFromWindowsMenu] )
+		[NSApp changeWindowsItem:self title:self.windowMenuTitle filename:NO];
 }
+
+- (void)setRepresentedURL:(NSURL *)url
+{
+	// do nothing, don't want to show document icon in menu bar
+}
+
+- (void)makeKeyAndOrderFront:(id)sender
+{
+	[super makeKeyAndOrderFront:sender];
+	if ( ![self isExcludedFromWindowsMenu] )
+		[NSApp addWindowsItem:self title:self.windowMenuTitle filename:NO];	
+}
+
+
+- (void)orderFront:(id)sender
+{
+	[super orderFront:sender];
+	if ( ![self isExcludedFromWindowsMenu] )
+		[NSApp addWindowsItem:self title:self.windowMenuTitle filename:NO];	
+}
+
+
+- (void)orderOut:(id)sender
+{
+	[super orderOut:sender];
+	[NSApp removeWindowsItem:self];
+}
+
 
 #pragma mark -
 #pragma mark Accessors
@@ -149,19 +183,23 @@
     return _titleBarView;
 }
 
-- (void)setTitleBarHeight:(float)newTitleBarHeight
+- (void)setTitleBarHeight:(CGFloat)newTitleBarHeight
 {
     float minTitleHeight = [self _minimumTitlebarHeight];
     if (newTitleBarHeight < minTitleHeight) {
         newTitleBarHeight = minTitleHeight;
     }
-    _titleBarHeight = newTitleBarHeight;
-    [self _recalculateFrameForTitleBarView];
-    [self _layoutTrafficLightsAndContent];
-    [self _displayWindowAndTitlebar];
+	
+	if ( _titleBarHeight != newTitleBarHeight )
+	{
+		_titleBarHeight = newTitleBarHeight;
+		[self _recalculateFrameForTitleBarView];
+		[self _layoutTrafficLightsAndContent];
+		[self _displayWindowAndTitlebar];
+	}
 }
 
-- (float)titleBarHeight
+- (CGFloat)titleBarHeight
 {
     return _titleBarHeight;
 }
@@ -184,6 +222,10 @@
     [nc addObserver:self selector:@selector(_displayWindowAndTitlebar) name:NSWindowDidResignKeyNotification object:self];
     [nc addObserver:self selector:@selector(_displayWindowAndTitlebar) name:NSWindowDidBecomeKeyNotification object:self];
     [nc addObserver:self selector:@selector(_setupTrafficLightsTrackingArea) name:NSWindowDidBecomeKeyNotification object:self];
+
+    [nc addObserver:self selector:@selector(_displayWindowAndTitlebar) name:NSApplicationDidBecomeActiveNotification object:nil];
+    [nc addObserver:self selector:@selector(_displayWindowAndTitlebar) name:NSApplicationDidResignActiveNotification object:nil];
+
     [self _createTitlebarView];
     [self _layoutTrafficLightsAndContent];
     [self _setupTrafficLightsTrackingArea];
@@ -264,7 +306,6 @@
 - (void)_displayWindowAndTitlebar
 {
     // Redraw the window and titlebar
-    [self display];
     [_titleBarView setNeedsDisplay:YES];
 }
 @end
