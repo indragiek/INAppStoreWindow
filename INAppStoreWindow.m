@@ -86,18 +86,20 @@
 #pragma mark -
 #pragma mark Initialization
 
-- (id)init
+- (id)initWithContentRect:(NSRect)contentRect styleMask:(NSUInteger)aStyle backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag
 {
-    if ((self = [super init])) {
+    if ((self = [super initWithContentRect:contentRect styleMask:aStyle backing:bufferingType defer:flag])) {
         [self _doInitialWindowSetup];
     }
     return self;
 }
 
-- (void)awakeFromNib
+- (id)initWithContentRect:(NSRect)contentRect styleMask:(NSUInteger)aStyle backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag screen:(NSScreen *)screen
 {
-    [super awakeFromNib];
-    [self _doInitialWindowSetup];
+    if ((self = [super initWithContentRect:contentRect styleMask:aStyle backing:bufferingType defer:flag screen:screen])) {
+        [self _doInitialWindowSetup];
+    }
+    return self;
 }
 
 #pragma mark -
