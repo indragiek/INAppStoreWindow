@@ -8,20 +8,32 @@
 
 #import "INAppStoreWindow.h"
 
+#define IN_RUNNING_LION (NSClassFromString(@"NSPopover") != nil)
+
 /** -----------------------------------------
-- There are 2 sets of colors, one for an active (key) state and one for an inactivate state
-- Each set contains 3 colors. 2 colors for the start and end of the title gradient, and another color to draw the separator line on the bottom
-- These colors are meant to mimic the color of the default titlebar (taken from OS X 10.6), but are subject
+ - There are 2 sets of colors, one for an active (key) state and one for an inactivate state
+ - Each set contains 3 colors. 2 colors for the start and end of the title gradient, and another color to draw the separator line on the bottom
+ - These colors are meant to mimic the color of the default titlebar (taken from OS X 10.6), but are subject
  to change at any time
  ----------------------------------------- **/
 
 #define COLOR_MAIN_START [NSColor colorWithDeviceRed:0.659 green:0.659 blue:0.659 alpha:1.00]
 #define COLOR_MAIN_END [NSColor colorWithDeviceRed:0.812 green:0.812 blue:0.812 alpha:1.00]
 #define COLOR_MAIN_BOTTOM [NSColor colorWithDeviceRed:0.318 green:0.318 blue:0.318 alpha:1.00]
- 
+
 #define COLOR_NOTMAIN_START [NSColor colorWithDeviceRed:0.851 green:0.851 blue:0.851 alpha:1.00]
 #define COLOR_NOTMAIN_END [NSColor colorWithDeviceRed:0.929 green:0.929 blue:0.929 alpha:1.00]
 #define COLOR_NOTMAIN_BOTTOM [NSColor colorWithDeviceRed:0.600 green:0.600 blue:0.600 alpha:1.00]
+
+/** Lion */
+
+#define COLOR_MAIN_START_L [NSColor colorWithDeviceRed:0.686 green:0.686 blue:0.686 alpha:1.00]
+#define COLOR_MAIN_END_L [NSColor colorWithDeviceRed:0.906 green:0.906 blue:0.906 alpha:1.00]
+#define COLOR_MAIN_BOTTOM_L [NSColor colorWithDeviceRed:0.408 green:0.408 blue:0.408 alpha:1.00]
+
+#define COLOR_NOTMAIN_START_L [NSColor colorWithDeviceRed:0.878 green:0.878 blue:0.878 alpha:1.00]
+#define COLOR_NOTMAIN_END_L [NSColor colorWithDeviceRed:0.976 green:0.976 blue:0.976 alpha:1.00]
+#define COLOR_NOTMAIN_BOTTOM_L [NSColor colorWithDeviceRed:0.655 green:0.655 blue:0.655 alpha:1.00]
 
 /** Corner clipping radius **/
 #define CORNER_CLIP_RADIUS 4.0
@@ -43,9 +55,15 @@
     BOOL drawsAsMainWindow = ([[self window] isMainWindow] && [[NSApplication sharedApplication] isActive]);
     NSRect drawingRect = [self bounds];
     drawingRect.size.height -= 1.0; // Decrease the height by 1.0px to show the highlight line at the top
-    
-    NSColor *startColor = drawsAsMainWindow ? COLOR_MAIN_START : COLOR_NOTMAIN_START;
-    NSColor *endColor = drawsAsMainWindow ? COLOR_MAIN_END : COLOR_NOTMAIN_END;
+    NSColor *startColor = nil;
+    NSColor *endColor = nil;
+    if (IN_RUNNING_LION) {
+        startColor = drawsAsMainWindow ? COLOR_MAIN_START_L : COLOR_NOTMAIN_START_L;
+        endColor = drawsAsMainWindow ? COLOR_MAIN_END_L : COLOR_NOTMAIN_END_L;
+    } else {
+        startColor = drawsAsMainWindow ? COLOR_MAIN_START : COLOR_NOTMAIN_START;
+        endColor = drawsAsMainWindow ? COLOR_MAIN_END : COLOR_NOTMAIN_END;
+    }
     NSBezierPath *clipPath = [self clippingPathWithRect:drawingRect cornerRadius:CORNER_CLIP_RADIUS];
     [NSGraphicsContext saveGraphicsState];
     [clipPath addClip];
@@ -54,7 +72,12 @@
     [gradient release];
     [NSGraphicsContext restoreGraphicsState];
     
-    NSColor *bottomColor = drawsAsMainWindow ? COLOR_MAIN_BOTTOM : COLOR_NOTMAIN_BOTTOM;
+    NSColor *bottomColor = nil;
+    if (IN_RUNNING_LION) {
+        bottomColor = drawsAsMainWindow ? COLOR_MAIN_BOTTOM_L : COLOR_NOTMAIN_BOTTOM_L;
+    } else {
+        bottomColor = drawsAsMainWindow ? COLOR_MAIN_BOTTOM : COLOR_NOTMAIN_BOTTOM;
+    }
     NSRect bottomRect = NSMakeRect(0.0, NSMinY(drawingRect), NSWidth(drawingRect), 1.0);
     [bottomColor set];
     NSRectFill(bottomRect);
@@ -205,7 +228,7 @@
 {
     return _titleBarHeight;
 }
-        
+
 #pragma mark -
 #pragma mark Private
 
@@ -224,10 +247,10 @@
     [nc addObserver:self selector:@selector(_displayWindowAndTitlebar) name:NSWindowDidResignKeyNotification object:self];
     [nc addObserver:self selector:@selector(_displayWindowAndTitlebar) name:NSWindowDidBecomeKeyNotification object:self];
     [nc addObserver:self selector:@selector(_setupTrafficLightsTrackingArea) name:NSWindowDidBecomeKeyNotification object:self];
-
+    
     [nc addObserver:self selector:@selector(_displayWindowAndTitlebar) name:NSApplicationDidBecomeActiveNotification object:nil];
     [nc addObserver:self selector:@selector(_displayWindowAndTitlebar) name:NSApplicationDidResignActiveNotification object:nil];
-
+    
     [self _createTitlebarView];
     [self _layoutTrafficLightsAndContent];
     [self _setupTrafficLightsTrackingArea];
