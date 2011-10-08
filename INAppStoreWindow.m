@@ -229,6 +229,26 @@
     return _titleBarHeight;
 }
 
+
+- (void)setCentersTrafficWindowButtons:(BOOL)centersTrafficWindowButtons
+{
+	if (_centersTrafficWindowButtons == centersTrafficWindowButtons)
+		return; // don't do any more work.
+	
+	_centersTrafficWindowButtons = centersTrafficWindowButtons;
+	
+	
+	// Update the display and tracking area of the traffic lights.
+	[self _layoutTrafficLightsAndContent];
+	[self _setupTrafficLightsTrackingArea];
+}
+
+
+- (BOOL)centersTrafficWindowButtons
+{
+	return _centersTrafficWindowButtons;
+}
+
 #pragma mark -
 #pragma mark Private
 
@@ -250,6 +270,10 @@
     
     [nc addObserver:self selector:@selector(_displayWindowAndTitlebar) name:NSApplicationDidBecomeActiveNotification object:nil];
     [nc addObserver:self selector:@selector(_displayWindowAndTitlebar) name:NSApplicationDidResignActiveNotification object:nil];
+	
+	
+	// Set the traffic lights to be centered
+	_centersTrafficWindowButtons = YES;
     
     [self _createTitlebarView];
     [self _layoutTrafficLightsAndContent];
@@ -259,21 +283,25 @@
 - (void)_layoutTrafficLightsAndContent
 {
     NSView *contentView = [self contentView];
-    NSButton *close = [self standardWindowButton:NSWindowCloseButton];
-    NSButton *minimize = [self standardWindowButton:NSWindowMiniaturizeButton];
-    NSButton *zoom = [self standardWindowButton:NSWindowZoomButton];
-    
-    // Set the frame of the window buttons
-    NSRect closeFrame = [close frame];
-    NSRect minimizeFrame = [minimize frame];
-    NSRect zoomFrame = [zoom frame];
-    float buttonOrigin = floor(NSMidY([_titleBarView frame]) - (closeFrame.size.height / 2.0));
-    closeFrame.origin.y = buttonOrigin;
-    minimizeFrame.origin.y = buttonOrigin;
-    zoomFrame.origin.y = buttonOrigin;
-    [close setFrame:closeFrame];
-    [minimize setFrame:minimizeFrame];
-    [zoom setFrame:zoomFrame];
+	
+	if (_centersTrafficWindowButtons)
+	{
+		NSButton *close = [self standardWindowButton:NSWindowCloseButton];
+		NSButton *minimize = [self standardWindowButton:NSWindowMiniaturizeButton];
+		NSButton *zoom = [self standardWindowButton:NSWindowZoomButton];
+		
+		// Set the frame of the window buttons
+		NSRect closeFrame = [close frame];
+		NSRect minimizeFrame = [minimize frame];
+		NSRect zoomFrame = [zoom frame];
+		float buttonOrigin = floor(NSMidY([_titleBarView frame]) - (closeFrame.size.height / 2.0));
+		closeFrame.origin.y = buttonOrigin;
+		minimizeFrame.origin.y = buttonOrigin;
+		zoomFrame.origin.y = buttonOrigin;
+		[close setFrame:closeFrame];
+		[minimize setFrame:minimizeFrame];
+		[zoom setFrame:zoomFrame];
+	}
     
     // Reposition the content view
     NSRect windowFrame = [self frame];

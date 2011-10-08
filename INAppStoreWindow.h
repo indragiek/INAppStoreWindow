@@ -22,11 +22,20 @@
  **/
 @interface INAppStoreWindow : NSWindow {
     CGFloat _titleBarHeight;
+	BOOL _centersTrafficWindowButtons;
     NSView *_titleBarView;
 	NSString *_windowMenuTitle;
 }
+
+
 /** The height of the title bar. By default, this is set to the standard title bar height. **/
 @property (nonatomic, assign) CGFloat titleBarHeight;
+
+
+/** Toggles whether or not the Window buttons should be centered in the title bar. Defaults to YES **/
+@property (nonatomic, assign) BOOL centersTrafficWindowButtons;
+
+
 /** The title bar view itself. Add subviews to this view that you want to show in the title bar (e.g. buttons, a toolbar, etc.). This view can also be set if you want to use a different styled title bar aside from the default one (textured, etc.). **/
 @property (nonatomic, retain) NSView *titleBarView;
 @end
