@@ -28,6 +28,7 @@
 /** Lion */
 
 #define COLOR_MAIN_START_L [NSColor colorWithDeviceRed:0.686 green:0.686 blue:0.686 alpha:1.00]
+#define COLOR_MAIN_START_COVER_L [NSColor colorWithDeviceRed:0.686 green:0.686 blue:0.686 alpha:0.00]
 #define COLOR_MAIN_END_L [NSColor colorWithDeviceRed:0.906 green:0.906 blue:0.906 alpha:1.00]
 #define COLOR_MAIN_BOTTOM_L [NSColor colorWithDeviceRed:0.408 green:0.408 blue:0.408 alpha:1.00]
 
@@ -50,6 +51,18 @@
 @end
 
 @implementation INTitlebarView
+
+- (id)initWithFrame:(NSRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        _randomGenerator = [[CIFilter filterWithName:@"CIColorMonochrome"] retain];
+        [_randomGenerator setValue:[[CIFilter filterWithName:@"CIRandomGenerator"] valueForKey:@"outputImage"] forKey:@"inputImage"];
+    }
+    
+    return self;
+}
+
 - (void)drawRect:(NSRect)dirtyRect
 {
     BOOL drawsAsMainWindow = ([[self window] isMainWindow] && [[NSApplication sharedApplication] isActive]);
@@ -70,6 +83,15 @@
     NSGradient *gradient = [[NSGradient alloc] initWithStartingColor:startColor endingColor:endColor];
     [gradient drawInRect:drawingRect angle:90];
     [gradient release];
+    if (IN_RUNNING_LION && drawsAsMainWindow) {
+        [_randomGenerator setDefaults];
+        CIImage* newImg = [_randomGenerator valueForKey:@"outputImage"];
+        [newImg drawAtPoint:NSZeroPoint fromRect:drawingRect operation:NSCompositeSourceOver fraction:0.085];
+        startColor = COLOR_MAIN_START_COVER_L;
+        gradient = [[NSGradient alloc] initWithStartingColor:startColor endingColor:endColor];
+        [gradient drawInRect:drawingRect angle:90];
+        [gradient release];
+    }
     [NSGraphicsContext restoreGraphicsState];
     
     NSColor *bottomColor = nil;
@@ -100,6 +122,12 @@
     [path closePath];
     return path;
 }
+
+- (void)dealloc {
+	[_randomGenerator release];
+    [super dealloc];
+}
+
 @end
 
 @implementation INAppStoreWindow
