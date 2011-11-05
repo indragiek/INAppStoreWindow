@@ -19,8 +19,10 @@
 #import <QuartzCore/QuartzCore.h>
 
 #if __has_feature(objc_arc)
+#define INAppStoreWindowCopy nonatomic, strong
 #define INAppStoreWindowRetain nonatomic, strong
 #else
+#define INAppStoreWindowCopy nonatomic, copy
 #define INAppStoreWindowRetain nonatomic, retain
 #endif
 

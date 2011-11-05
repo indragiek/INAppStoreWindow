@@ -48,7 +48,7 @@
 #define CORNER_CLIP_RADIUS 4.0
 
 @interface INAppStoreWindow ()
-@property (copy) NSString *windowMenuTitle;
+@property (INAppStoreWindowCopy) NSString *windowMenuTitle;
 - (void)_doInitialWindowSetup;
 - (void)_createTitlebarView;
 - (void)_setupTrafficLightsTrackingArea;
