@@ -79,7 +79,9 @@
     [[self clippingPathWithRect:drawingRect cornerRadius:CORNER_CLIP_RADIUS] addClip];
     NSGradient *gradient = [[NSGradient alloc] initWithStartingColor:startColor endingColor:endColor];
     [gradient drawInRect:drawingRect angle:90];
+    #if !__has_feature(objc_arc)
     [gradient release];
+    #endif
     if (IN_RUNNING_LION && drawsAsMainWindow) {
         static CIImage *noisePattern = nil;
         if(noisePattern == nil){
@@ -329,7 +331,11 @@
 - (void)_createTitlebarView
 {
     // Create the title bar view
+    #if __has_feature(objc_arc)
+    self.titleBarView = [[INTitlebarView alloc] initWithFrame:NSZeroRect];
+    #else
     self.titleBarView = [[[INTitlebarView alloc] initWithFrame:NSZeroRect] autorelease];
+    #endif
 }
 
 // Solution for tracking area issue thanks to @Perspx (Alex Rozanski) <https://gist.github.com/972958>
