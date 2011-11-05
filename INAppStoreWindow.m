@@ -17,7 +17,7 @@
 
 #import "INAppStoreWindow.h"
 
-#define IN_RUNNING_LION (NSClassFromString(@"NSPopover") != nil)
+#define IN_RUNNING_LION (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_6)
 
 /** -----------------------------------------
  - There are 2 sets of colors, one for an active (key) state and one for an inactivate state
