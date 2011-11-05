@@ -201,6 +201,11 @@
     [_titleBarView setNeedsDisplay:YES];
 }
 
+- (void)resignKeyWindow
+{
+    [super resignKeyWindow];
+    [_titleBarView setNeedsDisplay:YES];
+}
 
 - (void)orderFront:(id)sender
 {
@@ -259,8 +264,7 @@
         newTitleBarHeight = minTitleHeight;
     }
 	
-	if ( _titleBarHeight != newTitleBarHeight )
-	{
+	if ( _titleBarHeight != newTitleBarHeight ) {
 		_titleBarHeight = newTitleBarHeight;
 		[self _recalculateFrameForTitleBarView];
 		[self _layoutTrafficLightsAndContent];
