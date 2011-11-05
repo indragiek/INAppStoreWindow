@@ -4,11 +4,20 @@
 //  Copyright 2011 Indragie Karunaratne. All rights reserved.
 //
 //  Licensed under the BSD License <http://www.opensource.org/licenses/bsd-license>
-//  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+//  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
+//  SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+//  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+//  BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+//  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
+//  THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 
 #import "INAppStoreWindow.h"
 
-#define IN_RUNNING_LION (NSClassFromString(@"NSPopover") != nil)
+#define IN_RUNNING_LION (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_6)
 
 /** -----------------------------------------
  - There are 2 sets of colors, one for an active (key) state and one for an inactivate state
@@ -17,29 +26,29 @@
  to change at any time
  ----------------------------------------- **/
 
-#define COLOR_MAIN_START [NSColor colorWithDeviceRed:0.659 green:0.659 blue:0.659 alpha:1.00]
-#define COLOR_MAIN_END [NSColor colorWithDeviceRed:0.812 green:0.812 blue:0.812 alpha:1.00]
-#define COLOR_MAIN_BOTTOM [NSColor colorWithDeviceRed:0.318 green:0.318 blue:0.318 alpha:1.00]
+#define COLOR_MAIN_START [NSColor colorWithDeviceWhite:0.659 alpha:1.0]
+#define COLOR_MAIN_END [NSColor colorWithDeviceWhite:0.812 alpha:1.0]
+#define COLOR_MAIN_BOTTOM [NSColor colorWithDeviceWhite:0.318 alpha:1.0]
 
-#define COLOR_NOTMAIN_START [NSColor colorWithDeviceRed:0.851 green:0.851 blue:0.851 alpha:1.00]
-#define COLOR_NOTMAIN_END [NSColor colorWithDeviceRed:0.929 green:0.929 blue:0.929 alpha:1.00]
-#define COLOR_NOTMAIN_BOTTOM [NSColor colorWithDeviceRed:0.600 green:0.600 blue:0.600 alpha:1.00]
+#define COLOR_NOTMAIN_START [NSColor colorWithDeviceWhite:0.851 alpha:1.0]
+#define COLOR_NOTMAIN_END [NSColor colorWithDeviceWhite:0.929 alpha:1.0]
+#define COLOR_NOTMAIN_BOTTOM [NSColor colorWithDeviceWhite:0.600 alpha:1.0]
 
 /** Lion */
 
-#define COLOR_MAIN_START_L [NSColor colorWithDeviceRed:0.686 green:0.686 blue:0.686 alpha:1.00]
-#define COLOR_MAIN_END_L [NSColor colorWithDeviceRed:0.906 green:0.906 blue:0.906 alpha:1.00]
-#define COLOR_MAIN_BOTTOM_L [NSColor colorWithDeviceRed:0.408 green:0.408 blue:0.408 alpha:1.00]
+#define COLOR_MAIN_START_L [NSColor colorWithDeviceWhite:0.66 alpha:1.0]
+#define COLOR_MAIN_END_L [NSColor colorWithDeviceWhite:0.9 alpha:1.0]
+#define COLOR_MAIN_BOTTOM_L [NSColor colorWithDeviceWhite:0.408 alpha:1.0]
 
-#define COLOR_NOTMAIN_START_L [NSColor colorWithDeviceRed:0.878 green:0.878 blue:0.878 alpha:1.00]
-#define COLOR_NOTMAIN_END_L [NSColor colorWithDeviceRed:0.976 green:0.976 blue:0.976 alpha:1.00]
-#define COLOR_NOTMAIN_BOTTOM_L [NSColor colorWithDeviceRed:0.655 green:0.655 blue:0.655 alpha:1.00]
+#define COLOR_NOTMAIN_START_L [NSColor colorWithDeviceWhite:0.878 alpha:1.0]
+#define COLOR_NOTMAIN_END_L [NSColor colorWithDeviceWhite:0.976 alpha:1.0]
+#define COLOR_NOTMAIN_BOTTOM_L [NSColor colorWithDeviceWhite:0.655 alpha:1.0]
 
 /** Corner clipping radius **/
 #define CORNER_CLIP_RADIUS 4.0
 
 @interface INAppStoreWindow ()
-@property (copy) NSString *windowMenuTitle;
+@property (INAppStoreWindowCopy) NSString *windowMenuTitle;
 - (void)_doInitialWindowSetup;
 - (void)_createTitlebarView;
 - (void)_setupTrafficLightsTrackingArea;
@@ -50,6 +59,7 @@
 @end
 
 @implementation INTitlebarView
+
 - (void)drawRect:(NSRect)dirtyRect
 {
     BOOL drawsAsMainWindow = ([[self window] isMainWindow] && [[NSApplication sharedApplication] isActive]);
@@ -64,12 +74,29 @@
         startColor = drawsAsMainWindow ? COLOR_MAIN_START : COLOR_NOTMAIN_START;
         endColor = drawsAsMainWindow ? COLOR_MAIN_END : COLOR_NOTMAIN_END;
     }
-    NSBezierPath *clipPath = [self clippingPathWithRect:drawingRect cornerRadius:CORNER_CLIP_RADIUS];
+    
     [NSGraphicsContext saveGraphicsState];
-    [clipPath addClip];
+    [[self clippingPathWithRect:drawingRect cornerRadius:CORNER_CLIP_RADIUS] addClip];
     NSGradient *gradient = [[NSGradient alloc] initWithStartingColor:startColor endingColor:endColor];
     [gradient drawInRect:drawingRect angle:90];
+    #if !__has_feature(objc_arc)
     [gradient release];
+    #endif
+    if (IN_RUNNING_LION && drawsAsMainWindow) {
+        static CIImage *noisePattern = nil;
+        if(noisePattern == nil){
+            CIFilter *randomGenerator = [CIFilter filterWithName:@"CIColorMonochrome"];
+            [randomGenerator setValue:[[CIFilter filterWithName:@"CIRandomGenerator"] valueForKey:@"outputImage"]
+                               forKey:@"inputImage"];
+            [randomGenerator setDefaults];
+            #if __has_feature(objc_arc)
+            noisePattern = [randomGenerator valueForKey:@"outputImage"];
+            #else
+            noisePattern = [[randomGenerator valueForKey:@"outputImage"] retain];
+            #endif
+        }
+        [noisePattern drawAtPoint:NSZeroPoint fromRect:self.bounds operation:NSCompositePlusLighter fraction:0.04];
+    }
     [NSGraphicsContext restoreGraphicsState];
     
     NSColor *bottomColor = nil;
@@ -81,6 +108,12 @@
     NSRect bottomRect = NSMakeRect(0.0, NSMinY(drawingRect), NSWidth(drawingRect), 1.0);
     [bottomColor set];
     NSRectFill(bottomRect);
+    
+    if (IN_RUNNING_LION) {
+        bottomRect.origin.y += 1.0;
+        [[NSColor colorWithDeviceWhite:1.0 alpha:0.12] setFill];
+        [[NSBezierPath bezierPathWithRect:bottomRect] fill];
+    }
 }
 
 // Uses code from NSBezierPath+PXRoundedRectangleAdditions by Andy Matuschak
@@ -100,6 +133,7 @@
     [path closePath];
     return path;
 }
+
 @end
 
 @implementation INAppStoreWindow
@@ -128,13 +162,14 @@
 #pragma mark -
 #pragma mark Memory Management
 
+#if !__has_feature(objc_arc)
 - (void)dealloc
 {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
     [_titleBarView release];
 	[_windowMenuTitle release];
-    [super dealloc];
+    [super dealloc];    
 }
+#endif
 
 #pragma mark -
 #pragma mark NSWindow Overrides
@@ -163,8 +198,14 @@
 	[super makeKeyAndOrderFront:sender];
 	if ( ![self isExcludedFromWindowsMenu] )
 		[NSApp addWindowsItem:self title:self.windowMenuTitle filename:NO];	
+    [_titleBarView setNeedsDisplay:YES];
 }
 
+- (void)resignKeyWindow
+{
+    [super resignKeyWindow];
+    [_titleBarView setNeedsDisplay:YES];
+}
 
 - (void)orderFront:(id)sender
 {
@@ -180,6 +221,11 @@
 	[NSApp removeWindowsItem:self];
 }
 
+- (void)close
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [super close];    
+}
 
 #pragma mark -
 #pragma mark Accessors
@@ -188,9 +234,12 @@
 {
     if ((_titleBarView != newTitleBarView) && newTitleBarView) {
         [_titleBarView removeFromSuperview];
+        #if __has_feature(objc_arc)
+        _titleBarView = newTitleBarView;
+        #else
         [_titleBarView release];
         _titleBarView = [newTitleBarView retain];
-        
+        #endif
         // Configure the view properties and add it as a subview of the theme frame
         NSView *contentView = [self contentView];
         NSView *themeFrame = [contentView superview];
@@ -215,8 +264,7 @@
         newTitleBarHeight = minTitleHeight;
     }
 	
-	if ( _titleBarHeight != newTitleBarHeight )
-	{
+	if ( _titleBarHeight != newTitleBarHeight ) {
 		_titleBarHeight = newTitleBarHeight;
 		[self _recalculateFrameForTitleBarView];
 		[self _layoutTrafficLightsAndContent];
@@ -287,7 +335,11 @@
 - (void)_createTitlebarView
 {
     // Create the title bar view
+    #if __has_feature(objc_arc)
+    self.titleBarView = [[INTitlebarView alloc] initWithFrame:NSZeroRect];
+    #else
     self.titleBarView = [[[INTitlebarView alloc] initWithFrame:NSZeroRect] autorelease];
+    #endif
 }
 
 // Solution for tracking area issue thanks to @Perspx (Alex Rozanski) <https://gist.github.com/972958>

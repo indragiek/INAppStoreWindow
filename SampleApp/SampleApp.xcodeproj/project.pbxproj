@@ -16,6 +16,7 @@
 		03970F191315CE8D00F15C7E /* INAppStoreWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 03970F181315CE8D00F15C7E /* INAppStoreWindow.m */; };
 		03970F1C1315CECF00F15C7E /* SampleWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 03970F1B1315CECF00F15C7E /* SampleWindowController.m */; };
 		03970F1E1315D2CB00F15C7E /* SampleWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 03970F1D1315D2CB00F15C7E /* SampleWindow.xib */; };
+		573D639A14632A1B000CAADC /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 573D639914632A1B000CAADC /* QuartzCore.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +38,7 @@
 		03970F1A1315CECF00F15C7E /* SampleWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SampleWindowController.h; sourceTree = "<group>"; };
 		03970F1B1315CECF00F15C7E /* SampleWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SampleWindowController.m; sourceTree = "<group>"; };
 		03970F1D1315D2CB00F15C7E /* SampleWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SampleWindow.xib; sourceTree = "<group>"; };
+		573D639914632A1B000CAADC /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,6 +46,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				573D639A14632A1B000CAADC /* QuartzCore.framework in Frameworks */,
 				03970EFA1315CE4400F15C7E /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -72,6 +75,7 @@
 			isa = PBXGroup;
 			children = (
 				03970EF91315CE4400F15C7E /* Cocoa.framework */,
+				573D639914632A1B000CAADC /* QuartzCore.framework */,
 				03970EFB1315CE4400F15C7E /* Other Frameworks */,
 			);
 			name = Frameworks;
@@ -149,6 +153,7 @@
 		03970EEC1315CE4400F15C7E /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastUpgradeCheck = 0420;
 				ORGANIZATIONNAME = "PCWiz Computer";
 			};
 			buildConfigurationList = 03970EEF1315CE4400F15C7E /* Build configuration list for PBXProject "SampleApp" */;
@@ -304,6 +309,7 @@
 				03970F151315CE4400F15C7E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
