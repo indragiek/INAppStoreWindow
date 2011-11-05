@@ -3,13 +3,14 @@ What is INAppStoreWindow?
 
 INAppStoreWindow is an NSWindow subclass that mimics the appearance of the main window in the Mac App Store application. These modifications consist of enlarging the title bar, and centring the traffic lights (**note that this subclass does not handle the creation of a toolbar**). The end result looks like this:
 
-![INAppStoreWindow](http://i51.tinypic.com/15ydhjk.png)
+![INAppStoreWindow](http://i41.tinypic.com/abidd1.png)
 
 Features of INAppStoreWindow:
 
 * No use of private APIs, so it should (theoretically) be App Store friendly
 * The title bar view is entirely customizable -- you can add subviews (toolbars, buttons, etc.) as well as customize the title bar itself to give it a different appearance (e.g. Reeder)
 * The height of the title bar is easily adjustable
+* Supports ARC (thanks to @InScopeApps)
 
 How to use it
 ====================
@@ -28,10 +29,12 @@ Who am I?
 
 I'm Indragie Karunaratne, a 16 year old Mac OS X and iOS Developer from Edmonton AB, Canada. Visit [my website](http://indragie.com) to check out my work, or to get in touch with me.
 
-Other Credits
+Special Thanks To
 ====================
 
-Thanks to @Perspx for the [fix](https://gist.github.com/972958) for the traffic lights hover issue!
+Alex Rozanski ([@Perspx](https://github.com/perspx))
+David Keegan ([@InScopeApps](https://github.com/inscopeapps)
+Victor Pimentel ([@victorpimentel](https://github.com/victorpimentel))
 
 Licensing
 ====================
