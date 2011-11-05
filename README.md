@@ -32,9 +32,9 @@ I'm Indragie Karunaratne, a 16 year old Mac OS X and iOS Developer from Edmonton
 Special Thanks To
 ====================
 
-Alex Rozanski ([@Perspx](https://github.com/perspx))
-David Keegan ([@InScopeApps](https://github.com/inscopeapps)
-Victor Pimentel ([@victorpimentel](https://github.com/victorpimentel))
+- Alex Rozanski ([@Perspx](https://github.com/perspx))
+- David Keegan ([@InScopeApps](https://github.com/inscopeapps))
+- Victor Pimentel ([@victorpimentel](https://github.com/victorpimentel))
 
 Licensing
 ====================
