@@ -51,23 +51,6 @@
 
 @implementation INTitlebarView
 
-- (id)initWithFrame:(NSRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Prepare the noise pattern in Lion
-        if (IN_RUNNING_LION) {
-            CIFilter *randomGenerator = [CIFilter filterWithName:@"CIColorMonochrome"];
-            [randomGenerator setValue:[[CIFilter filterWithName:@"CIRandomGenerator"] valueForKey:@"outputImage"]
-                               forKey:@"inputImage"];
-            [randomGenerator setDefaults];
-            _noisePattern = [[randomGenerator valueForKey:@"outputImage"] retain];
-        }
-    }
-    
-    return self;
-}
-
 - (void)drawRect:(NSRect)dirtyRect
 {
     BOOL drawsAsMainWindow = ([[self window] isMainWindow] && [[NSApplication sharedApplication] isActive]);
@@ -89,7 +72,15 @@
     [gradient drawInRect:drawingRect angle:90];
     [gradient release];
     if (IN_RUNNING_LION && drawsAsMainWindow) {
-        [_noisePattern drawAtPoint:NSZeroPoint fromRect:self.bounds operation:NSCompositePlusLighter fraction:0.04];
+        static CIImage *noisePattern = nil;
+        if(noisePattern == nil){
+            CIFilter *randomGenerator = [CIFilter filterWithName:@"CIColorMonochrome"];
+            [randomGenerator setValue:[[CIFilter filterWithName:@"CIRandomGenerator"] valueForKey:@"outputImage"]
+                               forKey:@"inputImage"];
+            [randomGenerator setDefaults];
+            noisePattern = [[randomGenerator valueForKey:@"outputImage"] retain];        
+        }
+        [noisePattern drawAtPoint:NSZeroPoint fromRect:self.bounds operation:NSCompositePlusLighter fraction:0.04];
     }
     [NSGraphicsContext restoreGraphicsState];
     
@@ -126,11 +117,6 @@
     [path appendBezierPathWithArcWithCenter:NSMakePoint(NSMinX(rect), NSMaxY(rect)) radius:radius startAngle: 90.0 endAngle:180.0];
     [path closePath];
     return path;
-}
-
-- (void)dealloc {
-    [_noisePattern release];
-    [super dealloc];
 }
 
 @end
