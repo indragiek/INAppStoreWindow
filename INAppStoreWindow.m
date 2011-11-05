@@ -196,6 +196,7 @@
 	[super makeKeyAndOrderFront:sender];
 	if ( ![self isExcludedFromWindowsMenu] )
 		[NSApp addWindowsItem:self title:self.windowMenuTitle filename:NO];	
+    [_titleBarView setNeedsDisplay:YES];
 }
 
 
