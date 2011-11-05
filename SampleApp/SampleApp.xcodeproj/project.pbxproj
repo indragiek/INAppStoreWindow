@@ -153,6 +153,7 @@
 		03970EEC1315CE4400F15C7E /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastUpgradeCheck = 0420;
 				ORGANIZATIONNAME = "PCWiz Computer";
 			};
 			buildConfigurationList = 03970EEF1315CE4400F15C7E /* Build configuration list for PBXProject "SampleApp" */;
@@ -308,6 +309,7 @@
 				03970F151315CE4400F15C7E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
