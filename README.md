@@ -35,6 +35,10 @@ Special Thanks To
 - Alex Rozanski ([@Perspx](https://github.com/perspx))
 - David Keegan ([@InScopeApps](https://github.com/inscopeapps))
 - Victor Pimentel ([@victorpimentel](https://github.com/victorpimentel))
+- Wade Cosgrove ([@wadeco](https://github.com/wadeco))
+- Levi Nunnink ([@levinunnink](https://github.com/levinunnink))
+- Georg C. Brückmann ([@gcbrueckmann](https://github.com/gcbrueckmann))
+- nonamelive ([@nonamelive](https://github.com/nonamelive))
 
 Licensing
 ====================
