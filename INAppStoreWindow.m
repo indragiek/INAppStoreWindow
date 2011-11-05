@@ -78,7 +78,11 @@
             [randomGenerator setValue:[[CIFilter filterWithName:@"CIRandomGenerator"] valueForKey:@"outputImage"]
                                forKey:@"inputImage"];
             [randomGenerator setDefaults];
-            noisePattern = [[randomGenerator valueForKey:@"outputImage"] retain];        
+            #if __has_feature(objc_arc)
+            noisePattern = [randomGenerator valueForKey:@"outputImage"];
+            #else
+            noisePattern = [[randomGenerator valueForKey:@"outputImage"] retain];
+            #endif
         }
         [noisePattern drawAtPoint:NSZeroPoint fromRect:self.bounds operation:NSCompositePlusLighter fraction:0.04];
     }
@@ -147,13 +151,14 @@
 #pragma mark -
 #pragma mark Memory Management
 
+#if !__has_feature(objc_arc)
 - (void)dealloc
 {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
     [_titleBarView release];
 	[_windowMenuTitle release];
-    [super dealloc];
+    [super dealloc];    
 }
+#endif
 
 #pragma mark -
 #pragma mark NSWindow Overrides
@@ -199,6 +204,11 @@
 	[NSApp removeWindowsItem:self];
 }
 
+- (void)close
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [super close];    
+}
 
 #pragma mark -
 #pragma mark Accessors
@@ -207,9 +217,12 @@
 {
     if ((_titleBarView != newTitleBarView) && newTitleBarView) {
         [_titleBarView removeFromSuperview];
+        #if __has_feature(objc_arc)
+        _titleBarView = newTitleBarView;
+        #else
         [_titleBarView release];
         _titleBarView = [newTitleBarView retain];
-        
+        #endif
         // Configure the view properties and add it as a subview of the theme frame
         NSView *contentView = [self contentView];
         NSView *themeFrame = [contentView superview];
