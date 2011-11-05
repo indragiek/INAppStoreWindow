@@ -14,7 +14,7 @@
  **/
 @interface INTitlebarView : NSView {
 @private
-    CIFilter *_randomGenerator;
+    CIImage *_noisePattern;
 }
 - (NSBezierPath*)clippingPathWithRect:(NSRect)aRect cornerRadius:(CGFloat)radius;
 @end

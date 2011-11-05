@@ -17,24 +17,23 @@
  to change at any time
  ----------------------------------------- **/
 
-#define COLOR_MAIN_START [NSColor colorWithDeviceRed:0.659 green:0.659 blue:0.659 alpha:1.00]
-#define COLOR_MAIN_END [NSColor colorWithDeviceRed:0.812 green:0.812 blue:0.812 alpha:1.00]
-#define COLOR_MAIN_BOTTOM [NSColor colorWithDeviceRed:0.318 green:0.318 blue:0.318 alpha:1.00]
+#define COLOR_MAIN_START [NSColor colorWithDeviceWhite:0.659 alpha:1.0]
+#define COLOR_MAIN_END [NSColor colorWithDeviceWhite:0.812 alpha:1.0]
+#define COLOR_MAIN_BOTTOM [NSColor colorWithDeviceWhite:0.318 alpha:1.0]
 
-#define COLOR_NOTMAIN_START [NSColor colorWithDeviceRed:0.851 green:0.851 blue:0.851 alpha:1.00]
-#define COLOR_NOTMAIN_END [NSColor colorWithDeviceRed:0.929 green:0.929 blue:0.929 alpha:1.00]
-#define COLOR_NOTMAIN_BOTTOM [NSColor colorWithDeviceRed:0.600 green:0.600 blue:0.600 alpha:1.00]
+#define COLOR_NOTMAIN_START [NSColor colorWithDeviceWhite:0.851 alpha:1.0]
+#define COLOR_NOTMAIN_END [NSColor colorWithDeviceWhite:0.929 alpha:1.0]
+#define COLOR_NOTMAIN_BOTTOM [NSColor colorWithDeviceWhite:0.600 alpha:1.0]
 
 /** Lion */
 
-#define COLOR_MAIN_START_L [NSColor colorWithDeviceRed:0.686 green:0.686 blue:0.686 alpha:1.00]
-#define COLOR_MAIN_START_COVER_L [NSColor colorWithDeviceRed:0.686 green:0.686 blue:0.686 alpha:0.00]
-#define COLOR_MAIN_END_L [NSColor colorWithDeviceRed:0.906 green:0.906 blue:0.906 alpha:1.00]
-#define COLOR_MAIN_BOTTOM_L [NSColor colorWithDeviceRed:0.408 green:0.408 blue:0.408 alpha:1.00]
+#define COLOR_MAIN_START_L [NSColor colorWithDeviceWhite:0.66 alpha:1.0]
+#define COLOR_MAIN_END_L [NSColor colorWithDeviceWhite:0.9 alpha:1.0]
+#define COLOR_MAIN_BOTTOM_L [NSColor colorWithDeviceWhite:0.408 alpha:1.0]
 
-#define COLOR_NOTMAIN_START_L [NSColor colorWithDeviceRed:0.878 green:0.878 blue:0.878 alpha:1.00]
-#define COLOR_NOTMAIN_END_L [NSColor colorWithDeviceRed:0.976 green:0.976 blue:0.976 alpha:1.00]
-#define COLOR_NOTMAIN_BOTTOM_L [NSColor colorWithDeviceRed:0.655 green:0.655 blue:0.655 alpha:1.00]
+#define COLOR_NOTMAIN_START_L [NSColor colorWithDeviceWhite:0.878 alpha:1.0]
+#define COLOR_NOTMAIN_END_L [NSColor colorWithDeviceWhite:0.976 alpha:1.0]
+#define COLOR_NOTMAIN_BOTTOM_L [NSColor colorWithDeviceWhite:0.655 alpha:1.0]
 
 /** Corner clipping radius **/
 #define CORNER_CLIP_RADIUS 4.0
@@ -56,8 +55,14 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        _randomGenerator = [[CIFilter filterWithName:@"CIColorMonochrome"] retain];
-        [_randomGenerator setValue:[[CIFilter filterWithName:@"CIRandomGenerator"] valueForKey:@"outputImage"] forKey:@"inputImage"];
+        // Prepare the noise pattern in Lion
+        if (IN_RUNNING_LION) {
+            CIFilter *randomGenerator = [CIFilter filterWithName:@"CIColorMonochrome"];
+            [randomGenerator setValue:[[CIFilter filterWithName:@"CIRandomGenerator"] valueForKey:@"outputImage"]
+                               forKey:@"inputImage"];
+            [randomGenerator setDefaults];
+            _noisePattern = [[randomGenerator valueForKey:@"outputImage"] retain];
+        }
     }
     
     return self;
@@ -77,20 +82,14 @@
         startColor = drawsAsMainWindow ? COLOR_MAIN_START : COLOR_NOTMAIN_START;
         endColor = drawsAsMainWindow ? COLOR_MAIN_END : COLOR_NOTMAIN_END;
     }
-    NSBezierPath *clipPath = [self clippingPathWithRect:drawingRect cornerRadius:CORNER_CLIP_RADIUS];
+    
     [NSGraphicsContext saveGraphicsState];
-    [clipPath addClip];
+    [[self clippingPathWithRect:drawingRect cornerRadius:CORNER_CLIP_RADIUS] addClip];
     NSGradient *gradient = [[NSGradient alloc] initWithStartingColor:startColor endingColor:endColor];
     [gradient drawInRect:drawingRect angle:90];
     [gradient release];
     if (IN_RUNNING_LION && drawsAsMainWindow) {
-        [_randomGenerator setDefaults];
-        CIImage* newImg = [_randomGenerator valueForKey:@"outputImage"];
-        [newImg drawAtPoint:NSZeroPoint fromRect:drawingRect operation:NSCompositeSourceOver fraction:0.085];
-        startColor = COLOR_MAIN_START_COVER_L;
-        gradient = [[NSGradient alloc] initWithStartingColor:startColor endingColor:endColor];
-        [gradient drawInRect:drawingRect angle:90];
-        [gradient release];
+        [_noisePattern drawAtPoint:NSZeroPoint fromRect:self.bounds operation:NSCompositePlusLighter fraction:0.04];
     }
     [NSGraphicsContext restoreGraphicsState];
     
@@ -103,6 +102,12 @@
     NSRect bottomRect = NSMakeRect(0.0, NSMinY(drawingRect), NSWidth(drawingRect), 1.0);
     [bottomColor set];
     NSRectFill(bottomRect);
+    
+    if (IN_RUNNING_LION) {
+        bottomRect.origin.y += 1.0;
+        [[NSColor colorWithDeviceWhite:1.0 alpha:0.12] setFill];
+        [[NSBezierPath bezierPathWithRect:bottomRect] fill];
+    }
 }
 
 // Uses code from NSBezierPath+PXRoundedRectangleAdditions by Andy Matuschak
@@ -124,7 +129,7 @@
 }
 
 - (void)dealloc {
-	[_randomGenerator release];
+    [_noisePattern release];
     [super dealloc];
 }
 
