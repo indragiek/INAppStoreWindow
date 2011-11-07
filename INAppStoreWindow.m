@@ -198,6 +198,11 @@
 	[super makeKeyAndOrderFront:sender];
 	if ( ![self isExcludedFromWindowsMenu] )
 		[NSApp addWindowsItem:self title:self.windowMenuTitle filename:NO];	
+}
+
+- (void)becomeKeyWindow
+{
+    [super becomeKeyWindow];
     [_titleBarView setNeedsDisplay:YES];
 }
 
