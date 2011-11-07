@@ -175,14 +175,15 @@
 #pragma mark -
 #pragma mark Memory Management
 
-#if !__has_feature(objc_arc)
 - (void)dealloc
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    #if !__has_feature(objc_arc)
     [_titleBarView release];
 	[_windowMenuTitle release];
     [super dealloc];    
+    #endif
 }
-#endif
 
 #pragma mark -
 #pragma mark NSWindow Overrides
@@ -239,11 +240,6 @@
 	[NSApp removeWindowsItem:self];
 }
 
-- (void)close
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [super close];    
-}
 
 #pragma mark -
 #pragma mark Accessors
