@@ -134,6 +134,19 @@
     return path;
 }
 
+- (void)mouseUp:(NSEvent *)theEvent {
+    if ([theEvent clickCount] == 2) {
+        // Get settings from "System Preferences" >  "Appearance" > "Double-click on windows title bar to minimize"
+        NSString *const MDAppleMiniaturizeOnDoubleClickKey = @"AppleMiniaturizeOnDoubleClick";
+        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+        [userDefaults addSuiteNamed:NSGlobalDomain];
+        BOOL shouldMiniaturize = [[userDefaults objectForKey:MDAppleMiniaturizeOnDoubleClickKey] boolValue];
+        if (shouldMiniaturize) {
+            [[self window] miniaturize:self];
+        }
+    }
+}
+
 @end
 
 @implementation INAppStoreWindow
