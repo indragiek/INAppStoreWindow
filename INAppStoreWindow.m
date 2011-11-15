@@ -312,6 +312,9 @@
     
     [nc addObserver:self selector:@selector(_displayWindowAndTitlebar) name:NSApplicationDidBecomeActiveNotification object:nil];
     [nc addObserver:self selector:@selector(_displayWindowAndTitlebar) name:NSApplicationDidResignActiveNotification object:nil];
+    if( IN_RUNNING_LION )
+        [nc addObserver:self selector:@selector(_setupTrafficLightsTrackingArea) name:NSWindowDidExitFullScreenNotification object:nil];
+        
     
     [self _createTitlebarView];
     [self _layoutTrafficLightsAndContent];
