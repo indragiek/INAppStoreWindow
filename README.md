@@ -4,12 +4,13 @@ INAppStoreWindow is an NSWindow subclass that mimics the appearance of the main 
 
 ![INAppStoreWindow](http://i41.tinypic.com/abidd1.png)
 
-Features of INAppStoreWindow:
+**Features of INAppStoreWindow:**
 
-* No use of private APIs, so it should (theoretically) be App Store friendly
-* The title bar view is entirely customizable -- you can add subviews (toolbars, buttons, etc.) as well as customize the title bar itself to give it a different appearance (e.g. Reeder)
+* No use of private APIs, so it should be App Store friendly
+* The title bar view is entirely customizable -- you can add subviews (toolbars, buttons, etc.) as well as customize the title bar itself to give it a different appearance
 * The height of the title bar is easily adjustable
-* Supports ARC (thanks to @InScopeApps)
+* Compiles and runs perfectly under ARC and non-ARC setups (thanks to @InScopeApps)
+* Support's Lion's full screen mode
 
 ## Usage
 
@@ -47,6 +48,7 @@ NSButton *button = [[NSButton alloc] initWithFrame:buttonFrame];
 ````
 
 **Interface Builder**
+
 ```
 // self.titleView is a an IBOutlet to an NSView that has been configured in IB with everything you want in the title bar
 self.titleView.frame = self.window.titleBarView.bounds;
