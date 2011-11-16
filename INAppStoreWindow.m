@@ -58,7 +58,25 @@
 - (void)_displayWindowAndTitlebar;
 @end
 
-@implementation INTitlebarView
+@implementation INTitlebarView {
+    CIImage *_noisePattern;
+}
+
+- (id)initWithFrame:(NSRect)frameRect
+{
+    if ((self = [super initWithFrame:frameRect])) {
+        CIFilter *randomGenerator = [CIFilter filterWithName:@"CIColorMonochrome"];
+        [randomGenerator setValue:[[CIFilter filterWithName:@"CIRandomGenerator"] valueForKey:@"outputImage"]
+                           forKey:@"inputImage"];
+        [randomGenerator setDefaults];
+#if __has_feature(objc_arc)
+        _noisePattern = [randomGenerator valueForKey:@"outputImage"];
+#else
+        _noisePattern = [[randomGenerator valueForKey:@"outputImage"] retain];
+#endif
+    }
+    return self;
+}
 
 - (void)drawRect:(NSRect)dirtyRect
 {
@@ -74,7 +92,6 @@
         startColor = drawsAsMainWindow ? COLOR_MAIN_START : COLOR_NOTMAIN_START;
         endColor = drawsAsMainWindow ? COLOR_MAIN_END : COLOR_NOTMAIN_END;
     }
-    
     [NSGraphicsContext saveGraphicsState];
     [[self clippingPathWithRect:drawingRect cornerRadius:CORNER_CLIP_RADIUS] addClip];
     NSGradient *gradient = [[NSGradient alloc] initWithStartingColor:startColor endingColor:endColor];
@@ -83,19 +100,7 @@
     [gradient release];
     #endif
     if (IN_RUNNING_LION && drawsAsMainWindow) {
-        static CIImage *noisePattern = nil;
-        if(noisePattern == nil){
-            CIFilter *randomGenerator = [CIFilter filterWithName:@"CIColorMonochrome"];
-            [randomGenerator setValue:[[CIFilter filterWithName:@"CIRandomGenerator"] valueForKey:@"outputImage"]
-                               forKey:@"inputImage"];
-            [randomGenerator setDefaults];
-            #if __has_feature(objc_arc)
-            noisePattern = [randomGenerator valueForKey:@"outputImage"];
-            #else
-            noisePattern = [[randomGenerator valueForKey:@"outputImage"] retain];
-            #endif
-        }
-        [noisePattern drawAtPoint:NSZeroPoint fromRect:self.bounds operation:NSCompositePlusLighter fraction:0.04];
+        [_noisePattern drawAtPoint:NSZeroPoint fromRect:self.bounds operation:NSCompositePlusLighter fraction:0.04];
     }
     [NSGraphicsContext restoreGraphicsState];
     
@@ -210,8 +215,9 @@
 - (void)makeKeyAndOrderFront:(id)sender
 {
 	[super makeKeyAndOrderFront:sender];
-	if ( ![self isExcludedFromWindowsMenu] )
+	if (![self isExcludedFromWindowsMenu]) {
 		[NSApp addWindowsItem:self title:self.windowMenuTitle filename:NO];	
+    }
 }
 
 - (void)becomeKeyWindow
@@ -229,17 +235,16 @@
 - (void)orderFront:(id)sender
 {
 	[super orderFront:sender];
-	if ( ![self isExcludedFromWindowsMenu] )
-		[NSApp addWindowsItem:self title:self.windowMenuTitle filename:NO];	
+	if (![self isExcludedFromWindowsMenu]) {
+		[NSApp addWindowsItem:self title:self.windowMenuTitle filename:NO];
+    }
 }
-
 
 - (void)orderOut:(id)sender
 {
 	[super orderOut:sender];
 	[NSApp removeWindowsItem:self];
 }
-
 
 #pragma mark -
 #pragma mark Accessors
@@ -277,8 +282,7 @@
     if (newTitleBarHeight < minTitleHeight) {
         newTitleBarHeight = minTitleHeight;
     }
-	
-	if ( _titleBarHeight != newTitleBarHeight ) {
+	if (_titleBarHeight != newTitleBarHeight) {
 		_titleBarHeight = newTitleBarHeight;
 		[self _recalculateFrameForTitleBarView];
 		[self _layoutTrafficLightsAndContent];
@@ -309,13 +313,13 @@
     [nc addObserver:self selector:@selector(_displayWindowAndTitlebar) name:NSWindowDidResignKeyNotification object:self];
     [nc addObserver:self selector:@selector(_displayWindowAndTitlebar) name:NSWindowDidBecomeKeyNotification object:self];
     [nc addObserver:self selector:@selector(_setupTrafficLightsTrackingArea) name:NSWindowDidBecomeKeyNotification object:self];
-    
     [nc addObserver:self selector:@selector(_displayWindowAndTitlebar) name:NSApplicationDidBecomeActiveNotification object:nil];
     [nc addObserver:self selector:@selector(_displayWindowAndTitlebar) name:NSApplicationDidResignActiveNotification object:nil];
-    if( IN_RUNNING_LION )
+    #if __MAC_OS_X_VERSION_MAX_ALLOWED >= 1070
+    if (IN_RUNNING_LION) {
         [nc addObserver:self selector:@selector(_setupTrafficLightsTrackingArea) name:NSWindowDidExitFullScreenNotification object:nil];
-        
-    
+    }
+    #endif
     [self _createTitlebarView];
     [self _layoutTrafficLightsAndContent];
     [self _setupTrafficLightsTrackingArea];
