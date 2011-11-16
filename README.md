@@ -49,6 +49,8 @@ NSButton *button = [[NSButton alloc] initWithFrame:buttonFrame];
 
 **Interface Builder**
 
+**NOTE:** Even though the content layout for the title bar can be done in Interface Builder, you still need to use the below code to display the view created in IB in the title bar.
+
 ```
 // self.titleView is a an IBOutlet to an NSView that has been configured in IB with everything you want in the title bar
 self.titleView.frame = self.window.titleBarView.bounds;
