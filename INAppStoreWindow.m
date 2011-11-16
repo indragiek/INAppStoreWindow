@@ -58,25 +58,7 @@
 - (void)_displayWindowAndTitlebar;
 @end
 
-@implementation INTitlebarView {
-    CIImage *_noisePattern;
-}
-
-- (id)initWithFrame:(NSRect)frameRect
-{
-    if ((self = [super initWithFrame:frameRect])) {
-        CIFilter *randomGenerator = [CIFilter filterWithName:@"CIColorMonochrome"];
-        [randomGenerator setValue:[[CIFilter filterWithName:@"CIRandomGenerator"] valueForKey:@"outputImage"]
-                           forKey:@"inputImage"];
-        [randomGenerator setDefaults];
-#if __has_feature(objc_arc)
-        _noisePattern = [randomGenerator valueForKey:@"outputImage"];
-#else
-        _noisePattern = [[randomGenerator valueForKey:@"outputImage"] retain];
-#endif
-    }
-    return self;
-}
+@implementation INTitlebarView
 
 - (void)drawRect:(NSRect)dirtyRect
 {
@@ -100,7 +82,19 @@
     [gradient release];
     #endif
     if (IN_RUNNING_LION && drawsAsMainWindow) {
-        [_noisePattern drawAtPoint:NSZeroPoint fromRect:self.bounds operation:NSCompositePlusLighter fraction:0.04];
+        static CIImage *noisePattern = nil;
+        if (!noisePattern) {
+            CIFilter *randomGenerator = [CIFilter filterWithName:@"CIColorMonochrome"];
+            [randomGenerator setValue:[[CIFilter filterWithName:@"CIRandomGenerator"] valueForKey:@"outputImage"]
+                               forKey:@"inputImage"];
+            [randomGenerator setDefaults];
+            #if __has_feature(objc_arc)
+            noisePattern = [randomGenerator valueForKey:@"outputImage"];
+            #else
+            noisePattern = [[randomGenerator valueForKey:@"outputImage"] retain];
+            #endif
+        }
+        [noisePattern drawAtPoint:NSZeroPoint fromRect:self.bounds operation:NSCompositePlusLighter fraction:0.04];
     }
     [NSGraphicsContext restoreGraphicsState];
     
