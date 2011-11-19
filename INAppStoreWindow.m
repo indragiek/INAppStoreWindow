@@ -244,7 +244,7 @@
 #pragma mark -
 #pragma mark Accessors
 
-- (void)setTitleBarView:(NSView *)newTitleBarView
+- (void)setTitleBarView:(INTitlebarView *)newTitleBarView
 {
     if ((_titleBarView != newTitleBarView) && newTitleBarView) {
         [_titleBarView removeFromSuperview];
@@ -266,7 +266,7 @@
     }
 }
 
-- (NSView*)titleBarView
+- (INTitlebarView*)titleBarView
 {
     return _titleBarView;
 }
