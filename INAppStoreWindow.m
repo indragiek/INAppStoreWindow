@@ -47,6 +47,21 @@
 /** Corner clipping radius **/
 #define CORNER_CLIP_RADIUS 4.0
 
+static CGImageRef noiseImageRef(int width, int height, float factor)
+{
+    int size = width*height;
+    char *rgba = (char *)malloc(size); srand(124);
+    for(int i=0; i < size; ++i){rgba[i] = rand()%256*factor;}
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceGray();
+    CGContextRef bitmapContext = 
+    CGBitmapContextCreate(rgba, width, height, 8, width, colorSpace, kCGImageAlphaNone);
+    CFRelease(colorSpace);
+    free(rgba);
+    CGImageRef image = CGBitmapContextCreateImage(bitmapContext);
+    CFRelease(bitmapContext);
+    return image;
+}
+
 @interface INAppStoreWindow ()
 @property (INAppStoreWindowCopy) NSString *windowMenuTitle;
 - (void)_doInitialWindowSetup;
@@ -74,7 +89,6 @@
         startColor = drawsAsMainWindow ? COLOR_MAIN_START : COLOR_NOTMAIN_START;
         endColor = drawsAsMainWindow ? COLOR_MAIN_END : COLOR_NOTMAIN_END;
     }
-    [NSGraphicsContext saveGraphicsState];
     [[self clippingPathWithRect:drawingRect cornerRadius:CORNER_CLIP_RADIUS] addClip];
     NSGradient *gradient = [[NSGradient alloc] initWithStartingColor:startColor endingColor:endColor];
     [gradient drawInRect:drawingRect angle:90];
@@ -82,21 +96,16 @@
     [gradient release];
     #endif
     if (IN_RUNNING_LION && drawsAsMainWindow) {
-        static CIImage *noisePattern = nil;
-        if (!noisePattern) {
-            CIFilter *randomGenerator = [CIFilter filterWithName:@"CIColorMonochrome"];
-            [randomGenerator setValue:[[CIFilter filterWithName:@"CIRandomGenerator"] valueForKey:@"outputImage"]
-                               forKey:@"inputImage"];
-            [randomGenerator setDefaults];
-            #if __has_feature(objc_arc)
-            noisePattern = [randomGenerator valueForKey:@"outputImage"];
-            #else
-            noisePattern = [[randomGenerator valueForKey:@"outputImage"] retain];
-            #endif
-        }
-        [noisePattern drawAtPoint:NSZeroPoint fromRect:self.bounds operation:NSCompositePlusLighter fraction:0.04];
+        static CGImageRef noisePattern = nil;
+        if (noisePattern == nil) noisePattern = noiseImageRef(128, 128, 0.015);
+        [NSGraphicsContext saveGraphicsState];
+        [[NSGraphicsContext currentContext] setCompositingOperation:NSCompositePlusLighter];
+        CGRect noisePatternRect = CGRectZero;
+        noisePatternRect.size = CGSizeMake(CGImageGetWidth(noisePattern), CGImageGetHeight(noisePattern));        
+        CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
+        CGContextDrawTiledImage(context, noisePatternRect, noisePattern);
+        [NSGraphicsContext restoreGraphicsState];
     }
-    [NSGraphicsContext restoreGraphicsState];
     
     NSColor *bottomColor = nil;
     if (IN_RUNNING_LION) {
