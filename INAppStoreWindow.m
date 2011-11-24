@@ -47,7 +47,7 @@
 /** Corner clipping radius **/
 #define CORNER_CLIP_RADIUS 4.0
 
-static CGImageRef noiseImageRef(int width, int height, float factor)
+static CGImageRef createNoiseImageRef(int width, int height, float factor)
 {
     int size = width*height;
     char *rgba = (char *)malloc(size); srand(124);
@@ -97,7 +97,7 @@ static CGImageRef noiseImageRef(int width, int height, float factor)
     #endif
     if (IN_RUNNING_LION && drawsAsMainWindow) {
         static CGImageRef noisePattern = nil;
-        if (noisePattern == nil) noisePattern = noiseImageRef(128, 128, 0.015);
+        if (noisePattern == nil) noisePattern = createNoiseImageRef(128, 128, 0.015);
         [NSGraphicsContext saveGraphicsState];
         [[NSGraphicsContext currentContext] setCompositingOperation:NSCompositePlusLighter];
         CGRect noisePatternRect = CGRectZero;
