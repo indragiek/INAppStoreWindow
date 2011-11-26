@@ -252,7 +252,7 @@ static CGImageRef createNoiseImageRef(int width, int height, float factor)
 #pragma mark -
 #pragma mark Accessors
 
-- (void)setTitleBarView:(NSView *)newTitleBarView
+- (void)setTitleBarView:(INTitlebarView *)newTitleBarView
 {
     if ((_titleBarView != newTitleBarView) && newTitleBarView) {
         [_titleBarView removeFromSuperview];
@@ -274,7 +274,7 @@ static CGImageRef createNoiseImageRef(int width, int height, float factor)
     }
 }
 
-- (NSView*)titleBarView
+- (INTitlebarView*)titleBarView
 {
     return _titleBarView;
 }

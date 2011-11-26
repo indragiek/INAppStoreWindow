@@ -33,15 +33,17 @@
 @end
 
 /** @class INAppStoreWindow 
- Creates a window similar to the Mac App Store window, with centered traffic lights and an enlarged title bar. This does not handle creating the toolbar.
- **/
+ Creates a window similar to the Mac App Store window, with centered traffic lights 
+ and an enlarged title bar. This does not handle creating the toolbar. **/
 @interface INAppStoreWindow : NSWindow {
     CGFloat _titleBarHeight;
-    NSView *_titleBarView;
+    INTitlebarView *_titleBarView;
 	NSString *_windowMenuTitle;
 }
 /** The height of the title bar. By default, this is set to the standard title bar height. **/
 @property (nonatomic) CGFloat titleBarHeight;
-/** The title bar view itself. Add subviews to this view that you want to show in the title bar (e.g. buttons, a toolbar, etc.). This view can also be set if you want to use a different styled title bar aside from the default one (textured, etc.). **/
-@property (INAppStoreWindowRetain) NSView *titleBarView;
+/** The title bar view itself. Add subviews to this view that you want to show in the title bar 
+ (e.g. buttons, a toolbar, etc.). This view can also be set if you want to use a different 
+ styled title bar aside from the default one (textured, etc.). **/
+@property (INAppStoreWindowRetain) IBOutlet INTitlebarView *titleBarView;
 @end
