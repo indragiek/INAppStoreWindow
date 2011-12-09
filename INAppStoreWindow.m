@@ -160,7 +160,7 @@ static CGImageRef createNoiseImageRef(int width, int height, float factor)
 @implementation INAppStoreWindow
 
 @synthesize windowMenuTitle = _windowMenuTitle;
-@synthesize centerFullScreenButon=_centerFullScreenButon;
+@synthesize centerFullScreenButton=_centerFullScreenButton;
 #pragma mark -
 #pragma mark Initialization
 
@@ -349,10 +349,9 @@ static CGImageRef createNoiseImageRef(int width, int height, float factor)
     
     #if __MAC_OS_X_VERSION_MAX_ALLOWED >= 1070
     // Set the frame of the FullScreen button in Lion if available
-    if ( IN_RUNNING_LION && _centerFullScreenButon ) {
+    if ( IN_RUNNING_LION && _centerFullScreenButton ) {
         NSButton *fullScreen = [self standardWindowButton:NSWindowFullScreenButton];
-        if( fullScreen )
-        {
+        if( fullScreen ) {
             NSRect fullScreenFrame = [fullScreen frame];
             fullScreenFrame.origin.y=buttonOrigin;
             [fullScreen setFrame:fullScreenFrame];

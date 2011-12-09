@@ -19,6 +19,7 @@
     self.windowControllers = [NSMutableArray array];
     // The class of the window has been set in INAppStoreWindow in Interface Builder
     INAppStoreWindow *aWindow = (INAppStoreWindow*)self.window;
+    aWindow.centerFullScreenButton = YES;
     aWindow.titleBarHeight = 40.0;
 }
 
