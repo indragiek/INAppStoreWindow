@@ -18,6 +18,7 @@
 #import "INAppStoreWindow.h"
 
 #define IN_RUNNING_LION (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_6)
+#define IN_COMPILING_LION __MAC_OS_X_VERSION_MAX_ALLOWED >= 1070
 
 /** -----------------------------------------
  - There are 2 sets of colors, one for an active (key) state and one for an inactivate state
@@ -47,11 +48,15 @@
 /** Corner clipping radius **/
 #define CORNER_CLIP_RADIUS 4.0
 
-static CGImageRef createNoiseImageRef(int width, int height, float factor)
+NS_INLINE CGFloat INMidHeight(NSRect aRect) {
+    return (aRect.size.height * (CGFloat)0.5);
+}
+
+static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFloat factor)
 {
-    int size = width*height;
+    NSUInteger size = width*height;
     char *rgba = (char *)malloc(size); srand(124);
-    for(int i=0; i < size; ++i){rgba[i] = rand()%256*factor;}
+    for(NSUInteger i=0; i < size; ++i){rgba[i] = rand()%256*factor;}
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceGray();
     CGContextRef bitmapContext = 
     CGBitmapContextCreate(rgba, width, height, 8, width, colorSpace, kCGImageAlphaNone);
@@ -69,7 +74,7 @@ static CGImageRef createNoiseImageRef(int width, int height, float factor)
 - (void)_setupTrafficLightsTrackingArea;
 - (void)_recalculateFrameForTitleBarView;
 - (void)_layoutTrafficLightsAndContent;
-- (float)_minimumTitlebarHeight;
+- (CGFloat)_minimumTitlebarHeight;
 - (void)_displayWindowAndTitlebar;
 @end
 
@@ -281,10 +286,7 @@ static CGImageRef createNoiseImageRef(int width, int height, float factor)
 
 - (void)setTitleBarHeight:(CGFloat)newTitleBarHeight
 {
-    float minTitleHeight = [self _minimumTitlebarHeight];
-    if (newTitleBarHeight < minTitleHeight) {
-        newTitleBarHeight = minTitleHeight;
-    }
+    newTitleBarHeight = MAX(newTitleBarHeight, [self _minimumTitlebarHeight]);
 	if (_titleBarHeight != newTitleBarHeight) {
 		_titleBarHeight = newTitleBarHeight;
 		[self _recalculateFrameForTitleBarView];
@@ -318,7 +320,7 @@ static CGImageRef createNoiseImageRef(int width, int height, float factor)
     [nc addObserver:self selector:@selector(_setupTrafficLightsTrackingArea) name:NSWindowDidBecomeKeyNotification object:self];
     [nc addObserver:self selector:@selector(_displayWindowAndTitlebar) name:NSApplicationDidBecomeActiveNotification object:nil];
     [nc addObserver:self selector:@selector(_displayWindowAndTitlebar) name:NSApplicationDidResignActiveNotification object:nil];
-    #if __MAC_OS_X_VERSION_MAX_ALLOWED >= 1070
+    #if IN_COMPILING_LION
     if (IN_RUNNING_LION) {
         [nc addObserver:self selector:@selector(_setupTrafficLightsTrackingArea) name:NSWindowDidExitFullScreenNotification object:nil];
     }
@@ -339,7 +341,8 @@ static CGImageRef createNoiseImageRef(int width, int height, float factor)
     NSRect closeFrame = [close frame];
     NSRect minimizeFrame = [minimize frame];
     NSRect zoomFrame = [zoom frame];
-    float buttonOrigin = floor(NSMidY([_titleBarView frame]) - (closeFrame.size.height / 2.0));
+    NSRect titleBarFrame = [_titleBarView frame];
+    CGFloat buttonOrigin = round(NSMidY(titleBarFrame) - INMidHeight(closeFrame));
     closeFrame.origin.y = buttonOrigin;
     minimizeFrame.origin.y = buttonOrigin;
     zoomFrame.origin.y = buttonOrigin;
@@ -347,22 +350,24 @@ static CGImageRef createNoiseImageRef(int width, int height, float factor)
     [minimize setFrame:minimizeFrame];
     [zoom setFrame:zoomFrame];
     
-    #if __MAC_OS_X_VERSION_MAX_ALLOWED >= 1070
+    #if IN_COMPILING_LION
     // Set the frame of the FullScreen button in Lion if available
     if ( IN_RUNNING_LION && _centerFullScreenButton ) {
         NSButton *fullScreen = [self standardWindowButton:NSWindowFullScreenButton];
         if( fullScreen ) {
             NSRect fullScreenFrame = [fullScreen frame];
-            fullScreenFrame.origin.y=buttonOrigin;
+            buttonOrigin = round(NSMidY(titleBarFrame) - INMidHeight(fullScreenFrame));
+            fullScreenFrame.origin.y = buttonOrigin;
             [fullScreen setFrame:fullScreenFrame];
         }
     }
     #endif
+    
     // Reposition the content view
     NSRect windowFrame = [self frame];
     NSRect newFrame = [contentView frame];
-    float titleHeight = windowFrame.size.height - newFrame.size.height;
-    float extraHeight = _titleBarHeight - titleHeight;
+    CGFloat titleHeight = NSHeight(windowFrame) - NSHeight(newFrame);
+    CGFloat extraHeight = _titleBarHeight - titleHeight;
     newFrame.size.height -= extraHeight;
     [contentView setFrame:newFrame];
 }
@@ -389,17 +394,17 @@ static CGImageRef createNoiseImageRef(int width, int height, float factor)
     NSView *contentView = [self contentView];
     NSView *themeFrame = [contentView superview];
     NSRect themeFrameRect = [themeFrame frame];
-    NSRect titleFrame = NSMakeRect(0.0, NSMaxY(themeFrameRect) - _titleBarHeight, themeFrameRect.size.width, _titleBarHeight);
+    NSRect titleFrame = NSMakeRect(0.0, NSMaxY(themeFrameRect) - _titleBarHeight, NSWidth(themeFrameRect), _titleBarHeight);
     [_titleBarView setFrame:titleFrame];
 }
 
-- (float)_minimumTitlebarHeight
+- (CGFloat)_minimumTitlebarHeight
 {
-    static float minTitleHeight = 0.0;
+    static CGFloat minTitleHeight = 0.0;
     if (!minTitleHeight) {
         NSRect frameRect = [self frame];
         NSRect contentRect = [self contentRectForFrameRect:frameRect];
-        minTitleHeight = (frameRect.size.height - contentRect.size.height);
+        minTitleHeight = NSHeight(frameRect) - NSHeight(contentRect);
     }
     return minTitleHeight;
 }
