@@ -8,19 +8,24 @@
 
 #import "SampleAppAppDelegate.h"
 #import "SampleWindowController.h"
-#import "INAppStoreWindow.h"
 
 @implementation SampleAppAppDelegate
 
-@synthesize window, windowControllers;
+@synthesize window = _window;
+@synthesize windowControllers = _windowControllers;
+@synthesize centerFullScreen = _centerFullScreen;
+@synthesize centerTrafficLight = _centerTrafficLight;
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     self.windowControllers = [NSMutableArray array];
     // The class of the window has been set in INAppStoreWindow in Interface Builder
-    INAppStoreWindow *aWindow = (INAppStoreWindow*)self.window;
-    aWindow.centerFullScreenButton = YES;
-    aWindow.titleBarHeight = 40.0;
+    self.window.centerFullScreenButton = YES;
+    self.window.titleBarHeight = 40.0;
+    
+    // set checkboxes
+    self.centerFullScreen.state = self.window.centerFullScreenButton;
+    self.centerTrafficLight.state = self.window.centerTrafficLightButtons;
 }
 
 - (IBAction)createWindowController:(id)sender
@@ -31,9 +36,18 @@
     [controller release];
 }
 
+- (IBAction)checkboxAction:(id)sender
+{
+    if ( [sender isEqual:self.centerFullScreen] ) {
+        self.window.centerFullScreenButton = [sender state];
+    } else {
+        self.window.centerTrafficLightButtons = [sender state];
+    }
+}
+
 - (void)dealloc
 {
-    [windowControllers release];
+    [_windowControllers release];
     [super dealloc];
 }
 @end

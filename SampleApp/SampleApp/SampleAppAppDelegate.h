@@ -7,13 +7,20 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "INAppStoreWindow.h"
 
 @interface SampleAppAppDelegate : NSObject <NSApplicationDelegate> {
-    NSMutableArray *windowControllers;
-@private
-    NSWindow *window;
+    INAppStoreWindow *_window;
+    NSMutableArray *_windowControllers;
+    NSButton *_centerFullScreen;
+    NSButton *_centerTrafficLight;
 }
 
-@property (assign) IBOutlet NSWindow *window;
+@property (assign) IBOutlet INAppStoreWindow *window;
 @property (nonatomic, retain) NSMutableArray *windowControllers;
+@property (assign) IBOutlet NSButton *centerFullScreen;
+@property (assign) IBOutlet NSButton *centerTrafficLight;
+
+- (IBAction)checkboxAction:(id)sender;
+
 @end

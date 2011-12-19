@@ -27,26 +27,27 @@
  to change at any time
  ----------------------------------------- **/
 
-#define COLOR_MAIN_START [NSColor colorWithDeviceWhite:0.659 alpha:1.0]
-#define COLOR_MAIN_END [NSColor colorWithDeviceWhite:0.812 alpha:1.0]
-#define COLOR_MAIN_BOTTOM [NSColor colorWithDeviceWhite:0.318 alpha:1.0]
+#define IN_COLOR_MAIN_START [NSColor colorWithDeviceWhite:0.659 alpha:1.0]
+#define IN_COLOR_MAIN_END [NSColor colorWithDeviceWhite:0.812 alpha:1.0]
+#define IN_COLOR_MAIN_BOTTOM [NSColor colorWithDeviceWhite:0.318 alpha:1.0]
 
-#define COLOR_NOTMAIN_START [NSColor colorWithDeviceWhite:0.851 alpha:1.0]
-#define COLOR_NOTMAIN_END [NSColor colorWithDeviceWhite:0.929 alpha:1.0]
-#define COLOR_NOTMAIN_BOTTOM [NSColor colorWithDeviceWhite:0.600 alpha:1.0]
+#define IN_COLOR_NOTMAIN_START [NSColor colorWithDeviceWhite:0.851 alpha:1.0]
+#define IN_COLOR_NOTMAIN_END [NSColor colorWithDeviceWhite:0.929 alpha:1.0]
+#define IN_COLOR_NOTMAIN_BOTTOM [NSColor colorWithDeviceWhite:0.600 alpha:1.0]
 
 /** Lion */
 
-#define COLOR_MAIN_START_L [NSColor colorWithDeviceWhite:0.66 alpha:1.0]
-#define COLOR_MAIN_END_L [NSColor colorWithDeviceWhite:0.9 alpha:1.0]
-#define COLOR_MAIN_BOTTOM_L [NSColor colorWithDeviceWhite:0.408 alpha:1.0]
+#define IN_COLOR_MAIN_START_L [NSColor colorWithDeviceWhite:0.66 alpha:1.0]
+#define IN_COLOR_MAIN_END_L [NSColor colorWithDeviceWhite:0.9 alpha:1.0]
+#define IN_COLOR_MAIN_BOTTOM_L [NSColor colorWithDeviceWhite:0.408 alpha:1.0]
 
-#define COLOR_NOTMAIN_START_L [NSColor colorWithDeviceWhite:0.878 alpha:1.0]
-#define COLOR_NOTMAIN_END_L [NSColor colorWithDeviceWhite:0.976 alpha:1.0]
-#define COLOR_NOTMAIN_BOTTOM_L [NSColor colorWithDeviceWhite:0.655 alpha:1.0]
+#define IN_COLOR_NOTMAIN_START_L [NSColor colorWithDeviceWhite:0.878 alpha:1.0]
+#define IN_COLOR_NOTMAIN_END_L [NSColor colorWithDeviceWhite:0.976 alpha:1.0]
+#define IN_COLOR_NOTMAIN_BOTTOM_L [NSColor colorWithDeviceWhite:0.655 alpha:1.0]
 
 /** Corner clipping radius **/
-#define CORNER_CLIP_RADIUS 4.0
+const CGFloat INCornerClipRadius = 4.0;
+const CGFloat INButtonTopOffset = 3.0;
 
 NS_INLINE CGFloat INMidHeight(NSRect aRect) {
     return (aRect.size.height * (CGFloat)0.5);
@@ -88,13 +89,13 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
     NSColor *startColor = nil;
     NSColor *endColor = nil;
     if (IN_RUNNING_LION) {
-        startColor = drawsAsMainWindow ? COLOR_MAIN_START_L : COLOR_NOTMAIN_START_L;
-        endColor = drawsAsMainWindow ? COLOR_MAIN_END_L : COLOR_NOTMAIN_END_L;
+        startColor = drawsAsMainWindow ? IN_COLOR_MAIN_START_L : IN_COLOR_NOTMAIN_START_L;
+        endColor = drawsAsMainWindow ? IN_COLOR_MAIN_END_L : IN_COLOR_NOTMAIN_END_L;
     } else {
-        startColor = drawsAsMainWindow ? COLOR_MAIN_START : COLOR_NOTMAIN_START;
-        endColor = drawsAsMainWindow ? COLOR_MAIN_END : COLOR_NOTMAIN_END;
+        startColor = drawsAsMainWindow ? IN_COLOR_MAIN_START : IN_COLOR_NOTMAIN_START;
+        endColor = drawsAsMainWindow ? IN_COLOR_MAIN_END : IN_COLOR_NOTMAIN_END;
     }
-    [[self clippingPathWithRect:drawingRect cornerRadius:CORNER_CLIP_RADIUS] addClip];
+    [[self clippingPathWithRect:drawingRect cornerRadius:INCornerClipRadius] addClip];
     NSGradient *gradient = [[NSGradient alloc] initWithStartingColor:startColor endingColor:endColor];
     [gradient drawInRect:drawingRect angle:90];
     #if !__has_feature(objc_arc)
@@ -114,9 +115,9 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
     
     NSColor *bottomColor = nil;
     if (IN_RUNNING_LION) {
-        bottomColor = drawsAsMainWindow ? COLOR_MAIN_BOTTOM_L : COLOR_NOTMAIN_BOTTOM_L;
+        bottomColor = drawsAsMainWindow ? IN_COLOR_MAIN_BOTTOM_L : IN_COLOR_NOTMAIN_BOTTOM_L;
     } else {
-        bottomColor = drawsAsMainWindow ? COLOR_MAIN_BOTTOM : COLOR_NOTMAIN_BOTTOM;
+        bottomColor = drawsAsMainWindow ? IN_COLOR_MAIN_BOTTOM : IN_COLOR_NOTMAIN_BOTTOM;
     }
     NSRect bottomRect = NSMakeRect(0.0, NSMinY(drawingRect), NSWidth(drawingRect), 1.0);
     [bottomColor set];
@@ -165,7 +166,8 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
 @implementation INAppStoreWindow
 
 @synthesize windowMenuTitle = _windowMenuTitle;
-@synthesize centerFullScreenButton=_centerFullScreenButton;
+@synthesize centerFullScreenButton = _centerFullScreenButton;
+@synthesize centerTrafficLightButtons = _centerTrafficLightButtons;
 #pragma mark -
 #pragma mark Initialization
 
@@ -279,7 +281,7 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
     }
 }
 
-- (NSView*)titleBarView
+- (NSView *)titleBarView
 {
     return _titleBarView;
 }
@@ -300,12 +302,27 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
     return _titleBarHeight;
 }
 
+- (void)setCenterFullScreenButton:(BOOL)centerFullScreenButton{
+    if( _centerFullScreenButton != centerFullScreenButton ) {
+        _centerFullScreenButton = centerFullScreenButton;
+        [self _layoutTrafficLightsAndContent];
+    }
+}
+
+- (void)setCenterTrafficLightButtons:(BOOL)centerTrafficLightButtons{
+    if ( _centerTrafficLightButtons != centerTrafficLightButtons ) {
+        _centerTrafficLightButtons = centerTrafficLightButtons;
+        [self _layoutTrafficLightsAndContent];
+    }
+}
+
 #pragma mark -
 #pragma mark Private
 
 - (void)_doInitialWindowSetup
 {
     // Calculate titlebar height
+    _centerTrafficLightButtons = YES;
     _titleBarHeight = [self _minimumTitlebarHeight];
     [self setMovableByWindowBackground:YES];
     /** -----------------------------------------
@@ -342,7 +359,12 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
     NSRect minimizeFrame = [minimize frame];
     NSRect zoomFrame = [zoom frame];
     NSRect titleBarFrame = [_titleBarView frame];
-    CGFloat buttonOrigin = round(NSMidY(titleBarFrame) - INMidHeight(closeFrame));
+    CGFloat buttonOrigin = 0.0;
+    if ( self.centerTrafficLightButtons ) {
+        buttonOrigin = round(NSMidY(titleBarFrame) - INMidHeight(closeFrame));
+    } else {
+        buttonOrigin = NSMaxY(titleBarFrame) - NSHeight(closeFrame) - INButtonTopOffset;
+    }
     closeFrame.origin.y = buttonOrigin;
     minimizeFrame.origin.y = buttonOrigin;
     zoomFrame.origin.y = buttonOrigin;
@@ -352,12 +374,15 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
     
     #if IN_COMPILING_LION
     // Set the frame of the FullScreen button in Lion if available
-    if ( IN_RUNNING_LION && _centerFullScreenButton ) {
-        NSButton *fullScreen = [self standardWindowButton:NSWindowFullScreenButton];
+    if ( IN_RUNNING_LION ) {
+        NSButton *fullScreen = [self standardWindowButton:NSWindowFullScreenButton];        
         if( fullScreen ) {
             NSRect fullScreenFrame = [fullScreen frame];
-            buttonOrigin = round(NSMidY(titleBarFrame) - INMidHeight(fullScreenFrame));
-            fullScreenFrame.origin.y = buttonOrigin;
+            if( self.centerFullScreenButton ) {
+                fullScreenFrame.origin.y = round(NSMidY(titleBarFrame) - INMidHeight(fullScreenFrame));
+            } else {
+                fullScreenFrame.origin.y = NSMaxY(titleBarFrame) - NSHeight(fullScreenFrame) - INButtonTopOffset;
+            }
             [fullScreen setFrame:fullScreenFrame];
         }
     }
