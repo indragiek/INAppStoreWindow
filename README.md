@@ -1,22 +1,22 @@
 ## INAppStoreWindow: Mac App Store style NSWindow subclass
 
-INAppStoreWindow is an NSWindow subclass that mimics the appearance of the main window in the Mac App Store application. These modifications consist of enlarging the title bar, and centring the traffic lights (**note that this subclass does not handle the creation of a toolbar**). The end result looks like this:
+INAppStoreWindow is an NSWindow subclass that mimics the appearance of the main window in the Mac App Store application. These modifications consist of enlarging the title bar, and centering the traffic lights (**note that this subclass does not handle the creation of a toolbar**). The end result looks like this:
 
 ![INAppStoreWindow](http://i41.tinypic.com/abidd1.png)
 
 **Features of INAppStoreWindow:**
 
-* No use of private APIs, so it should be App Store friendly
+* No use of private APIs, so it's App Store friendly!
 * The title bar view is entirely customizable -- you can add subviews (toolbars, buttons, etc.) as well as customize the title bar itself to give it a different appearance
 * The height of the title bar is easily adjustable
-* Compiles and runs perfectly under ARC and non-ARC setups (thanks to @InScopeApps)
+* Compiles and runs perfectly under ARC and non-ARC setups (thanks to [@InScopeApps](https://github.com/inscopeapps))
 * Support's Lion's full screen mode
 
 ## Usage
 
 ### Basic Configuration
 
-Using `INAppStoreWindow` is as easy as changing the class of the `NSWindow` in Interface Builder, or simply by creating an instance of `INAppStoreWindow` in code (if you're doing it programatically). I've included a sample project demonstrating how to use `INAppStoreWindow`.
+Using `INAppStoreWindow` is as easy as changing the class of the `NSWindow` in Interface Builder, or simply by creating an instance of `INAppStoreWindow` in code (if you're doing it programmatically). I've included a sample project demonstrating how to use `INAppStoreWindow`.
 
 **NOTE: The title bar height is set to the standard window title height by default. You must set the 'titleBarHeight' property in order to increase the height of the title bar.**
 
@@ -33,9 +33,9 @@ Because of the enlarged title bar, sheet windows may not appear properly (it'll 
 
 ### Adding buttons and other controls to the title bar
 
-Adding controls and other views to the title bar is simple. This can be done either programatically or through Interface Builder. Here are examples of both methods:
+Adding controls and other views to the title bar is simple. This can be done either programmatically or through Interface Builder. Here are examples of both methods:
 
-**Programatically**
+**Programmatically**
 
 ```
 // This code places a 100x100 button in the center of the title bar view
@@ -45,7 +45,13 @@ NSRect buttonFrame = NSMakeRect(NSMidX(titleBarView.bounds) - (buttonSize.width 
 NSButton *button = [[NSButton alloc] initWithFrame:buttonFrame];
 [button setTitle:@"A Button"];
 [titleBarView addSubview:button];
-````
+```
+
+### Centering the traffic light and full screen buttons
+
+The vertical centering of the traffic light and full screen buttons can be controlled through two properties: `centerTrafficLightButtons` and `centerFullScreenButton`.
+
+The traffic light buttons are vertically centered by default.
 
 **Interface Builder**
 
