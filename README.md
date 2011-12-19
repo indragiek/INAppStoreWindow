@@ -47,12 +47,6 @@ NSButton *button = [[NSButton alloc] initWithFrame:buttonFrame];
 [titleBarView addSubview:button];
 ```
 
-### Centering the traffic light and full screen buttons
-
-The vertical centering of the traffic light and full screen buttons can be controlled through two properties: `centerTrafficLightButtons` and `centerFullScreenButton`.
-
-The traffic light buttons are vertically centered by default.
-
 **Interface Builder**
 
 **NOTE:** Even though the content layout for the title bar can be done in Interface Builder, you still need to use the below code to display the view created in IB in the title bar.
@@ -63,6 +57,12 @@ self.titleView.frame = self.window.titleBarView.bounds;
 self.titleView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
 [self.window.titleBarView addSubview:self.titleView];
 ```
+
+### Centering the traffic light and full screen buttons
+
+The vertical centering of the traffic light and full screen buttons can be controlled through two properties: `centerTrafficLightButtons` and `centerFullScreenButton`.
+
+The traffic light buttons are vertically centered by default.
 
 ## Who am I?
 
