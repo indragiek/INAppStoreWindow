@@ -9,7 +9,7 @@ INAppStoreWindow is an NSWindow subclass that mimics the appearance of the main 
 * No use of private APIs, so it's App Store friendly!
 * The title bar view is entirely customizable -- you can add subviews (toolbars, buttons, etc.) as well as customize the title bar itself to give it a different appearance
 * The height of the title bar is easily adjustable
-* Compiles and runs perfectly under ARC and non-ARC setups (thanks to [@InScopeApps](https://github.com/inscopeapps))
+* Compiles and runs perfectly under ARC and non-ARC setups (thanks to [@kgn](https://github.com/kgn))
 * Support's Lion's full screen mode
 
 ## Usage
@@ -71,7 +71,7 @@ I'm Indragie Karunaratne, a 16 year old Mac OS X and iOS Developer from Edmonton
 ## Special Thanks To
 
 - Alex Rozanski ([@Perspx](https://github.com/perspx))
-- David Keegan ([@InScopeApps](https://github.com/inscopeapps))
+- David Keegan ([@kgn](https://github.com/kgn))
 - Victor Pimentel ([@victorpimentel](https://github.com/victorpimentel))
 - Wade Cosgrove ([@wadeco](https://github.com/wadeco))
 - Levi Nunnink ([@levinunnink](https://github.com/levinunnink))
