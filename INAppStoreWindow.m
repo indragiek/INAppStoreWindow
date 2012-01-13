@@ -301,6 +301,21 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
     return _titleBarHeight;
 }
 
+- (void)setTitleBarPadding:(CGFloat)newTitleBarPadding
+{
+	if (_titleBarPadding != newTitleBarPadding) {
+		_titleBarPadding = newTitleBarPadding;
+		[self _recalculateFrameForTitleBarView];
+		[self _layoutTrafficLightsAndContent];
+		[self _displayWindowAndTitlebar];
+	}
+}
+
+- (CGFloat)titleBarPadding
+{
+    return _titleBarPadding;
+}
+
 - (void)setCenterFullScreenButton:(BOOL)centerFullScreenButton{
     if( _centerFullScreenButton != centerFullScreenButton ) {
         _centerFullScreenButton = centerFullScreenButton;
@@ -323,6 +338,7 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
     // Calculate titlebar height
     _centerTrafficLightButtons = YES;
     _titleBarHeight = [self _minimumTitlebarHeight];
+	_titleBarPadding = 7;
     [self setMovableByWindowBackground:YES];
     /** -----------------------------------------
      - The window automatically does layout every time its moved or resized, which means that the traffic lights and content view get reset at the original positions, so we need to put them back in place
@@ -366,6 +382,9 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
     closeFrame.origin.y = buttonOrigin;
     minimizeFrame.origin.y = buttonOrigin;
     zoomFrame.origin.y = buttonOrigin;
+	closeFrame.origin.x = _titleBarPadding;
+    minimizeFrame.origin.x = _titleBarPadding + 20;
+    zoomFrame.origin.x = _titleBarPadding + 40;
     [close setFrame:closeFrame];
     [minimize setFrame:minimizeFrame];
     [zoom setFrame:zoomFrame];
@@ -376,6 +395,7 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
         NSButton *fullScreen = [self standardWindowButton:NSWindowFullScreenButton];        
         if( fullScreen ) {
             NSRect fullScreenFrame = [fullScreen frame];
+			fullScreenFrame.origin.x = titleBarFrame.size.width - fullScreenFrame.size.width - _titleBarPadding;
             if( self.centerFullScreenButton ) {
                 fullScreenFrame.origin.y = round(NSMidY(titleBarFrame) - INMidHeight(fullScreenFrame));
             } else {
