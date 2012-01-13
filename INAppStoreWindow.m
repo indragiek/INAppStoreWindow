@@ -270,8 +270,7 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
         _titleBarView = [newTitleBarView retain];
         #endif
         // Configure the view properties and add it as a subview of the theme frame
-        NSView *contentView = [self contentView];
-        NSView *themeFrame = [contentView superview];
+        NSView *themeFrame = [[self contentView] superview];
         NSView *firstSubview = [[themeFrame subviews] objectAtIndex:0];
         [_titleBarView setAutoresizingMask:(NSViewMinYMargin | NSViewWidthSizable)];
         [self _recalculateFrameForTitleBarView];
@@ -349,7 +348,6 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
 
 - (void)_layoutTrafficLightsAndContent
 {
-    NSView *contentView = [self contentView];
     NSButton *close = [self standardWindowButton:NSWindowCloseButton];
     NSButton *minimize = [self standardWindowButton:NSWindowMiniaturizeButton];
     NSButton *zoom = [self standardWindowButton:NSWindowZoomButton];
@@ -389,12 +387,14 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
     #endif
     
     // Reposition the content view
+    NSView *contentView = [self contentView];    
     NSRect windowFrame = [self frame];
     NSRect newFrame = [contentView frame];
     CGFloat titleHeight = NSHeight(windowFrame) - NSHeight(newFrame);
     CGFloat extraHeight = _titleBarHeight - titleHeight;
     newFrame.size.height -= extraHeight;
     [contentView setFrame:newFrame];
+    [contentView setNeedsDisplay:YES];
 }
 
 - (void)_createTitlebarView
@@ -416,8 +416,7 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
 
 - (void)_recalculateFrameForTitleBarView
 {
-    NSView *contentView = [self contentView];
-    NSView *themeFrame = [contentView superview];
+    NSView *themeFrame = [[self contentView] superview];
     NSRect themeFrameRect = [themeFrame frame];
     NSRect titleFrame = NSMakeRect(0.0, NSMaxY(themeFrameRect) - _titleBarHeight, NSWidth(themeFrameRect), _titleBarHeight);
     [_titleBarView setFrame:titleFrame];
