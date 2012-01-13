@@ -53,6 +53,9 @@ NS_INLINE CGFloat INMidHeight(NSRect aRect) {
     return (aRect.size.height * (CGFloat)0.5);
 }
 
+/** Added left margin to traffic lights **/
+#define TRAFFICLIGHTS_LEFT_MARGIN 1.2
+
 static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFloat factor)
 {
     NSUInteger size = width*height;
@@ -366,6 +369,9 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
     closeFrame.origin.y = buttonOrigin;
     minimizeFrame.origin.y = buttonOrigin;
     zoomFrame.origin.y = buttonOrigin;
+	closeFrame.origin.x += TRAFFICLIGHTS_LEFT_MARGIN;
+    minimizeFrame.origin.x += TRAFFICLIGHTS_LEFT_MARGIN;
+    zoomFrame.origin.x += TRAFFICLIGHTS_LEFT_MARGIN;
     [close setFrame:closeFrame];
     [minimize setFrame:minimizeFrame];
     [zoom setFrame:zoomFrame];
