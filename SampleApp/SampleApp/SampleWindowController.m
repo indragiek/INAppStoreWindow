@@ -17,7 +17,7 @@
     // The class of the window has been set in INAppStoreWindow in Interface Builder
     INAppStoreWindow *aWindow = (INAppStoreWindow*)[self window];
     aWindow.titleBarHeight = 46.0;
-	aWindow.titleBarPadding = 13.0;
+	aWindow.trafficLightButtonsLeftMargin = 13.0;
 }
 
 @end

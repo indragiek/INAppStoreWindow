@@ -301,19 +301,35 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
     return _titleBarHeight;
 }
 
-- (void)setTitleBarPadding:(CGFloat)newTitleBarPadding
+- (void)setTrafficLightButtonsLeftMargin:(CGFloat)newTrafficLightButtonsLeftMargin
 {
-	if (_titleBarPadding != newTitleBarPadding) {
-		_titleBarPadding = newTitleBarPadding;
+	if (_trafficLightButtonsLeftMargin != newTrafficLightButtonsLeftMargin) {
+		_trafficLightButtonsLeftMargin = newTrafficLightButtonsLeftMargin;
 		[self _recalculateFrameForTitleBarView];
 		[self _layoutTrafficLightsAndContent];
 		[self _displayWindowAndTitlebar];
 	}
 }
 
-- (CGFloat)titleBarPadding
+- (CGFloat)trafficLightButtonsLeftMargin
 {
-    return _titleBarPadding;
+    return _trafficLightButtonsLeftMargin;
+}
+
+
+- (void)setFullScreenButtonRightMargin:(CGFloat)newFullScreenButtonRightMargin
+{
+	if (_fullScreenButtonRightMargin != newFullScreenButtonRightMargin) {
+		_fullScreenButtonRightMargin = newFullScreenButtonRightMargin;
+		[self _recalculateFrameForTitleBarView];
+		[self _layoutTrafficLightsAndContent];
+		[self _displayWindowAndTitlebar];
+	}
+}
+
+- (CGFloat)fullScreenButtonRightMargin
+{
+    return _fullScreenButtonRightMargin;
 }
 
 - (void)setCenterFullScreenButton:(BOOL)centerFullScreenButton{
@@ -338,7 +354,8 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
     // Calculate titlebar height
     _centerTrafficLightButtons = YES;
     _titleBarHeight = [self _minimumTitlebarHeight];
-	_titleBarPadding = 7;
+	_trafficLightButtonsLeftMargin = 7;
+	_fullScreenButtonRightMargin = 3;
     [self setMovableByWindowBackground:YES];
     /** -----------------------------------------
      - The window automatically does layout every time its moved or resized, which means that the traffic lights and content view get reset at the original positions, so we need to put them back in place
@@ -382,9 +399,9 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
     closeFrame.origin.y = buttonOrigin;
     minimizeFrame.origin.y = buttonOrigin;
     zoomFrame.origin.y = buttonOrigin;
-	closeFrame.origin.x = _titleBarPadding;
-    minimizeFrame.origin.x = _titleBarPadding + 20;
-    zoomFrame.origin.x = _titleBarPadding + 40;
+	closeFrame.origin.x = _trafficLightButtonsLeftMargin;
+    minimizeFrame.origin.x = _trafficLightButtonsLeftMargin + 20;
+    zoomFrame.origin.x = _trafficLightButtonsLeftMargin + 40;
     [close setFrame:closeFrame];
     [minimize setFrame:minimizeFrame];
     [zoom setFrame:zoomFrame];
@@ -395,7 +412,7 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
         NSButton *fullScreen = [self standardWindowButton:NSWindowFullScreenButton];        
         if( fullScreen ) {
             NSRect fullScreenFrame = [fullScreen frame];
-			fullScreenFrame.origin.x = titleBarFrame.size.width - fullScreenFrame.size.width - _titleBarPadding;
+			fullScreenFrame.origin.x = titleBarFrame.size.width - fullScreenFrame.size.width - _fullScreenButtonRightMargin;
             if( self.centerFullScreenButton ) {
                 fullScreenFrame.origin.y = round(NSMidY(titleBarFrame) - INMidHeight(fullScreenFrame));
             } else {
