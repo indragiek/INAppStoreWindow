@@ -41,6 +41,8 @@
 	NSString *_windowMenuTitle;
     BOOL _centerFullScreenButton;
     BOOL _centerTrafficLightButtons;
+	CGFloat _trafficLightButtonsLeftMargin;
+	CGFloat _fullScreenButtonRightMargin;
 }
 /** The height of the title bar. By default, this is set to the standard title bar height. **/
 @property (nonatomic) CGFloat titleBarHeight;
@@ -48,4 +50,6 @@
 @property (INAppStoreWindowRetain) NSView *titleBarView;
 @property (nonatomic) BOOL centerFullScreenButton;
 @property (nonatomic) BOOL centerTrafficLightButtons;
+@property (nonatomic) CGFloat trafficLightButtonsLeftMargin;
+@property (nonatomic) CGFloat fullScreenButtonRightMargin;
 @end

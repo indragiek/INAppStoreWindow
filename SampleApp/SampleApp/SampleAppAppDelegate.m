@@ -21,7 +21,8 @@
     self.windowControllers = [NSMutableArray array];
     // The class of the window has been set in INAppStoreWindow in Interface Builder
     self.window.centerFullScreenButton = YES;
-    self.window.titleBarHeight = 40.0;
+    self.window.titleBarHeight = 46.0;
+	self.window.trafficLightButtonsLeftMargin = 13.0;
     
     // set checkboxes
     self.centerFullScreen.state = self.window.centerFullScreenButton;
