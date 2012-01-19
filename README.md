@@ -64,6 +64,10 @@ The vertical centering of the traffic light and full screen buttons can be contr
 
 The traffic light buttons are vertically centered by default.
 
+### Hiding the title bar in fullscreen
+
+You can tell INAppStoreWindow to hide when entering fullscreen mode, and reappear on exit. Just set the property `hideTitleBarInFullScreen`in order to hide it.
+
 ## Who am I?
 
 I'm Indragie Karunaratne, a 16 year old Mac OS X and iOS Developer from Edmonton AB, Canada. Visit [my website](http://indragie.com) to check out my work, or to get in touch with me.
