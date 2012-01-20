@@ -167,8 +167,6 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
 
 @implementation INAppStoreWindow
 @synthesize cachedTitleBarHeight=_cachedTitleBarHeight;
-@synthesize movableButton=_movableButton;
-@synthesize movableContentView=_movableContentView;
 @synthesize windowMenuTitle = _windowMenuTitle;
 @synthesize centerFullScreenButton = _centerFullScreenButton;
 @synthesize centerTrafficLightButtons = _centerTrafficLightButtons;
@@ -437,7 +435,7 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
     #if __has_feature(objc_arc)
     self.titleBarView = [[INTitlebarView alloc] initWithFrame:NSZeroRect];
     #else
-    self.titleBarView = [[[CustomTitlebarView alloc] initWithFrame:NSZeroRect] autorelease];
+    self.titleBarView = [[[INTitlebarView alloc] initWithFrame:NSZeroRect] autorelease];
     #endif
 }
 

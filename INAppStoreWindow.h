@@ -45,8 +45,6 @@
 }
 /** The height of the title bar. By default, this is set to the standard title bar height. **/
 @property (nonatomic) CGFloat titleBarHeight;
-@property (nonatomic, strong) IBOutlet NSView *movableContentView;
-@property (nonatomic, strong) IBOutlet NSButton *movableButton;
 /** The title bar view itself. Add subviews to this view that you want to show in the title bar (e.g. buttons, a toolbar, etc.). This view can also be set if you want to use a different styled title bar aside from the default one (textured, etc.). **/
 @property (INAppStoreWindowRetain) NSView *titleBarView;
 @property (nonatomic) BOOL centerFullScreenButton;
