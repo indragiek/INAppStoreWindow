@@ -26,6 +26,8 @@
     // set checkboxes
     self.centerFullScreen.state = self.window.centerFullScreenButton;
     self.centerTrafficLight.state = self.window.centerTrafficLightButtons;
+    
+    self.window.hideTitleBarInFullScreen = YES;
 }
 
 - (IBAction)createWindowController:(id)sender

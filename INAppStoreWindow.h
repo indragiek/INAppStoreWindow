@@ -40,7 +40,9 @@
     NSView *_titleBarView;
 	NSString *_windowMenuTitle;
     BOOL _centerFullScreenButton;
+    BOOL _hideTitleBarInFullScreen;
     BOOL _centerTrafficLightButtons;
+    CGFloat _cachedTitleBarHeight;
 }
 /** The height of the title bar. By default, this is set to the standard title bar height. **/
 @property (nonatomic) CGFloat titleBarHeight;
@@ -48,4 +50,6 @@
 @property (INAppStoreWindowRetain) NSView *titleBarView;
 @property (nonatomic) BOOL centerFullScreenButton;
 @property (nonatomic) BOOL centerTrafficLightButtons;
+/** If you want to hide the title bar in fullscreen mode, set this boolean to YES **/
+@property (nonatomic) BOOL hideTitleBarInFullScreen;
 @end

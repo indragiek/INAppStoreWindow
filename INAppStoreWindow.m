@@ -77,6 +77,7 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
 - (void)_layoutTrafficLightsAndContent;
 - (CGFloat)_minimumTitlebarHeight;
 - (void)_displayWindowAndTitlebar;
+- (void)_hideTitleBarView:(BOOL)hidden;
 @end
 
 @implementation INTitlebarView
@@ -148,7 +149,8 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
     return path;
 }
 
-- (void)mouseUp:(NSEvent *)theEvent {
+- (void)mouseUp:(NSEvent *)theEvent 
+{
     if ([theEvent clickCount] == 2) {
         // Get settings from "System Preferences" >  "Appearance" > "Double-click on windows title bar to minimize"
         NSString *const MDAppleMiniaturizeOnDoubleClickKey = @"AppleMiniaturizeOnDoubleClick";
@@ -164,10 +166,10 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
 @end
 
 @implementation INAppStoreWindow
-
 @synthesize windowMenuTitle = _windowMenuTitle;
 @synthesize centerFullScreenButton = _centerFullScreenButton;
 @synthesize centerTrafficLightButtons = _centerTrafficLightButtons;
+@synthesize hideTitleBarInFullScreen = _hideTitleBarInFullScreen;
 #pragma mark -
 #pragma mark Initialization
 
@@ -285,10 +287,10 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
     return _titleBarView;
 }
 
-- (void)setTitleBarHeight:(CGFloat)newTitleBarHeight
+- (void)setTitleBarHeight:(CGFloat)newTitleBarHeight 
 {
-    newTitleBarHeight = MAX(newTitleBarHeight, [self _minimumTitlebarHeight]);
 	if (_titleBarHeight != newTitleBarHeight) {
+        _cachedTitleBarHeight = newTitleBarHeight;
 		_titleBarHeight = newTitleBarHeight;
 		[self _recalculateFrameForTitleBarView];
 		[self _layoutTrafficLightsAndContent];
@@ -301,14 +303,16 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
     return _titleBarHeight;
 }
 
-- (void)setCenterFullScreenButton:(BOOL)centerFullScreenButton{
+- (void)setCenterFullScreenButton:(BOOL)centerFullScreenButton
+{
     if( _centerFullScreenButton != centerFullScreenButton ) {
         _centerFullScreenButton = centerFullScreenButton;
         [self _layoutTrafficLightsAndContent];
     }
 }
 
-- (void)setCenterTrafficLightButtons:(BOOL)centerTrafficLightButtons{
+- (void)setCenterTrafficLightButtons:(BOOL)centerTrafficLightButtons
+{
     if ( _centerTrafficLightButtons != centerTrafficLightButtons ) {
         _centerTrafficLightButtons = centerTrafficLightButtons;
         [self _layoutTrafficLightsAndContent];
@@ -339,6 +343,8 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
     #if IN_COMPILING_LION
     if (IN_RUNNING_LION) {
         [nc addObserver:self selector:@selector(_setupTrafficLightsTrackingArea) name:NSWindowDidExitFullScreenNotification object:nil];
+        [nc addObserver:self selector:@selector(windowWillEnterFullScreen:) name:NSWindowWillEnterFullScreenNotification object:nil];
+        [nc addObserver:self selector:@selector(windowWillExitFullScreen:) name:NSWindowWillExitFullScreenNotification object:nil];
     }
     #endif
     [self _createTitlebarView];
@@ -397,6 +403,31 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
     [contentView setNeedsDisplay:YES];
 }
 
+- (void)windowWillEnterFullScreen:(NSNotification *)notification 
+{
+    if (_hideTitleBarInFullScreen) {
+        // Recalculate the views when entering from fullscreen
+        _titleBarHeight = 0.0f;
+		[self _recalculateFrameForTitleBarView];
+		[self _layoutTrafficLightsAndContent];
+		[self _displayWindowAndTitlebar];
+        
+        [self _hideTitleBarView:YES];
+    }
+}
+
+- (void)windowWillExitFullScreen:(NSNotification *)notification 
+{
+    if (_hideTitleBarInFullScreen) {
+        _titleBarHeight = _cachedTitleBarHeight;
+		[self _recalculateFrameForTitleBarView];
+		[self _layoutTrafficLightsAndContent];
+		[self _displayWindowAndTitlebar];
+        
+        [self _hideTitleBarView:NO];
+    }
+}
+
 - (void)_createTitlebarView
 {
     // Create the title bar view
@@ -405,6 +436,11 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
     #else
     self.titleBarView = [[[INTitlebarView alloc] initWithFrame:NSZeroRect] autorelease];
     #endif
+}
+
+- (void)_hideTitleBarView:(BOOL)hidden 
+{
+    [self.titleBarView setHidden:hidden];
 }
 
 // Solution for tracking area issue thanks to @Perspx (Alex Rozanski) <https://gist.github.com/972958>
