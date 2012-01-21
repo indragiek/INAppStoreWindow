@@ -15,20 +15,24 @@
 @synthesize windowControllers = _windowControllers;
 @synthesize centerFullScreen = _centerFullScreen;
 @synthesize centerTrafficLight = _centerTrafficLight;
+@synthesize fullScreenRightMarginSlider = _fullScreenRightMarginSlider;
+@synthesize trafficLightLeftMargin = _trafficLightLeftMargin;
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     self.windowControllers = [NSMutableArray array];
     // The class of the window has been set in INAppStoreWindow in Interface Builder
-    self.window.centerFullScreenButton = YES;
-    self.window.titleBarHeight = 46.0;
-	self.window.trafficLightButtonsLeftMargin = 13.0;
+    self.window.trafficLightButtonsLeftMargin = 7.0;
+    self.window.fullScreenButtonRightMargin = 7.0; 
+    self.window.hideTitleBarInFullScreen = YES;    
+    self.window.centerFullScreenButton = YES;    
+    self.window.titleBarHeight = 40.0;
     
     // set checkboxes
     self.centerFullScreen.state = self.window.centerFullScreenButton;
     self.centerTrafficLight.state = self.window.centerTrafficLightButtons;
-    
-    self.window.hideTitleBarInFullScreen = YES;
+    self.fullScreenRightMarginSlider.doubleValue = self.window.fullScreenButtonRightMargin;
+    self.trafficLightLeftMargin.doubleValue = self.window.trafficLightButtonsLeftMargin;
 }
 
 - (IBAction)createWindowController:(id)sender
@@ -46,6 +50,15 @@
     } else {
         self.window.centerTrafficLightButtons = [sender state];
     }
+}
+
+- (IBAction)sliderAction:(id)sender 
+{
+    if ( [sender isEqual:self.fullScreenRightMarginSlider] ) {
+        self.window.fullScreenButtonRightMargin = [sender doubleValue];
+    } else {
+        self.window.trafficLightButtonsLeftMargin = [sender doubleValue];
+    }    
 }
 
 - (void)dealloc

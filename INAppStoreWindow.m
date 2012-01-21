@@ -78,6 +78,8 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
 - (CGFloat)_minimumTitlebarHeight;
 - (void)_displayWindowAndTitlebar;
 - (void)_hideTitleBarView:(BOOL)hidden;
+- (CGFloat)_defaultTrafficLightLeftMargin;
+- (CGFloat)_trafficLightSeparation;
 @end
 
 @implementation INTitlebarView
@@ -322,6 +324,7 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
 - (void)setFullScreenButtonRightMargin:(CGFloat)newFullScreenButtonRightMargin
 {
 	if (_fullScreenButtonRightMargin != newFullScreenButtonRightMargin) {
+        _setFullScreenButtonRightMargin = YES;
 		_fullScreenButtonRightMargin = newFullScreenButtonRightMargin;
 		[self _recalculateFrameForTitleBarView];
 		[self _layoutTrafficLightsAndContent];
@@ -357,8 +360,7 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
     // Calculate titlebar height
     _centerTrafficLightButtons = YES;
     _titleBarHeight = [self _minimumTitlebarHeight];
-	_trafficLightButtonsLeftMargin = 7;
-	_fullScreenButtonRightMargin = 3;
+	_trafficLightButtonsLeftMargin = [self _defaultTrafficLightLeftMargin];
     [self setMovableByWindowBackground:YES];
     /** -----------------------------------------
      - The window automatically does layout every time its moved or resized, which means that the traffic lights and content view get reset at the original positions, so we need to put them back in place
@@ -405,8 +407,8 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
     minimizeFrame.origin.y = buttonOrigin;
     zoomFrame.origin.y = buttonOrigin;
 	closeFrame.origin.x = _trafficLightButtonsLeftMargin;
-    minimizeFrame.origin.x = _trafficLightButtonsLeftMargin + 20;
-    zoomFrame.origin.x = _trafficLightButtonsLeftMargin + 40;
+    minimizeFrame.origin.x = _trafficLightButtonsLeftMargin + [self _trafficLightSeparation];
+    zoomFrame.origin.x = _trafficLightButtonsLeftMargin + [self _trafficLightSeparation] * 2;
     [close setFrame:closeFrame];
     [minimize setFrame:minimizeFrame];
     [zoom setFrame:zoomFrame];
@@ -417,7 +419,10 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
         NSButton *fullScreen = [self standardWindowButton:NSWindowFullScreenButton];        
         if( fullScreen ) {
             NSRect fullScreenFrame = [fullScreen frame];
-			fullScreenFrame.origin.x = titleBarFrame.size.width - fullScreenFrame.size.width - _fullScreenButtonRightMargin;
+            if ( !_setFullScreenButtonRightMargin ) {
+                self.fullScreenButtonRightMargin = NSWidth([_titleBarView frame]) - NSMaxX(fullScreen.frame);
+            }
+			fullScreenFrame.origin.x = NSWidth(titleBarFrame) - NSWidth(fullScreenFrame) - _fullScreenButtonRightMargin;
             if( self.centerFullScreenButton ) {
                 fullScreenFrame.origin.y = round(NSMidY(titleBarFrame) - INMidHeight(fullScreenFrame));
             } else {
@@ -497,12 +502,33 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
 - (CGFloat)_minimumTitlebarHeight
 {
     static CGFloat minTitleHeight = 0.0;
-    if (!minTitleHeight) {
+    if ( !minTitleHeight ) {
         NSRect frameRect = [self frame];
         NSRect contentRect = [self contentRectForFrameRect:frameRect];
         minTitleHeight = NSHeight(frameRect) - NSHeight(contentRect);
     }
     return minTitleHeight;
+}
+
+- (CGFloat)_defaultTrafficLightLeftMargin
+{
+    static CGFloat trafficLightLeftMargin = 0.0;
+    if ( !trafficLightLeftMargin ) {
+        NSButton *close = [self standardWindowButton:NSWindowCloseButton];
+        trafficLightLeftMargin = NSMinX(close.frame);
+    }
+    return trafficLightLeftMargin;
+}
+
+- (CGFloat)_trafficLightSeparation
+{
+    static CGFloat trafficLightSeparation = 0.0;
+    if ( !trafficLightSeparation ) {
+        NSButton *close = [self standardWindowButton:NSWindowCloseButton];
+        NSButton *minimize = [self standardWindowButton:NSWindowMiniaturizeButton];
+        trafficLightSeparation = NSMinX(minimize.frame) - NSMinX(close.frame);
+    }
+    return trafficLightSeparation;    
 }
 
 - (void)_displayWindowAndTitlebar

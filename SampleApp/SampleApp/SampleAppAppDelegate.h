@@ -14,13 +14,18 @@
     NSMutableArray *_windowControllers;
     NSButton *_centerFullScreen;
     NSButton *_centerTrafficLight;
+    NSSlider *_fullScreenRightMarginSlider;
+    NSSlider *_trafficLightLeftMargin;
 }
 
 @property (assign) IBOutlet INAppStoreWindow *window;
 @property (nonatomic, retain) NSMutableArray *windowControllers;
 @property (assign) IBOutlet NSButton *centerFullScreen;
 @property (assign) IBOutlet NSButton *centerTrafficLight;
+@property (assign) IBOutlet NSSlider *fullScreenRightMarginSlider;
+@property (assign) IBOutlet NSSlider *trafficLightLeftMargin;
 
 - (IBAction)checkboxAction:(id)sender;
+- (IBAction)sliderAction:(id)sender;
 
 @end
