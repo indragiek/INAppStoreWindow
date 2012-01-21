@@ -43,6 +43,8 @@
     BOOL _hideTitleBarInFullScreen;
     BOOL _centerTrafficLightButtons;
     CGFloat _cachedTitleBarHeight;
+	CGFloat _trafficLightButtonsLeftMargin;
+	CGFloat _fullScreenButtonRightMargin;
 }
 /** The height of the title bar. By default, this is set to the standard title bar height. **/
 @property (nonatomic) CGFloat titleBarHeight;
@@ -52,4 +54,6 @@
 @property (nonatomic) BOOL centerTrafficLightButtons;
 /** If you want to hide the title bar in fullscreen mode, set this boolean to YES **/
 @property (nonatomic) BOOL hideTitleBarInFullScreen;
+@property (nonatomic) CGFloat trafficLightButtonsLeftMargin;
+@property (nonatomic) CGFloat fullScreenButtonRightMargin;
 @end
