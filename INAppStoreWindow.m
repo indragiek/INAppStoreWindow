@@ -84,6 +84,16 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
 
 @implementation INTitlebarView
 
+@synthesize showsBaselineSeparator = _showsBaselineSeparator;
+
+- (id)initWithFrame:(NSRect)frameRect {
+    if (self = [super initWithFrame:frameRect]) {
+        _showsBaselineSeparator = YES;
+    }
+    
+    return self;
+}
+
 - (void)drawRect:(NSRect)dirtyRect
 {
     BOOL drawsAsMainWindow = ([[self window] isMainWindow] && [[NSApplication sharedApplication] isActive]);
@@ -116,20 +126,22 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
         [NSGraphicsContext restoreGraphicsState];
     }
     
-    NSColor *bottomColor = nil;
-    if (IN_RUNNING_LION) {
-        bottomColor = drawsAsMainWindow ? IN_COLOR_MAIN_BOTTOM_L : IN_COLOR_NOTMAIN_BOTTOM_L;
-    } else {
-        bottomColor = drawsAsMainWindow ? IN_COLOR_MAIN_BOTTOM : IN_COLOR_NOTMAIN_BOTTOM;
-    }
-    NSRect bottomRect = NSMakeRect(0.0, NSMinY(drawingRect), NSWidth(drawingRect), 1.0);
-    [bottomColor set];
-    NSRectFill(bottomRect);
-    
-    if (IN_RUNNING_LION) {
-        bottomRect.origin.y += 1.0;
-        [[NSColor colorWithDeviceWhite:1.0 alpha:0.12] setFill];
-        [[NSBezierPath bezierPathWithRect:bottomRect] fill];
+    if (_showsBaselineSeparator) {
+        NSColor *bottomColor = nil;
+        if (IN_RUNNING_LION) {
+          bottomColor = drawsAsMainWindow ? IN_COLOR_MAIN_BOTTOM_L : IN_COLOR_NOTMAIN_BOTTOM_L;
+        } else {
+          bottomColor = drawsAsMainWindow ? IN_COLOR_MAIN_BOTTOM : IN_COLOR_NOTMAIN_BOTTOM;
+        }
+        NSRect bottomRect = NSMakeRect(0.0, NSMinY(drawingRect), NSWidth(drawingRect), 1.0);
+        [bottomColor set];
+        NSRectFill(bottomRect);
+        
+        if (IN_RUNNING_LION) {
+          bottomRect.origin.y += 1.0;
+          [[NSColor colorWithDeviceWhite:1.0 alpha:0.12] setFill];
+          [[NSBezierPath bezierPathWithRect:bottomRect] fill];
+        }
     }
 }
 
