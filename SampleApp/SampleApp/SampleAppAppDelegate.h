@@ -16,6 +16,7 @@
     NSButton *_centerTrafficLight;
     NSSlider *_fullScreenRightMarginSlider;
     NSSlider *_trafficLightLeftMargin;
+    NSButton *_showsBaselineSeparator;
 }
 
 @property (assign) IBOutlet INAppStoreWindow *window;
@@ -24,6 +25,7 @@
 @property (assign) IBOutlet NSButton *centerTrafficLight;
 @property (assign) IBOutlet NSSlider *fullScreenRightMarginSlider;
 @property (assign) IBOutlet NSSlider *trafficLightLeftMargin;
+@property (assign) IBOutlet NSButton *showsBaselineSeparator;
 
 - (IBAction)checkboxAction:(id)sender;
 - (IBAction)sliderAction:(id)sender;

@@ -84,16 +84,6 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
 
 @implementation INTitlebarView
 
-@synthesize showsBaselineSeparator = _showsBaselineSeparator;
-
-- (id)initWithFrame:(NSRect)frameRect {
-    if (self = [super initWithFrame:frameRect]) {
-        _showsBaselineSeparator = YES;
-    }
-    
-    return self;
-}
-
 - (void)drawRect:(NSRect)dirtyRect
 {
     BOOL drawsAsMainWindow = ([[self window] isMainWindow] && [[NSApplication sharedApplication] isActive]);
@@ -126,7 +116,7 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
         [NSGraphicsContext restoreGraphicsState];
     }
     
-    if (_showsBaselineSeparator) {
+    if ([(INAppStoreWindow *)[self window] showsBaselineSeparator]) {
         NSColor *bottomColor = nil;
         if (IN_RUNNING_LION) {
           bottomColor = drawsAsMainWindow ? IN_COLOR_MAIN_BOTTOM_L : IN_COLOR_NOTMAIN_BOTTOM_L;
@@ -317,6 +307,19 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
     return _titleBarHeight;
 }
 
+- (void)setShowsBaselineSeparator:(BOOL)showsBaselineSeparator
+{
+    if (_showsBaselineSeparator != showsBaselineSeparator) {
+        _showsBaselineSeparator = showsBaselineSeparator;
+        [self.titleBarView setNeedsDisplay:YES];
+    }
+}
+
+- (BOOL)showsBaselineSeparator
+{
+    return _showsBaselineSeparator;
+}
+
 - (void)setTrafficLightButtonsLeftMargin:(CGFloat)newTrafficLightButtonsLeftMargin
 {
 	if (_trafficLightButtonsLeftMargin != newTrafficLightButtonsLeftMargin) {
@@ -369,11 +372,12 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
 
 - (void)_doInitialWindowSetup
 {
-    // Calculate titlebar height
+    _showsBaselineSeparator = YES;
     _centerTrafficLightButtons = YES;
     _titleBarHeight = [self _minimumTitlebarHeight];
 	_trafficLightButtonsLeftMargin = [self _defaultTrafficLightLeftMargin];
     [self setMovableByWindowBackground:YES];
+    
     /** -----------------------------------------
      - The window automatically does layout every time its moved or resized, which means that the traffic lights and content view get reset at the original positions, so we need to put them back in place
      - NSWindow is hardcoded to redraw the traffic lights in a specific rect, so when they are moved down, only part of the buttons get redrawn, causing graphical artifacts. Therefore, the window must be force redrawn every time it becomes key/resigns key

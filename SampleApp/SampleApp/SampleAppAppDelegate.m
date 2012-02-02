@@ -17,6 +17,7 @@
 @synthesize centerTrafficLight = _centerTrafficLight;
 @synthesize fullScreenRightMarginSlider = _fullScreenRightMarginSlider;
 @synthesize trafficLightLeftMargin = _trafficLightLeftMargin;
+@synthesize showsBaselineSeparator = _showsBaselineSeparator;
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
@@ -31,6 +32,7 @@
     // set checkboxes
     self.centerFullScreen.state = self.window.centerFullScreenButton;
     self.centerTrafficLight.state = self.window.centerTrafficLightButtons;
+    self.showsBaselineSeparator.state = self.window.showsBaselineSeparator;
     self.fullScreenRightMarginSlider.doubleValue = self.window.fullScreenButtonRightMargin;
     self.trafficLightLeftMargin.doubleValue = self.window.trafficLightButtonsLeftMargin;
 }
@@ -47,8 +49,10 @@
 {
     if ( [sender isEqual:self.centerFullScreen] ) {
         self.window.centerFullScreenButton = [sender state];
+    } else if ( [sender isEqual:self.centerTrafficLight] ) {
+        self.window.centerTrafficLightButtons = [sender state];        
     } else {
-        self.window.centerTrafficLightButtons = [sender state];
+        self.window.showsBaselineSeparator = [sender state];
     }
 }
 

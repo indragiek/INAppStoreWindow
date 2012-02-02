@@ -29,7 +29,6 @@
  Draws a default style Mac OS X title bar.
  **/
 @interface INTitlebarView : NSView
-@property (nonatomic) BOOL showsBaselineSeparator;
 - (NSBezierPath*)clippingPathWithRect:(NSRect)aRect cornerRadius:(CGFloat)radius;
 @end
 
@@ -57,9 +56,9 @@
 @property (nonatomic) BOOL centerTrafficLightButtons;
 /** If you want to hide the title bar in fullscreen mode, set this boolean to YES **/
 @property (nonatomic) BOOL hideTitleBarInFullScreen;
-/** Adjust the left and right padding of the trafficlight and fullscreen buttons */
-@property (nonatomic) BOOL showsBaselineSeparator;
 /** Use this API to hide the baseline INAppStoreWindow draws between itself and the main window contents. */
+@property (nonatomic) BOOL showsBaselineSeparator;
+/** Adjust the left and right padding of the trafficlight and fullscreen buttons */
 @property (nonatomic) CGFloat trafficLightButtonsLeftMargin;
 @property (nonatomic) CGFloat fullScreenButtonRightMargin;
 
