@@ -22,8 +22,10 @@ Using `INAppStoreWindow` is as easy as changing the class of the `NSWindow` in I
 
 Some people seem to be having an issue where the title bar height property is not set properly when calling the method on an NSWindow without typecasting it to the INAppStoreWindow class. If you are experiencing this issue, do something like this (using a window controller, for example):
 
-    INAppStoreWindow *aWindow = (INAppStoreWindow*)[windowController window];
-    aWindow.titleBarHeight = 60.0;
+``` obj-c
+INAppStoreWindow *aWindow = (INAppStoreWindow*)[windowController window];
+aWindow.titleBarHeight = 60.0;
+```
 
 ### Sheet Windows
 
@@ -37,7 +39,7 @@ Adding controls and other views to the title bar is simple. This can be done eit
 
 **Programmatically**
 
-```
+``` obj-c
 // This code places a 100x100 button in the center of the title bar view
 NSView *titleBarView = self.window.titleBarView;
 NSSize buttonSize = NSMakeSize(100.f, 100.f);
@@ -51,7 +53,7 @@ NSButton *button = [[NSButton alloc] initWithFrame:buttonFrame];
 
 **NOTE:** Even though the content layout for the title bar can be done in Interface Builder, you still need to use the below code to display the view created in IB in the title bar.
 
-```
+``` obj-c
 // self.titleView is a an IBOutlet to an NSView that has been configured in IB with everything you want in the title bar
 self.titleView.frame = self.window.titleBarView.bounds;
 self.titleView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
@@ -67,6 +69,14 @@ The traffic light buttons are vertically centered by default.
 ### Hiding the title bar in fullscreen
 
 You can tell INAppStoreWindow to hide when entering fullscreen mode, and reappear on exit. Just set the property `hideTitleBarInFullScreen`in order to hide it.
+
+### Padding the traffic lights and fullscreen buttons
+
+The left padding of the traffic lights can be adjusted with `trafficLightButtonsLeftMargin` and the right padding of the fullscreen button can be adjusted with `fullScreenButtonRightMargin`.
+
+### Hiding the baseline(divider line between the titlebar and the content view)
+
+The baseline divider can be hidden by setting `showsBaselineSeparator` to `NO`, the default value is `YES`.
 
 ## Who am I?
 
