@@ -333,6 +333,7 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
 		[self _recalculateFrameForTitleBarView];
 		[self _layoutTrafficLightsAndContent];
 		[self _displayWindowAndTitlebar];
+        [self _setupTrafficLightsTrackingArea];
 	}
 }
 
@@ -370,6 +371,7 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
     if ( _centerTrafficLightButtons != centerTrafficLightButtons ) {
         _centerTrafficLightButtons = centerTrafficLightButtons;
         [self _layoutTrafficLightsAndContent];
+        [self _setupTrafficLightsTrackingArea];
     }
 }
 
