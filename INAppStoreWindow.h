@@ -15,7 +15,7 @@
 //  THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <Foundation/Foundation.h>
+#import <Cocoa/Cocoa.h>
 
 #if __has_feature(objc_arc)
 #define INAppStoreWindowCopy nonatomic, strong
