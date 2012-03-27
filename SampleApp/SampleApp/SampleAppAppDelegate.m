@@ -11,13 +11,14 @@
 
 @implementation SampleAppAppDelegate
 
+@synthesize sheet = _sheet;
 @synthesize window = _window;
-@synthesize windowControllers = _windowControllers;
 @synthesize centerFullScreen = _centerFullScreen;
 @synthesize centerTrafficLight = _centerTrafficLight;
 @synthesize fullScreenRightMarginSlider = _fullScreenRightMarginSlider;
 @synthesize trafficLightLeftMargin = _trafficLightLeftMargin;
 @synthesize showsBaselineSeparator = _showsBaselineSeparator;
+@synthesize windowControllers = _windowControllers;
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
@@ -35,6 +36,25 @@
     self.showsBaselineSeparator.state = self.window.showsBaselineSeparator;
     self.fullScreenRightMarginSlider.doubleValue = self.window.fullScreenButtonRightMargin;
     self.trafficLightLeftMargin.doubleValue = self.window.trafficLightButtonsLeftMargin;
+}
+
+// window delegate to correct the position of the sheet
+- (NSRect)window:(INAppStoreWindow *)window willPositionSheet:(NSWindow *)sheet usingRect:(NSRect)rect
+{
+    rect.origin.y = NSHeight(window.frame)-window.titleBarHeight;
+    return rect;
+}
+
+- (IBAction)showSheetAction:(id)sender
+{
+    [NSApp beginSheet:self.sheet modalForWindow:self.window
+        modalDelegate:self didEndSelector:nil contextInfo:nil];
+}
+
+- (IBAction)doneSheetAction:(id)sender
+{
+    [self.sheet orderOut:nil];
+    [NSApp endSheet:self.sheet];
 }
 
 - (IBAction)createWindowController:(id)sender

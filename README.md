@@ -33,6 +33,8 @@ Because of the enlarged title bar, sheet windows may not appear properly (it'll 
 
 `- (NSRect)window:(NSWindow *)window willPositionSheet:(NSWindow *)sheet usingRect:(NSRect)rect`
 
+There is an example of how to get this working in the sample app.
+
 ### Adding buttons and other controls to the title bar
 
 Adding controls and other views to the title bar is simple. This can be done either programmatically or through Interface Builder. Here are examples of both methods:
