@@ -31,7 +31,13 @@ aWindow.titleBarHeight = 60.0;
 
 Because of the enlarged title bar, sheet windows may not appear properly (it'll look like they're popping out of the center of the title bar). To fix this, override this `NSWindow` delegate method and return an appropriate rect for where you want the sheet window to be positioned:
 
-`- (NSRect)window:(NSWindow *)window willPositionSheet:(NSWindow *)sheet usingRect:(NSRect)rect`
+``` obj-c
+- (NSRect)window:(INAppStoreWindow *)window willPositionSheet:(NSWindow *)sheet usingRect:(NSRect)rect
+{
+    rect.origin.y = NSHeight(window.frame)-window.titleBarHeight;
+    return rect;
+}
+```
 
 There is an example of how to get this working in the sample app.
 
