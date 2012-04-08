@@ -82,23 +82,13 @@ You can tell INAppStoreWindow to hide when entering fullscreen mode, and reappea
 
 The left padding of the traffic lights can be adjusted with `trafficLightButtonsLeftMargin` and the right padding of the fullscreen button can be adjusted with `fullScreenButtonRightMargin`.
 
-### Hiding the baseline(divider line between the titlebar and the content view)
+### Hiding the baseline (divider line between the titlebar and the content view)
 
 The baseline divider can be hidden by setting `showsBaselineSeparator` to `NO`, the default value is `YES`.
 
-## Who am I?
+## Authors
 
-I'm Indragie Karunaratne, a 16 year old Mac OS X and iOS Developer from Edmonton AB, Canada. Visit [my website](http://indragie.com) to check out my work, or to get in touch with me.
-
-## Special Thanks To
-
-- Alex Rozanski ([@Perspx](https://github.com/perspx))
-- David Keegan ([@kgn](https://github.com/kgn))
-- Victor Pimentel ([@victorpimentel](https://github.com/victorpimentel))
-- Wade Cosgrove ([@wadeco](https://github.com/wadeco))
-- Levi Nunnink ([@levinunnink](https://github.com/levinunnink))
-- Georg C. Brückmann ([@gcbrueckmann](https://github.com/gcbrueckmann))
-- nonamelive ([@nonamelive](https://github.com/nonamelive))
+INAppStoreWindow is maintained by [Indragie Karunaratne](http://indragie.com) and [David Keegan](http://inscopeapps.com). Special thanks to [everyone else](https://github.com/indragiek/INAppStoreWindow/contributors) who contributed various fixes and improvements to the code.
 
 ## Licensing
 
