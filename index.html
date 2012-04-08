@@ -1,0 +1,139 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>INAppStoreWindow by indragiek</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>INAppStoreWindow</h1>
+<p>A Mac App Store style Cocoa NSWindow subclass</p>
+        <p class="view"><a href="https://github.com/indragiek/INAppStoreWindow">View the Project on GitHub <small>indragiek/INAppStoreWindow</small></a></p>
+        <ul>
+          <li><a href="https://github.com/indragiek/INAppStoreWindow/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/indragiek/INAppStoreWindow/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/indragiek/INAppStoreWindow">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <p>INAppStoreWindow is an NSWindow subclass that mimics the appearance of the main window in the Mac App Store application. These modifications consist of enlarging the title bar, and centering the traffic lights (<strong>note that this subclass does not handle the creation of a toolbar</strong>). The end result looks like this:</p>
+
+<p><img src="http://i41.tinypic.com/abidd1.png" alt="INAppStoreWindow"></p>
+
+<p><strong>Features of INAppStoreWindow:</strong></p>
+
+<ul>
+<li>No use of private APIs, so it's App Store friendly!</li>
+<li>The title bar view is entirely customizable -- you can add subviews (toolbars, buttons, etc.) as well as customize the title bar itself to give it a different appearance</li>
+<li>The height of the title bar is easily adjustable</li>
+<li>Compiles and runs perfectly under ARC and non-ARC setups (thanks to <a href="https://github.com/kgn">@kgn</a>)</li>
+<li>Support's Lion's full screen mode</li>
+</ul><h2>Usage</h2>
+
+<h3>Basic Configuration</h3>
+
+<p>Using <code>INAppStoreWindow</code> is as easy as changing the class of the <code>NSWindow</code> in Interface Builder, or simply by creating an instance of <code>INAppStoreWindow</code> in code (if you're doing it programmatically). I've included a sample project demonstrating how to use <code>INAppStoreWindow</code>.</p>
+
+<p><strong>NOTE: The title bar height is set to the standard window title height by default. You must set the 'titleBarHeight' property in order to increase the height of the title bar.</strong></p>
+
+<p>Some people seem to be having an issue where the title bar height property is not set properly when calling the method on an NSWindow without typecasting it to the INAppStoreWindow class. If you are experiencing this issue, do something like this (using a window controller, for example):</p>
+
+<div class="highlight">
+<pre><span class="n">INAppStoreWindow</span> <span class="o">*</span><span class="n">aWindow</span> <span class="o">=</span> <span class="p">(</span><span class="n">INAppStoreWindow</span><span class="o">*</span><span class="p">)[</span><span class="n">windowController</span> <span class="n">window</span><span class="p">];</span>
+<span class="n">aWindow</span><span class="p">.</span><span class="n">titleBarHeight</span> <span class="o">=</span> <span class="mf">60.0</span><span class="p">;</span>
+</pre>
+</div>
+
+
+<h3>Sheet Windows</h3>
+
+<p>Because of the enlarged title bar, sheet windows may not appear properly (it'll look like they're popping out of the center of the title bar). To fix this, override this <code>NSWindow</code> delegate method and return an appropriate rect for where you want the sheet window to be positioned:</p>
+
+<div class="highlight">
+<pre><span class="k">-</span> <span class="p">(</span><span class="n">NSRect</span><span class="p">)</span><span class="nf">window:</span><span class="p">(</span><span class="n">INAppStoreWindow</span> <span class="o">*</span><span class="p">)</span><span class="nv">window</span> <span class="nf">willPositionSheet:</span><span class="p">(</span><span class="n">NSWindow</span> <span class="o">*</span><span class="p">)</span><span class="nv">sheet</span> <span class="nf">usingRect:</span><span class="p">(</span><span class="n">NSRect</span><span class="p">)</span><span class="nv">rect</span>
+<span class="p">{</span>
+    <span class="n">rect</span><span class="p">.</span><span class="n">origin</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">NSHeight</span><span class="p">(</span><span class="n">window</span><span class="p">.</span><span class="n">frame</span><span class="p">)</span><span class="o">-</span><span class="n">window</span><span class="p">.</span><span class="n">titleBarHeight</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">rect</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+</div>
+
+
+<p>There is an example of how to get this working in the sample app.</p>
+
+<h3>Adding buttons and other controls to the title bar</h3>
+
+<p>Adding controls and other views to the title bar is simple. This can be done either programmatically or through Interface Builder. Here are examples of both methods:</p>
+
+<p><strong>Programmatically</strong></p>
+
+<div class="highlight">
+<pre><span class="c1">// This code places a 100x100 button in the center of the title bar view</span>
+<span class="n">NSView</span> <span class="o">*</span><span class="n">titleBarView</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">window</span><span class="p">.</span><span class="n">titleBarView</span><span class="p">;</span>
+<span class="n">NSSize</span> <span class="n">buttonSize</span> <span class="o">=</span> <span class="n">NSMakeSize</span><span class="p">(</span><span class="mf">100.f</span><span class="p">,</span> <span class="mf">100.f</span><span class="p">);</span>
+<span class="n">NSRect</span> <span class="n">buttonFrame</span> <span class="o">=</span> <span class="n">NSMakeRect</span><span class="p">(</span><span class="n">NSMidX</span><span class="p">(</span><span class="n">titleBarView</span><span class="p">.</span><span class="n">bounds</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">buttonSize</span><span class="p">.</span><span class="n">width</span> <span class="o">/</span> <span class="mf">2.f</span><span class="p">),</span> <span class="n">NSMidY</span><span class="p">(</span><span class="n">titleBarView</span><span class="p">.</span><span class="n">bounds</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">buttonSize</span><span class="p">.</span><span class="n">height</span> <span class="o">/</span> <span class="mf">2.f</span><span class="p">),</span> <span class="n">buttonSize</span><span class="p">.</span><span class="n">width</span><span class="p">,</span> <span class="n">buttonSize</span><span class="p">.</span><span class="n">height</span><span class="p">);</span>
+<span class="n">NSButton</span> <span class="o">*</span><span class="n">button</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSButton</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithFrame:</span><span class="n">buttonFrame</span><span class="p">];</span>
+<span class="p">[</span><span class="n">button</span> <span class="nl">setTitle:</span><span class="s">@"A Button"</span><span class="p">];</span>
+<span class="p">[</span><span class="n">titleBarView</span> <span class="nl">addSubview:</span><span class="n">button</span><span class="p">];</span>
+</pre>
+</div>
+
+
+<p><strong>Interface Builder</strong></p>
+
+<p><strong>NOTE:</strong> Even though the content layout for the title bar can be done in Interface Builder, you still need to use the below code to display the view created in IB in the title bar.</p>
+
+<div class="highlight">
+<pre><span class="c1">// self.titleView is a an IBOutlet to an NSView that has been configured in IB with everything you want in the title bar</span>
+<span class="n">self</span><span class="p">.</span><span class="n">titleView</span><span class="p">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">window</span><span class="p">.</span><span class="n">titleBarView</span><span class="p">.</span><span class="n">bounds</span><span class="p">;</span>
+<span class="n">self</span><span class="p">.</span><span class="n">titleView</span><span class="p">.</span><span class="n">autoresizingMask</span> <span class="o">=</span> <span class="n">NSViewWidthSizable</span> <span class="o">|</span> <span class="n">NSViewHeightSizable</span><span class="p">;</span>
+<span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">window</span><span class="p">.</span><span class="n">titleBarView</span> <span class="nl">addSubview:</span><span class="n">self</span><span class="p">.</span><span class="n">titleView</span><span class="p">];</span>
+</pre>
+</div>
+
+
+<h3>Centering the traffic light and full screen buttons</h3>
+
+<p>The vertical centering of the traffic light and full screen buttons can be controlled through two properties: <code>centerTrafficLightButtons</code> and <code>centerFullScreenButton</code>.</p>
+
+<p>The traffic light buttons are vertically centered by default.</p>
+
+<h3>Hiding the title bar in fullscreen</h3>
+
+<p>You can tell INAppStoreWindow to hide when entering fullscreen mode, and reappear on exit. Just set the property <code>hideTitleBarInFullScreen</code>in order to hide it.</p>
+
+<h3>Padding the traffic lights and fullscreen buttons</h3>
+
+<p>The left padding of the traffic lights can be adjusted with <code>trafficLightButtonsLeftMargin</code> and the right padding of the fullscreen button can be adjusted with <code>fullScreenButtonRightMargin</code>.</p>
+
+<h3>Hiding the baseline (divider line between the titlebar and the content view)</h3>
+
+<p>The baseline divider can be hidden by setting <code>showsBaselineSeparator</code> to <code>NO</code>, the default value is <code>YES</code>.</p>
+
+<h2>Authors</h2>
+
+<p>INAppStoreWindow is maintained by <a href="http://indragie.com">Indragie Karunaratne</a> and <a href="http://inscopeapps.com">David Keegan</a>. Special thanks to <a href="https://github.com/indragiek/INAppStoreWindow/contributors">everyone else</a> who contributed various fixes and improvements to the code.</p>
+
+<h2>Licensing</h2>
+
+<p>INAppStoreWindow is licensed under the <a href="http://www.opensource.org/licenses/bsd-license.php">BSD license</a>.</p>
+      </section>
+    </div>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/indragiek">indragiek</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+  </body>
+</html>
