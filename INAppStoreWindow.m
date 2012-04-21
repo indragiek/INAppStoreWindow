@@ -82,14 +82,14 @@ static inline CGPathRef createClippingPathWithRectAndRadius(NSRect aRect, CGFloa
     cornerPoint.x = NSMaxX(aRect);
     CGPathAddLineToPoint(path, NULL, cornerPoint.x, cornerPoint.y);
     cornerPoint.y = NSMaxY(aRect)-radius;
-    CGPoint endPoint = CGPointMake(CGRectGetMaxX(aRect), CGRectGetMaxY(aRect)-radius);
+    CGPoint endPoint = CGPointMake(NSMaxX(aRect), NSMaxY(aRect)-radius);
     CGPathAddLineToPoint(path, NULL, endPoint.x, endPoint.y);
-    endPoint = CGPointMake(CGRectGetMaxX(aRect)-radius, CGRectGetMaxY(aRect));
+    endPoint = CGPointMake(NSMaxX(aRect)-radius, NSMaxY(aRect));
     CGPathAddQuadCurveToPoint(path, NULL, cornerPoint.x, cornerPoint.y, endPoint.x, endPoint.y);
-    endPoint.x = CGRectGetMinX(aRect)+radius;
+    endPoint.x = NSMinX(aRect)+radius;
     CGPathAddLineToPoint(path, NULL, endPoint.x, endPoint.y);
-    cornerPoint.x = CGRectGetMinX(aRect);
-    endPoint = CGPointMake(CGRectGetMinX(aRect), CGRectGetMaxY(aRect)-radius);
+    cornerPoint.x = NSMinX(aRect);
+    endPoint = CGPointMake(NSMinX(aRect), NSMaxY(aRect)-radius);
     CGPathAddQuadCurveToPoint(path, NULL, cornerPoint.x, cornerPoint.y, endPoint.x, endPoint.y);
     cornerPoint.y = NSMinY(aRect);
     CGPathAddLineToPoint(path, NULL, cornerPoint.x, cornerPoint.y);
@@ -160,7 +160,7 @@ static inline CGGradientRef createGradientWithColors(NSColor* startingColor, NSC
     
     CGFloat midX = NSMidX(drawingRect);
     CGGradientRef gradient = createGradientWithColors(startColor, endColor);
-    CGContextDrawLinearGradient(context, gradient, CGPointMake(midX, CGRectGetMinY(drawingRect)), CGPointMake(midX, CGRectGetMaxY(drawingRect)), 0);
+    CGContextDrawLinearGradient(context, gradient, CGPointMake(midX, NSMinY(drawingRect)), CGPointMake(midX, NSMaxY(drawingRect)), 0);
     CGGradientRelease(gradient);
     
     if ([(INAppStoreWindow *)[self window] showsBaselineSeparator]) {
