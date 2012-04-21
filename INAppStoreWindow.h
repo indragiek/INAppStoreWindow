@@ -29,7 +29,6 @@
  Draws a default style Mac OS X title bar.
  **/
 @interface INTitlebarView : NSView
-- (NSBezierPath*)clippingPathWithRect:(NSRect)aRect cornerRadius:(CGFloat)radius;
 @end
 
 /** @class INAppStoreWindow 
