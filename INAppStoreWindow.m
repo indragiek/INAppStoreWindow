@@ -74,7 +74,7 @@ static inline CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height
     return image;
 }
 
-static inline CGPathRef clippingPathWithRectAndRadius(NSRect aRect, CGFloat radius)
+static inline CGPathRef createClippingPathWithRectAndRadius(NSRect aRect, CGFloat radius)
 {
     CGPoint cornerPoint = CGPointMake(NSMinX(aRect), NSMinY(aRect));
     CGMutablePathRef path = CGPathCreateMutable();
@@ -96,7 +96,7 @@ static inline CGPathRef clippingPathWithRectAndRadius(NSRect aRect, CGFloat radi
     return path;
 }
 
-static inline CGGradientRef gradientWithColors(NSColor* startingColor, NSColor* endingColor)
+static inline CGGradientRef createGradientWithColors(NSColor* startingColor, NSColor* endingColor)
 {
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceGray();
     CGFloat startingComponents[2];
@@ -153,13 +153,13 @@ static inline CGGradientRef gradientWithColors(NSColor* startingColor, NSColor* 
         endColor = drawsAsMainWindow ? IN_COLOR_MAIN_END : IN_COLOR_NOTMAIN_END;
     }
     CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
-    CGPathRef clippingPath = clippingPathWithRectAndRadius(drawingRect, INCornerClipRadius);
+    CGPathRef clippingPath = createClippingPathWithRectAndRadius(drawingRect, INCornerClipRadius);
     CGContextAddPath(context, clippingPath);
     CGPathRelease(clippingPath);
     CGContextClip(context);
     
     CGFloat midX = NSMidX(drawingRect);
-    CGGradientRef gradient = gradientWithColors(startColor, endColor);
+    CGGradientRef gradient = createGradientWithColors(startColor, endColor);
     CGContextDrawLinearGradient(context, gradient, CGPointMake(midX, CGRectGetMinY(drawingRect)), CGPointMake(midX, CGRectGetMaxY(drawingRect)), 0);
     CGGradientRelease(gradient);
     
