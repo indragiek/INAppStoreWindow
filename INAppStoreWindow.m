@@ -59,7 +59,7 @@ NS_INLINE CGFloat INMidHeight(NSRect aRect){
     return (aRect.size.height * (CGFloat)0.5);
 }
 
-static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFloat factor)
+static inline CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFloat factor)
 {
     NSUInteger size = width*height;
     char *rgba = (char *)malloc(size); srand(124);
@@ -67,11 +67,56 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceGray();
     CGContextRef bitmapContext = 
     CGBitmapContextCreate(rgba, width, height, 8, width, colorSpace, kCGImageAlphaNone);
-    CFRelease(colorSpace);
-    free(rgba);
+    CGColorSpaceRelease(colorSpace);
     CGImageRef image = CGBitmapContextCreateImage(bitmapContext);
     CFRelease(bitmapContext);
     return image;
+}
+
+static inline CGPathRef clippingPathWithRectAndRadius(NSRect aRect, CGFloat radius)
+{
+    CGPoint cornerPoint = CGPointMake(NSMinX(aRect), NSMinY(aRect));
+    CGMutablePathRef path = CGPathCreateMutable();
+    CGPathMoveToPoint(path, NULL, cornerPoint.x, cornerPoint.y);
+    cornerPoint.x = NSMaxX(aRect);
+    CGPathAddLineToPoint(path, NULL, cornerPoint.x, cornerPoint.y);
+    cornerPoint.y = NSMaxY(aRect)-radius;
+    CGPoint endPoint = CGPointMake(CGRectGetMaxX(aRect), CGRectGetMaxY(aRect)-radius);
+    CGPathAddLineToPoint(path, NULL, endPoint.x, endPoint.y);
+    endPoint = CGPointMake(CGRectGetMaxX(aRect)-radius, CGRectGetMaxY(aRect));
+    CGPathAddQuadCurveToPoint(path, NULL, cornerPoint.x, cornerPoint.y, endPoint.x, endPoint.y);
+    endPoint.x = CGRectGetMinX(aRect)+radius;
+    CGPathAddLineToPoint(path, NULL, endPoint.x, endPoint.y);
+    cornerPoint.x = CGRectGetMinX(aRect);
+    endPoint = CGPointMake(CGRectGetMinX(aRect), CGRectGetMaxY(aRect)-radius);
+    CGPathAddQuadCurveToPoint(path, NULL, cornerPoint.x, cornerPoint.y, endPoint.x, endPoint.y);
+    cornerPoint.y = NSMinY(aRect);
+    CGPathAddLineToPoint(path, NULL, cornerPoint.x, cornerPoint.y);
+    return path;
+}
+
+static inline CGGradientRef gradientWithColors(NSColor* startingColor, NSColor* endingColor)
+{
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceGray();
+    CGFloat startingComponents[2];
+    [startingColor getWhite:&startingComponents[0] alpha:&startingComponents[1]];
+    
+    CGFloat endingComponents[2];
+    [endingColor getWhite:&endingComponents[0] alpha:&endingComponents[1]];
+    
+    CGFloat compontents[4] = {
+        startingComponents[0],
+        startingComponents[1],
+        endingComponents[0],
+        endingComponents[1],
+    };
+    
+    CGFloat locations[2] = {
+        0.0f,
+        1.0f,
+    };
+    
+    return CGGradientCreateWithColorComponents(colorSpace, (const CGFloat*)&compontents, (const CGFloat*)&locations, 2);
 }
 
 @interface INAppStoreWindow ()
@@ -94,7 +139,7 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
 {
     BOOL drawsAsMainWindow = ([[self window] isMainWindow] && [[NSApplication sharedApplication] isActive]);
     NSRect drawingRect = [self bounds];
-    drawingRect.size.height -= 1.0; // Decrease the height by 1.0px to show the highlight line at the top
+    //drawingRect.size.height -= 1.0; // Decrease the height by 1.0px to show the highlight line at the top
     NSColor *startColor = nil;
     NSColor *endColor = nil;
     if (IN_RUNNING_LION) {
@@ -104,23 +149,16 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
         startColor = drawsAsMainWindow ? IN_COLOR_MAIN_START : IN_COLOR_NOTMAIN_START;
         endColor = drawsAsMainWindow ? IN_COLOR_MAIN_END : IN_COLOR_NOTMAIN_END;
     }
-    [[self clippingPathWithRect:drawingRect cornerRadius:INCornerClipRadius] addClip];
-    NSGradient *gradient = [[NSGradient alloc] initWithStartingColor:startColor endingColor:endColor];
-    [gradient drawInRect:drawingRect angle:90];
-    #if !__has_feature(objc_arc)
-    [gradient release];
-    #endif
-    if (IN_RUNNING_LION && drawsAsMainWindow) {
-        static CGImageRef noisePattern = nil;
-        if (noisePattern == nil) noisePattern = createNoiseImageRef(128, 128, 0.015);
-        [NSGraphicsContext saveGraphicsState];
-        [[NSGraphicsContext currentContext] setCompositingOperation:NSCompositePlusLighter];
-        CGRect noisePatternRect = CGRectZero;
-        noisePatternRect.size = CGSizeMake(CGImageGetWidth(noisePattern), CGImageGetHeight(noisePattern));        
-        CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
-        CGContextDrawTiledImage(context, noisePatternRect, noisePattern);
-        [NSGraphicsContext restoreGraphicsState];
-    }
+    CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
+    CGPathRef clippingPath = clippingPathWithRectAndRadius(drawingRect, INCornerClipRadius);
+    CGContextAddPath(context, clippingPath);
+    CGPathRelease(clippingPath);
+    CGContextClip(context);
+    
+    CGFloat midX = NSMidX(drawingRect);
+    CGGradientRef gradient = gradientWithColors(startColor, endColor);
+    CGContextDrawLinearGradient(context, gradient, CGPointMake(midX, CGRectGetMinY(drawingRect)), CGPointMake(midX, CGRectGetMaxY(drawingRect)), 0);
+    CGGradientRelease(gradient);
     
     if ([(INAppStoreWindow *)[self window] showsBaselineSeparator]) {
         NSColor *bottomColor = nil;
@@ -139,24 +177,16 @@ static CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFlo
           [[NSBezierPath bezierPathWithRect:bottomRect] fill];
         }
     }
-}
-
-// Uses code from NSBezierPath+PXRoundedRectangleAdditions by Andy Matuschak
-// <http://code.andymatuschak.org/pixen/trunk/NSBezierPath+PXRoundedRectangleAdditions.m>
-
-- (NSBezierPath*)clippingPathWithRect:(NSRect)aRect cornerRadius:(CGFloat)radius
-{
-    NSBezierPath *path = [NSBezierPath bezierPath];
-	NSRect rect = NSInsetRect(aRect, radius, radius);
-    NSPoint cornerPoint = NSMakePoint(NSMinX(aRect), NSMinY(aRect));
-    // Create a rounded rectangle path, omitting the bottom left/right corners
-    [path appendBezierPathWithPoints:&cornerPoint count:1];
-    cornerPoint = NSMakePoint(NSMaxX(aRect), NSMinY(aRect));
-    [path appendBezierPathWithPoints:&cornerPoint count:1];
-    [path appendBezierPathWithArcWithCenter:NSMakePoint(NSMaxX(rect), NSMaxY(rect)) radius:radius startAngle:  0.0 endAngle: 90.0];
-    [path appendBezierPathWithArcWithCenter:NSMakePoint(NSMinX(rect), NSMaxY(rect)) radius:radius startAngle: 90.0 endAngle:180.0];
-    [path closePath];
-    return path;
+    
+    if (IN_RUNNING_LION && drawsAsMainWindow) {
+        static CGImageRef noisePattern = nil;
+        if (noisePattern == nil) noisePattern = createNoiseImageRef(128, 128, 0.015);
+        
+        CGContextSetBlendMode(context, kCGBlendModePlusLighter);
+        CGRect noisePatternRect = CGRectZero;
+        noisePatternRect.size = CGSizeMake(CGImageGetWidth(noisePattern), CGImageGetHeight(noisePattern)); 
+        CGContextDrawTiledImage(context, noisePatternRect, noisePattern);
+    }
 }
 
 - (void)mouseUp:(NSEvent *)theEvent 
