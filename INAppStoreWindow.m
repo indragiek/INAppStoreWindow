@@ -116,7 +116,9 @@ static inline CGGradientRef gradientWithColors(NSColor* startingColor, NSColor* 
         1.0f,
     };
     
-    return CGGradientCreateWithColorComponents(colorSpace, (const CGFloat*)&compontents, (const CGFloat*)&locations, 2);
+    CGGradientRef gradient = CGGradientCreateWithColorComponents(colorSpace, (const CGFloat*)&compontents, (const CGFloat*)&locations, 2);
+    CGColorSpaceRelease(colorSpace);
+    return gradient;
 }
 
 @interface INAppStoreWindow ()
