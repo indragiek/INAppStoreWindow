@@ -142,7 +142,7 @@ static inline CGGradientRef createGradientWithColors(NSColor* startingColor, NSC
 {
     BOOL drawsAsMainWindow = ([[self window] isMainWindow] && [[NSApplication sharedApplication] isActive]);
     NSRect drawingRect = [self bounds];
-    //drawingRect.size.height -= 1.0; // Decrease the height by 1.0px to show the highlight line at the top
+    drawingRect.size.height -= 1.0; // Decrease the height by 1.0px to show the highlight line at the top
     NSColor *startColor = nil;
     NSColor *endColor = nil;
     if (IN_RUNNING_LION) {
