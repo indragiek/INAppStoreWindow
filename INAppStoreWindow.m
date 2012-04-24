@@ -287,6 +287,18 @@ static inline CGGradientRef createGradientWithColors(NSColor* startingColor, NSC
     [_titleBarView setNeedsDisplay:YES];
 }
 
+- (void)becomeMainWindow
+{
+    [super becomeMainWindow];
+    [_titleBarView setNeedsDisplay:YES];    
+}
+
+- (void)resignMainWindow
+{
+    [super resignMainWindow];
+    [_titleBarView setNeedsDisplay:YES];    
+}
+
 - (void)orderFront:(id)sender
 {
 	[super orderFront:sender];
