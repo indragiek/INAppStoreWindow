@@ -138,15 +138,13 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     BOOL drawsAsMainWindow = ([window isMainWindow] && [[NSApplication sharedApplication] isActive]);
     
     NSRect drawingRect = [self bounds];
-    CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
-    
     if ( window.titleBarDrawingBlock ) {
         CGPathRef clippingPath = createClippingPathWithRectAndRadius(drawingRect, INCornerClipRadius);
-        CGContextAddPath(context, clippingPath);
-        CGContextClip(context);
-        window.titleBarDrawingBlock(drawsAsMainWindow, NSRectToCGRect(drawingRect), clippingPath, context);
+        window.titleBarDrawingBlock(drawsAsMainWindow, NSRectToCGRect(drawingRect), clippingPath);
         CGPathRelease(clippingPath);
     } else {
+        CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];        
+        
         NSColor *startColor = nil;
         NSColor *endColor = nil;
         if (IN_RUNNING_LION) {
