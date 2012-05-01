@@ -224,12 +224,21 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 
 @end
 
-@implementation INAppStoreWindow
+@implementation INAppStoreWindow{
+    CGFloat _cachedTitleBarHeight;
+    BOOL _setFullScreenButtonRightMargin;
+}
+
+@synthesize titleBarView = _titleBarView;
+@synthesize titleBarHeight = _titleBarHeight;
 @synthesize windowMenuTitle = _windowMenuTitle;
 @synthesize centerFullScreenButton = _centerFullScreenButton;
 @synthesize centerTrafficLightButtons = _centerTrafficLightButtons;
 @synthesize hideTitleBarInFullScreen = _hideTitleBarInFullScreen;
 @synthesize titleBarDrawingBlock = _titleBarDrawingBlock;
+@synthesize showsBaselineSeparator = _showsBaselineSeparator;
+@synthesize fullScreenButtonRightMargin = _fullScreenButtonRightMargin;
+@synthesize trafficLightButtonsLeftMargin = _trafficLightButtonsLeftMargin;
 
 #pragma mark -
 #pragma mark Initialization
