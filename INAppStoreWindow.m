@@ -134,67 +134,77 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 
 - (void)drawRect:(NSRect)dirtyRect
 {
-    BOOL drawsAsMainWindow = ([[self window] isMainWindow] && [[NSApplication sharedApplication] isActive]);
+    INAppStoreWindow *window = (INAppStoreWindow *)[self window];
+    BOOL drawsAsMainWindow = ([window isMainWindow] && [[NSApplication sharedApplication] isActive]);
+    
     NSRect drawingRect = [self bounds];
-
-    NSColor *startColor = nil;
-    NSColor *endColor = nil;
-    if (IN_RUNNING_LION) {
-        startColor = drawsAsMainWindow ? IN_COLOR_MAIN_START_L : IN_COLOR_NOTMAIN_START_L;
-        endColor = drawsAsMainWindow ? IN_COLOR_MAIN_END_L : IN_COLOR_NOTMAIN_END_L;
-    } else {
-        startColor = drawsAsMainWindow ? IN_COLOR_MAIN_START : IN_COLOR_NOTMAIN_START;
-        endColor = drawsAsMainWindow ? IN_COLOR_MAIN_END : IN_COLOR_NOTMAIN_END;
-    }
-    
-    NSRect clippingRect = drawingRect;
-    clippingRect.size.height -= 1.0;
     CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
-    CGPathRef clippingPath = createClippingPathWithRectAndRadius(clippingRect, INCornerClipRadius);
-    CGContextAddPath(context, clippingPath);
-    CGPathRelease(clippingPath);
-    CGContextClip(context);
     
-    CGGradientRef gradient = createGradientWithColors(startColor, endColor);
-    CGContextDrawLinearGradient(context, gradient, 
-                                CGPointMake(NSMidX(drawingRect), NSMinY(drawingRect)), 
-                                CGPointMake(NSMidX(drawingRect), NSMaxY(drawingRect)), 0);
-    CGGradientRelease(gradient);
-    
-    if ([(INAppStoreWindow *)[self window] showsBaselineSeparator]) {
-        NSColor *bottomColor = nil;
+    if ( window.titleBarDrawingBlock ) {
+        CGPathRef clippingPath = createClippingPathWithRectAndRadius(drawingRect, INCornerClipRadius);
+        CGContextAddPath(context, clippingPath);
+        CGContextClip(context);
+        window.titleBarDrawingBlock(drawsAsMainWindow, NSRectToCGRect(drawingRect), clippingPath, context);
+        CGPathRelease(clippingPath);
+    } else {
+        NSColor *startColor = nil;
+        NSColor *endColor = nil;
         if (IN_RUNNING_LION) {
-          bottomColor = drawsAsMainWindow ? IN_COLOR_MAIN_BOTTOM_L : IN_COLOR_NOTMAIN_BOTTOM_L;
+            startColor = drawsAsMainWindow ? IN_COLOR_MAIN_START_L : IN_COLOR_NOTMAIN_START_L;
+            endColor = drawsAsMainWindow ? IN_COLOR_MAIN_END_L : IN_COLOR_NOTMAIN_END_L;
         } else {
-          bottomColor = drawsAsMainWindow ? IN_COLOR_MAIN_BOTTOM : IN_COLOR_NOTMAIN_BOTTOM;
-        }
-        NSRect bottomRect = NSMakeRect(0.0, NSMinY(drawingRect), NSWidth(drawingRect), 1.0);
-        [bottomColor set];
-        NSRectFill(bottomRect);
-        
-        if (IN_RUNNING_LION) {
-          bottomRect.origin.y += 1.0;
-          [[NSColor colorWithDeviceWhite:1.0 alpha:0.12] setFill];
-          [[NSBezierPath bezierPathWithRect:bottomRect] fill];
-        }
-    }
-    
-    if (IN_RUNNING_LION && drawsAsMainWindow) {
-        static CGImageRef noisePattern = nil;
-        if (noisePattern == nil) {
-            noisePattern = createNoiseImageRef(128, 128, 0.015);
+            startColor = drawsAsMainWindow ? IN_COLOR_MAIN_START : IN_COLOR_NOTMAIN_START;
+            endColor = drawsAsMainWindow ? IN_COLOR_MAIN_END : IN_COLOR_NOTMAIN_END;
         }
         
-        CGPathRef noiseClippingPath = 
-        createClippingPathWithRectAndRadius(NSInsetRect(drawingRect, 1, 1), INCornerClipRadius);
-        CGContextAddPath(context, noiseClippingPath);
-        CGPathRelease(noiseClippingPath);
-        CGContextClip(context);        
+        NSRect clippingRect = drawingRect;
+        clippingRect.size.height -= 1;
+        CGPathRef clippingPath = createClippingPathWithRectAndRadius(clippingRect, INCornerClipRadius);
+        CGContextAddPath(context, clippingPath);
+        CGContextClip(context);
+        CGPathRelease(clippingPath);
         
-        CGContextSetBlendMode(context, kCGBlendModePlusLighter);
-        CGRect noisePatternRect = CGRectZero;
-        noisePatternRect.size = CGSizeMake(CGImageGetWidth(noisePattern), CGImageGetHeight(noisePattern)); 
-        CGContextDrawTiledImage(context, noisePatternRect, noisePattern);
+        CGGradientRef gradient = createGradientWithColors(startColor, endColor);
+        CGContextDrawLinearGradient(context, gradient, CGPointMake(NSMidX(drawingRect), NSMinY(drawingRect)), 
+                                    CGPointMake(NSMidX(drawingRect), NSMaxY(drawingRect)), 0);
+        CGGradientRelease(gradient);
+
+        if ([window showsBaselineSeparator]) {
+            NSColor *bottomColor = nil;
+            if (IN_RUNNING_LION) {
+              bottomColor = drawsAsMainWindow ? IN_COLOR_MAIN_BOTTOM_L : IN_COLOR_NOTMAIN_BOTTOM_L;
+            } else {
+              bottomColor = drawsAsMainWindow ? IN_COLOR_MAIN_BOTTOM : IN_COLOR_NOTMAIN_BOTTOM;
+            }
+            
+            NSRect bottomRect = NSMakeRect(0.0, NSMinY(drawingRect), NSWidth(drawingRect), 1.0);
+            [bottomColor set];
+            NSRectFill(bottomRect);
+            
+            if (IN_RUNNING_LION) {
+              bottomRect.origin.y += 1.0;
+              [[NSColor colorWithDeviceWhite:1.0 alpha:0.12] setFill];
+              [[NSBezierPath bezierPathWithRect:bottomRect] fill];
+            }
+        }
+        
+        if (IN_RUNNING_LION && drawsAsMainWindow) {
+            static CGImageRef noisePattern = nil;
+            if (noisePattern == nil) {
+                noisePattern = createNoiseImageRef(128, 128, 0.015);
+            }
+
+            CGPathRef noiseClippingPath = 
+            createClippingPathWithRectAndRadius(NSInsetRect(drawingRect, 1, 1), INCornerClipRadius);
+            CGContextAddPath(context, noiseClippingPath);
+            CGContextClip(context);
+            CGPathRelease(noiseClippingPath);
+            
+            CGContextSetBlendMode(context, kCGBlendModePlusLighter);
+            CGRect noisePatternRect = CGRectZero;
+            noisePatternRect.size = CGSizeMake(CGImageGetWidth(noisePattern), CGImageGetHeight(noisePattern)); 
+            CGContextDrawTiledImage(context, noisePatternRect, noisePattern);
+        }        
     }
 }
 
@@ -219,6 +229,8 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 @synthesize centerFullScreenButton = _centerFullScreenButton;
 @synthesize centerTrafficLightButtons = _centerTrafficLightButtons;
 @synthesize hideTitleBarInFullScreen = _hideTitleBarInFullScreen;
+@synthesize titleBarDrawingBlock = _titleBarDrawingBlock;
+
 #pragma mark -
 #pragma mark Initialization
 
