@@ -116,6 +116,29 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     return gradient;
 }
 
+@interface INAppStoreWindowDelegateProxy : NSObject <NSWindowDelegate>
+@property (nonatomic, assign) id<NSWindowDelegate> secondaryDelegate;
+@end
+
+@implementation INAppStoreWindowDelegateProxy
+@synthesize secondaryDelegate = _secondaryDelegate;
+
+- (void)forwardInvocation:(NSInvocation *)anInvocation
+{
+    if ([_secondaryDelegate respondsToSelector:[anInvocation selector]]) {
+        [anInvocation invokeWithTarget:_secondaryDelegate];
+    } else {
+        [super forwardInvocation:anInvocation];
+    }
+}
+
+- (NSRect)window:(INAppStoreWindow *)window willPositionSheet:(NSWindow *)sheet usingRect:(NSRect)rect
+{
+    rect.origin.y = NSHeight(window.frame)-window.titleBarHeight;
+    return rect;
+}
+@end
+
 @interface INAppStoreWindow ()
 @property (INAppStoreWindowCopy) NSString *windowMenuTitle;
 - (void)_doInitialWindowSetup;
@@ -225,6 +248,7 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 @implementation INAppStoreWindow{
     CGFloat _cachedTitleBarHeight;
     BOOL _setFullScreenButtonRightMargin;
+    INAppStoreWindowDelegateProxy *_delegateProxy;
 }
 
 @synthesize titleBarView = _titleBarView;
@@ -263,7 +287,9 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [self setDelegate:nil];
     #if !__has_feature(objc_arc)
+    [_delegateProxy release];
     [_titleBarView release];
 	[_windowMenuTitle release];
     [super dealloc];    
@@ -445,6 +471,16 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     }
 }
 
+- (void)setDelegate:(id<NSWindowDelegate>)anObject
+{
+    [_delegateProxy setSecondaryDelegate:anObject];
+}
+
+- (id<NSWindowDelegate>)delegate
+{
+    return [_delegateProxy secondaryDelegate];
+}
+
 #pragma mark -
 #pragma mark Private
 
@@ -455,6 +491,8 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     _titleBarHeight = [self _minimumTitlebarHeight];
 	_trafficLightButtonsLeftMargin = [self _defaultTrafficLightLeftMargin];
     [self setMovableByWindowBackground:YES];
+    _delegateProxy = [[INAppStoreWindowDelegateProxy alloc] init];
+    [super setDelegate:_delegateProxy];
     
     /** -----------------------------------------
      - The window automatically does layout every time its moved or resized, which means that the traffic lights and content view get reset at the original positions, so we need to put them back in place

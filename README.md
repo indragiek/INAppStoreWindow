@@ -27,20 +27,6 @@ INAppStoreWindow *aWindow = (INAppStoreWindow*)[windowController window];
 aWindow.titleBarHeight = 60.0;
 ```
 
-### Sheet Windows
-
-Because of the enlarged title bar, sheet windows may not appear properly (it'll look like they're popping out of the center of the title bar). To fix this, override this `NSWindow` delegate method and return an appropriate rect for where you want the sheet window to be positioned:
-
-``` obj-c
-- (NSRect)window:(INAppStoreWindow *)window willPositionSheet:(NSWindow *)sheet usingRect:(NSRect)rect
-{
-    rect.origin.y = NSHeight(window.frame)-window.titleBarHeight;
-    return rect;
-}
-```
-
-There is an example of how to get this working in the sample app.
-
 ### Adding buttons and other controls to the title bar
 
 Adding controls and other views to the title bar is simple. This can be done either programmatically or through Interface Builder. Here are examples of both methods:

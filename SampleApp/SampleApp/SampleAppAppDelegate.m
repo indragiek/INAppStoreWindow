@@ -38,13 +38,6 @@
     self.trafficLightLeftMargin.doubleValue = self.window.trafficLightButtonsLeftMargin;
 }
 
-// window delegate to correct the position of the sheet
-- (NSRect)window:(INAppStoreWindow *)window willPositionSheet:(NSWindow *)sheet usingRect:(NSRect)rect
-{
-    rect.origin.y = NSHeight(window.frame)-window.titleBarHeight;
-    return rect;
-}
-
 - (IBAction)showSheetAction:(id)sender
 {
     [NSApp beginSheet:self.sheet modalForWindow:self.window
