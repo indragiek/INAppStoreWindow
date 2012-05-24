@@ -352,8 +352,8 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 - (void)setTitleBarHeight:(CGFloat)newTitleBarHeight 
 {
 	if (_titleBarHeight != newTitleBarHeight) {
-        _cachedTitleBarHeight = newTitleBarHeight;
-		_titleBarHeight = newTitleBarHeight;
+        _cachedTitleBarHeight = MAX(22, newTitleBarHeight);
+		_titleBarHeight = _cachedTitleBarHeight;
 		[self _recalculateFrameForTitleBarView];
 		[self _layoutTrafficLightsAndContent];
 		[self _displayWindowAndTitlebar];
