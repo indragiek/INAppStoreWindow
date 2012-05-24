@@ -140,7 +140,6 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 @end
 
 @interface INAppStoreWindow ()
-@property (INAppStoreWindowCopy) NSString *windowMenuTitle;
 - (void)_doInitialWindowSetup;
 - (void)_createTitlebarView;
 - (void)_setupTrafficLightsTrackingArea;
@@ -253,7 +252,6 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 
 @synthesize titleBarView = _titleBarView;
 @synthesize titleBarHeight = _titleBarHeight;
-@synthesize windowMenuTitle = _windowMenuTitle;
 @synthesize centerFullScreenButton = _centerFullScreenButton;
 @synthesize centerTrafficLightButtons = _centerTrafficLightButtons;
 @synthesize hideTitleBarInFullScreen = _hideTitleBarInFullScreen;
@@ -291,40 +289,12 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     #if !__has_feature(objc_arc)
     [_delegateProxy release];
     [_titleBarView release];
-	[_windowMenuTitle release];
     [super dealloc];    
     #endif
 }
 
 #pragma mark -
 #pragma mark NSWindow Overrides
-
-// Disable window titles
-
-- (NSString*)title
-{
-    return @"";
-}
-
-- (void)setTitle:(NSString*)title
-{
-	self.windowMenuTitle = title;
-	if ( ![self isExcludedFromWindowsMenu] )
-		[NSApp changeWindowsItem:self title:self.windowMenuTitle filename:NO];
-}
-
-- (void)setRepresentedURL:(NSURL *)url
-{
-	// do nothing, don't want to show document icon in menu bar
-}
-
-- (void)makeKeyAndOrderFront:(id)sender
-{
-	[super makeKeyAndOrderFront:sender];
-	if (![self isExcludedFromWindowsMenu]) {
-		[NSApp addWindowsItem:self title:self.windowMenuTitle filename:NO];	
-    }
-}
 
 - (void)becomeKeyWindow
 {
@@ -348,20 +318,6 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 {
     [super resignMainWindow];
     [_titleBarView setNeedsDisplay:YES];    
-}
-
-- (void)orderFront:(id)sender
-{
-	[super orderFront:sender];
-	if (![self isExcludedFromWindowsMenu]) {
-		[NSApp addWindowsItem:self title:self.windowMenuTitle filename:NO];
-    }
-}
-
-- (void)orderOut:(id)sender
-{
-	[super orderOut:sender];
-	[NSApp removeWindowsItem:self];
 }
 
 #pragma mark -
