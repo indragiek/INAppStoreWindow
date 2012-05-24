@@ -178,7 +178,13 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
         }
         
         NSRect clippingRect = drawingRect;
-        clippingRect.size.height -= 1;
+        #if IN_COMPILING_LION
+        if((([window styleMask] & NSFullScreenWindowMask) == NSFullScreenWindowMask)){
+            [[NSColor blackColor] setFill];
+            [[NSBezierPath bezierPathWithRect:self.bounds] fill];
+        }
+        #endif
+        clippingRect.size.height -= 1;        
         CGPathRef clippingPath = createClippingPathWithRectAndRadius(clippingRect, INCornerClipRadius);
         CGContextAddPath(context, clippingPath);
         CGContextClip(context);
@@ -245,7 +251,7 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 @end
 
 @implementation INAppStoreWindow{
-    CGFloat _cachedTitleBarHeight;
+    CGFloat _cachedTitleBarHeight;  
     BOOL _setFullScreenButtonRightMargin;
     INAppStoreWindowDelegateProxy *_delegateProxy;
 }
@@ -624,4 +630,5 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     // Redraw the window and titlebar
     [_titleBarView setNeedsDisplay:YES];
 }
+
 @end

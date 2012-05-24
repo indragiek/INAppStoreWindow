@@ -25,8 +25,7 @@
     self.windowControllers = [NSMutableArray array];
     // The class of the window has been set in INAppStoreWindow in Interface Builder
     self.window.trafficLightButtonsLeftMargin = 7.0;
-    self.window.fullScreenButtonRightMargin = 7.0; 
-    self.window.hideTitleBarInFullScreen = YES;    
+    self.window.fullScreenButtonRightMargin = 7.0;   
     self.window.centerFullScreenButton = YES;    
     self.window.titleBarHeight = 40.0;
     
