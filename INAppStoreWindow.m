@@ -252,7 +252,6 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 
 @implementation INAppStoreWindow{
     CGFloat _cachedTitleBarHeight;  
-    BOOL _setFullScreenButtonRightMargin;
     INAppStoreWindowDelegateProxy *_delegateProxy;
 }
 
@@ -404,7 +403,6 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 - (void)setFullScreenButtonRightMargin:(CGFloat)newFullScreenButtonRightMargin
 {
 	if (_fullScreenButtonRightMargin != newFullScreenButtonRightMargin) {
-        _setFullScreenButtonRightMargin = YES;
 		_fullScreenButtonRightMargin = newFullScreenButtonRightMargin;
 		[self _recalculateFrameForTitleBarView];
 		[self _layoutTrafficLightsAndContent];
@@ -513,9 +511,7 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
         NSButton *fullScreen = [self standardWindowButton:NSWindowFullScreenButton];        
         if( fullScreen ) {
             NSRect fullScreenFrame = [fullScreen frame];
-            if ( !_setFullScreenButtonRightMargin ) {
-                self.fullScreenButtonRightMargin = NSWidth([_titleBarView frame]) - NSMaxX(fullScreen.frame);
-            }
+            self.fullScreenButtonRightMargin = _centerFullScreenButton?7:INButtonTopOffset;
 			fullScreenFrame.origin.x = NSWidth(titleBarFrame) - NSWidth(fullScreenFrame) - _fullScreenButtonRightMargin;
             if( self.centerFullScreenButton ) {
                 fullScreenFrame.origin.y = round(NSMidY(titleBarFrame) - INMidHeight(fullScreenFrame));
