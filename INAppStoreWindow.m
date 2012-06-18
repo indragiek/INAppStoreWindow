@@ -54,6 +54,7 @@ const CGFloat INCornerClipRadius = 4.0;
 #endif
 
 const CGFloat INButtonTopOffset = 3.0;
+const CGFloat INButtonRightOffset = 7.0;
 
 NS_INLINE CGFloat INMidHeight(NSRect aRect){
     return (aRect.size.height * (CGFloat)0.5);
@@ -252,7 +253,6 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 
 @implementation INAppStoreWindow{
     CGFloat _cachedTitleBarHeight;  
-    BOOL _setFullScreenButtonRightMargin;
     INAppStoreWindowDelegateProxy *_delegateProxy;
 }
 
@@ -263,7 +263,6 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 @synthesize hideTitleBarInFullScreen = _hideTitleBarInFullScreen;
 @synthesize titleBarDrawingBlock = _titleBarDrawingBlock;
 @synthesize showsBaselineSeparator = _showsBaselineSeparator;
-@synthesize fullScreenButtonRightMargin = _fullScreenButtonRightMargin;
 @synthesize trafficLightButtonsLeftMargin = _trafficLightButtonsLeftMargin;
 
 #pragma mark -
@@ -400,23 +399,6 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     return _trafficLightButtonsLeftMargin;
 }
 
-
-- (void)setFullScreenButtonRightMargin:(CGFloat)newFullScreenButtonRightMargin
-{
-	if (_fullScreenButtonRightMargin != newFullScreenButtonRightMargin) {
-        _setFullScreenButtonRightMargin = YES;
-		_fullScreenButtonRightMargin = newFullScreenButtonRightMargin;
-		[self _recalculateFrameForTitleBarView];
-		[self _layoutTrafficLightsAndContent];
-		[self _displayWindowAndTitlebar];
-	}
-}
-
-- (CGFloat)fullScreenButtonRightMargin
-{
-    return _fullScreenButtonRightMargin;
-}
-
 - (void)setCenterFullScreenButton:(BOOL)centerFullScreenButton{
     if( _centerFullScreenButton != centerFullScreenButton ) {
         _centerFullScreenButton = centerFullScreenButton;
@@ -513,9 +495,7 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
         NSButton *fullScreen = [self standardWindowButton:NSWindowFullScreenButton];        
         if( fullScreen ) {
             NSRect fullScreenFrame = [fullScreen frame];
-            if ( !_setFullScreenButtonRightMargin ) {
-                self.fullScreenButtonRightMargin = NSWidth([_titleBarView frame]) - NSMaxX(fullScreen.frame);
-            }
+            _fullScreenButtonRightMargin = _centerFullScreenButton?INButtonRightOffset:INButtonTopOffset;
 			fullScreenFrame.origin.x = NSWidth(titleBarFrame) - NSWidth(fullScreenFrame) - _fullScreenButtonRightMargin;
             if( self.centerFullScreenButton ) {
                 fullScreenFrame.origin.y = round(NSMidY(titleBarFrame) - INMidHeight(fullScreenFrame));

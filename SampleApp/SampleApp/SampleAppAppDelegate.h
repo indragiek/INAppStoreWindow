@@ -24,7 +24,6 @@
 @property (assign) IBOutlet INAppStoreWindow *window;
 @property (assign) IBOutlet NSButton *centerFullScreen;
 @property (assign) IBOutlet NSButton *centerTrafficLight;
-@property (assign) IBOutlet NSSlider *fullScreenRightMarginSlider;
 @property (assign) IBOutlet NSSlider *trafficLightLeftMargin;
 @property (assign) IBOutlet NSButton *showsBaselineSeparator;
 @property (nonatomic, retain) NSMutableArray *windowControllers;
