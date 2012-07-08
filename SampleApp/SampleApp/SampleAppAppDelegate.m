@@ -37,6 +37,22 @@
     self.trafficLightLeftMargin.doubleValue = self.window.trafficLightButtonsLeftMargin;
 }
 
+- (void)windowDidBecomeKey:(NSNotification *)notification{
+    [self.centerFullScreen setEnabled:YES];
+    [self.centerTrafficLight setEnabled:YES];
+    [self.showsBaselineSeparator setEnabled:YES];
+    [self.fullScreenRightMarginSlider setEnabled:YES];
+    [self.trafficLightLeftMargin setEnabled:YES];
+}
+
+- (void)windowDidResignKey:(NSNotification *)notification{
+    [self.centerFullScreen setEnabled:NO];
+    [self.centerTrafficLight setEnabled:NO];
+    [self.showsBaselineSeparator setEnabled:NO];
+    [self.fullScreenRightMarginSlider setEnabled:NO];
+    [self.trafficLightLeftMargin setEnabled:NO];
+}
+
 - (IBAction)showSheetAction:(id)sender
 {
     [NSApp beginSheet:self.sheet modalForWindow:self.window

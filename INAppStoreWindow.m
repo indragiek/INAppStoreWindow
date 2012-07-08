@@ -116,19 +116,35 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     return gradient;
 }
 
-@interface INAppStoreWindowDelegateProxy : NSObject <NSWindowDelegate>
+@interface INAppStoreWindowDelegateProxy : NSProxy <NSWindowDelegate>
 @property (nonatomic, assign) id<NSWindowDelegate> secondaryDelegate;
 @end
 
 @implementation INAppStoreWindowDelegateProxy
 @synthesize secondaryDelegate = _secondaryDelegate;
 
+- (NSMethodSignature *)methodSignatureForSelector:(SEL)selector
+{
+    NSMethodSignature *signature = [[self.secondaryDelegate class] instanceMethodSignatureForSelector:selector];
+    NSAssert(signature != nil, @"The method signature(%@) should not be nil becuase of the respondsToSelector: check", NSStringFromSelector(selector));
+    return signature;
+}
+
+- (BOOL)respondsToSelector:(SEL)aSelector
+{
+    if ([self.secondaryDelegate respondsToSelector:aSelector]) {
+        return YES;
+    } else if ([NSStringFromSelector(aSelector) isEqualToString:@"window:willPositionSheet:usingRect:"]) {
+        //TODO: not sure if there is a better way to do this check
+        return YES;
+    }
+    return NO;
+}
+
 - (void)forwardInvocation:(NSInvocation *)anInvocation
 {
-    if ([_secondaryDelegate respondsToSelector:[anInvocation selector]]) {
-        [anInvocation invokeWithTarget:_secondaryDelegate];
-    } else {
-        [super forwardInvocation:anInvocation];
+    if ([self.secondaryDelegate respondsToSelector:[anInvocation selector]]) {
+        [anInvocation invokeWithTarget:self.secondaryDelegate];
     }
 }
 
@@ -291,9 +307,9 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [self setDelegate:nil];
+//    [self setDelegate:nil];
     #if !__has_feature(objc_arc)
-    [_delegateProxy release];
+//    [_delegateProxy release];
     [_titleBarView release];
     [super dealloc];    
     #endif
@@ -436,6 +452,7 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 - (void)setDelegate:(id<NSWindowDelegate>)anObject
 {
     [_delegateProxy setSecondaryDelegate:anObject];
+    [super setDelegate:_delegateProxy];    
 }
 
 - (id<NSWindowDelegate>)delegate
@@ -453,8 +470,7 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     _titleBarHeight = [self _minimumTitlebarHeight];
 	_trafficLightButtonsLeftMargin = [self _defaultTrafficLightLeftMargin];
     [self setMovableByWindowBackground:YES];
-    _delegateProxy = [[INAppStoreWindowDelegateProxy alloc] init];
-    [super setDelegate:_delegateProxy];
+    _delegateProxy = [INAppStoreWindowDelegateProxy alloc];
     
     /** -----------------------------------------
      - The window automatically does layout every time its moved or resized, which means that the traffic lights and content view get reset at the original positions, so we need to put them back in place
