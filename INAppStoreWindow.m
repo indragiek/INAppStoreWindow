@@ -67,10 +67,10 @@ static inline CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceGray();
     CGContextRef bitmapContext = 
     CGBitmapContextCreate(rgba, width, height, 8, width, colorSpace, kCGImageAlphaNone);
-    free(rgba);
-    CGColorSpaceRelease(colorSpace);
     CGImageRef image = CGBitmapContextCreateImage(bitmapContext);
     CFRelease(bitmapContext);
+    CGColorSpaceRelease(colorSpace);
+    free(rgba);
     return image;
 }
 
