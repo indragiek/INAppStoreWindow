@@ -19,7 +19,6 @@
 
 #define IN_RUNNING_LION (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_6)
 #define IN_COMPILING_LION __MAC_OS_X_VERSION_MAX_ALLOWED >= 1070
-#define IN_COMPILING_MOUNTAIN __MAC_OS_X_VERSION_MAX_ALLOWED >= 1080
 
 /** -----------------------------------------
  - There are 2 sets of colors, one for an active (key) state and one for an inactivate state
@@ -47,12 +46,7 @@
 #define IN_COLOR_NOTMAIN_BOTTOM_L [NSColor colorWithDeviceWhite:0.655 alpha:1.0]
 
 /** Corner clipping radius **/
-#if IN_COMPILING_MOUNTAIN
-const CGFloat INCornerClipRadius = 6.0;
-#else
 const CGFloat INCornerClipRadius = 4.0;
-#endif
-
 const CGFloat INButtonTopOffset = 3.0;
 
 NS_INLINE CGFloat INMidHeight(NSRect aRect){
