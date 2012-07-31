@@ -352,7 +352,6 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
         // Configure the view properties and add it as a subview of the theme frame
         NSView *themeFrame = [[self contentView] superview];
         NSView *firstSubview = [[themeFrame subviews] objectAtIndex:0];
-        [_titleBarView setAutoresizingMask:(NSViewMinYMargin | NSViewWidthSizable)];
         [self _recalculateFrameForTitleBarView];
         [themeFrame addSubview:_titleBarView positioned:NSWindowBelow relativeTo:firstSubview];
         [self _layoutTrafficLightsAndContent];
@@ -370,7 +369,6 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 	if (_titleBarHeight != newTitleBarHeight) {
         _cachedTitleBarHeight = newTitleBarHeight;
 		_titleBarHeight = _cachedTitleBarHeight;
-		[self _recalculateFrameForTitleBarView];
 		[self _layoutTrafficLightsAndContent];
 		[self _displayWindowAndTitlebar];
 	}
@@ -398,7 +396,6 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 {
 	if (_trafficLightButtonsLeftMargin != newTrafficLightButtonsLeftMargin) {
 		_trafficLightButtonsLeftMargin = newTrafficLightButtonsLeftMargin;
-		[self _recalculateFrameForTitleBarView];
 		[self _layoutTrafficLightsAndContent];
 		[self _displayWindowAndTitlebar];
         [self _setupTrafficLightsTrackingArea];
@@ -416,7 +413,6 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 	if (_fullScreenButtonRightMargin != newFullScreenButtonRightMargin) {
         _setFullScreenButtonRightMargin = YES;
 		_fullScreenButtonRightMargin = newFullScreenButtonRightMargin;
-		[self _recalculateFrameForTitleBarView];
 		[self _layoutTrafficLightsAndContent];
 		[self _displayWindowAndTitlebar];
 	}
@@ -492,6 +488,9 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 
 - (void)_layoutTrafficLightsAndContent
 {
+    // Reposition/resize the title bar view as needed
+    [self _recalculateFrameForTitleBarView];
+    
     NSButton *close = [self standardWindowButton:NSWindowCloseButton];
     NSButton *minimize = [self standardWindowButton:NSWindowMiniaturizeButton];
     NSButton *zoom = [self standardWindowButton:NSWindowZoomButton];
@@ -553,7 +552,6 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     if (_hideTitleBarInFullScreen) {
         // Recalculate the views when entering from fullscreen
         _titleBarHeight = 0.0f;
-		[self _recalculateFrameForTitleBarView];
 		[self _layoutTrafficLightsAndContent];
 		[self _displayWindowAndTitlebar];
         
@@ -565,7 +563,6 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 {
     if (_hideTitleBarInFullScreen) {
         _titleBarHeight = _cachedTitleBarHeight;
-		[self _recalculateFrameForTitleBarView];
 		[self _layoutTrafficLightsAndContent];
 		[self _displayWindowAndTitlebar];
         
