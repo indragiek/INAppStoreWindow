@@ -154,6 +154,7 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 - (void)_createTitlebarView;
 - (void)_setupTrafficLightsTrackingArea;
 - (void)_recalculateFrameForTitleBarView;
+- (void)_repositionContentView;
 - (void)_layoutTrafficLightsAndContent;
 - (CGFloat)_minimumTitlebarHeight;
 - (void)_displayWindowAndTitlebar;
@@ -334,6 +335,12 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 {
     [super resignMainWindow];
     [_titleBarView setNeedsDisplay:YES];    
+}
+
+- (void)setContentView:(NSView *)aView
+{
+    [super setContentView:aView];
+    [self _repositionContentView];
 }
 
 #pragma mark -
@@ -536,15 +543,7 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     }
     #endif
     
-    // Reposition the content view
-    NSView *contentView = [self contentView];    
-    NSRect windowFrame = [self frame];
-    NSRect newFrame = [contentView frame];
-    CGFloat titleHeight = NSHeight(windowFrame) - NSHeight(newFrame);
-    CGFloat extraHeight = _titleBarHeight - titleHeight;
-    newFrame.size.height -= extraHeight;
-    [contentView setFrame:newFrame];
-    [contentView setNeedsDisplay:YES];
+    [self _repositionContentView];
 }
 
 - (void)windowWillEnterFullScreen:(NSNotification *)notification 
@@ -598,6 +597,18 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     NSRect themeFrameRect = [themeFrame frame];
     NSRect titleFrame = NSMakeRect(0.0, NSMaxY(themeFrameRect) - _titleBarHeight, NSWidth(themeFrameRect), _titleBarHeight);
     [_titleBarView setFrame:titleFrame];
+}
+
+- (void)_repositionContentView
+{
+    NSView *contentView = [self contentView];
+    NSRect windowFrame = [self frame];
+    NSRect newFrame = [contentView frame];
+    CGFloat titleHeight = NSHeight(windowFrame) - NSHeight(newFrame);
+    CGFloat extraHeight = _titleBarHeight - titleHeight;
+    newFrame.size.height -= extraHeight;
+    [contentView setFrame:newFrame];
+    [contentView setNeedsDisplay:YES];
 }
 
 - (CGFloat)_minimumTitlebarHeight
