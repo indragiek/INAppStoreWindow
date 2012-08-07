@@ -59,6 +59,8 @@
 @property (nonatomic) CGFloat trafficLightButtonsLeftMargin;
 @property (nonatomic) CGFloat fullScreenButtonRightMargin;
 
+/** Draw default window title */
+@property (nonatomic) BOOL defaultWindowTitle;
 
 /** So much logic and work has gone into this window subclass to achieve a custom title bar,
  it would be a shame to have to re-invent that just to change the look. So this block can be used
