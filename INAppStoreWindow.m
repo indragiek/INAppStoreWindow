@@ -255,9 +255,9 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
                                       [NSFont systemFontOfSize:13], NSFontAttributeName,
                                       textShadow, NSShadowAttributeName, nil];
             
-            int width = [self.window.title widthForHeight:18 attributes:attsDict];
+            NSSize titleSize = [self.window.title sizeWithAttributes:attsDict];
             
-            [self.window.title drawInRect:NSMakeRect((self.frame.size.width - width) / 2, self.frame.size.height - 20 , self.frame.size.width, 18) withAttributes:attsDict];
+            [self.window.title drawInRect:NSMakeRect(((int)self.frame.size.width - titleSize.width) / 2, (int)self.frame.size.height - 20 , self.frame.size.width, 18) withAttributes:attsDict];
             
             [textShadow release];
         }
