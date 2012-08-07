@@ -240,7 +240,27 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
             CGRect noisePatternRect = CGRectZero;
             noisePatternRect.size = CGSizeMake(CGImageGetWidth(noisePattern), CGImageGetHeight(noisePattern)); 
             CGContextDrawTiledImage(context, noisePatternRect, noisePattern);
-        }        
+            
+            CGContextSetBlendMode(context, kCGBlendModeNormal);
+        }
+        
+        if (window.defaultWindowTitle) {
+            NSShadow *textShadow = [[NSShadow alloc] init];
+            
+            [textShadow setShadowColor:[NSColor colorWithDeviceWhite:1.0 alpha:0.6]];
+            [textShadow setShadowBlurRadius:0];
+            [textShadow setShadowOffset:NSMakeSize(0, -1)];
+            
+            NSDictionary *attsDict = [NSDictionary dictionaryWithObjectsAndKeys:[NSColor blackColor], NSForegroundColorAttributeName,
+                                      [NSFont systemFontOfSize:13], NSFontAttributeName,
+                                      textShadow, NSShadowAttributeName, nil];
+            
+            NSSize titleSize = [self.window.title sizeWithAttributes:attsDict];
+            
+            [self.window.title drawInRect:NSMakeRect(((int)self.frame.size.width - titleSize.width) / 2, (int)self.frame.size.height - 20 , self.frame.size.width, 18) withAttributes:attsDict];
+            
+            [textShadow release];
+        }
     }
 }
 
@@ -275,6 +295,7 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 @synthesize showsBaselineSeparator = _showsBaselineSeparator;
 @synthesize fullScreenButtonRightMargin = _fullScreenButtonRightMargin;
 @synthesize trafficLightButtonsLeftMargin = _trafficLightButtonsLeftMargin;
+@synthesize defaultWindowTitle;
 
 #pragma mark -
 #pragma mark Initialization
@@ -334,6 +355,11 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 {
     [super resignMainWindow];
     [_titleBarView setNeedsDisplay:YES];    
+}
+
+- (void)setTitle:(NSString *)aString {
+    [super setTitle:aString];
+    [_titleBarView setNeedsDisplay:YES];
 }
 
 #pragma mark -
