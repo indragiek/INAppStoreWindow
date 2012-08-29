@@ -173,9 +173,9 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     CGContextSetAlpha(context, opacity);
     CGContextSetBlendMode(context, kCGBlendModeScreen);
 
-    if ( [[self window] respondsToSelector:@selector(backingScaleFactor)] &&
-       [[self window] backingScaleFactor] == 2 ) {
-        CGContextScaleCTM(context, 0.5, 0.5);
+    if ( [[self window] respondsToSelector:@selector(backingScaleFactor)] ) {
+        CGFloat scaleFactor = [[self window] backingScaleFactor];
+        CGContextScaleCTM(context, 1/scaleFactor, 1/scaleFactor);
     }
 
     CGRect imageRect = (CGRect){CGPointZero, CGImageGetWidth(noiseImageRef), CGImageGetHeight(noiseImageRef)};
