@@ -326,25 +326,25 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 - (void)becomeKeyWindow
 {
     [super becomeKeyWindow];
-    [_titleBarView setNeedsDisplay:YES];
+    [self _updateTitlebarView];
 }
 
 - (void)resignKeyWindow
 {
     [super resignKeyWindow];
-    [_titleBarView setNeedsDisplay:YES];
+    [self _updateTitlebarView];
 }
 
 - (void)becomeMainWindow
 {
     [super becomeMainWindow];
-    [_titleBarView setNeedsDisplay:YES];    
+    [self _updateTitlebarView];
 }
 
 - (void)resignMainWindow
 {
     [super resignMainWindow];
-    [_titleBarView setNeedsDisplay:YES];    
+    [self _updateTitlebarView];
 }
 
 - (void)setContentView:(NSView *)aView
@@ -657,6 +657,20 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 {
     // Redraw the window and titlebar
     [_titleBarView setNeedsDisplay:YES];
+}
+
+
+- (void)_updateTitlebarView
+{
+    [_titleBarView setNeedsDisplay:YES];
+
+    // "validate" any controls in the titlebar view
+    BOOL isMainWindowAndActive = ([self isMainWindow] && [[NSApplication sharedApplication] isActive]);
+    for (NSView *childView in [_titleBarView subviews]) {
+        if ([childView isKindOfClass:[NSControl class]]) {
+            [(NSControl *)childView setEnabled:isMainWindowAndActive];
+        }
+    }
 }
 
 @end
