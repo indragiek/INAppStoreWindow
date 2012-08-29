@@ -53,21 +53,6 @@ NS_INLINE CGFloat INMidHeight(NSRect aRect){
     return (aRect.size.height * (CGFloat)0.5);
 }
 
-static inline CGImageRef createNoiseImageRef(NSUInteger width, NSUInteger height, CGFloat factor)
-{
-    NSUInteger size = width*height;
-    char *rgba = (char *)malloc(size); srand(124);
-    for(NSUInteger i=0; i < size; ++i){rgba[i] = rand()%256*factor;}
-    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceGray();
-    CGContextRef bitmapContext = 
-    CGBitmapContextCreate(rgba, width, height, 8, width, colorSpace, kCGImageAlphaNone);
-    CGImageRef image = CGBitmapContextCreateImage(bitmapContext);
-    CFRelease(bitmapContext);
-    CGColorSpaceRelease(colorSpace);
-    free(rgba);
-    return image;
-}
-
 static inline CGPathRef createClippingPathWithRectAndRadius(NSRect rect, CGFloat radius)
 {
     CGMutablePathRef path = CGPathCreateMutable();
@@ -165,6 +150,39 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 
 @implementation INTitlebarView
 
+- (void)drawNoiseWithOpacity:(CGFloat)opacity
+{
+    static CGImageRef noiseImageRef = nil;
+    static dispatch_once_t oncePredicate;
+    dispatch_once(&oncePredicate, ^{
+        NSUInteger width = 124, height = width;
+        NSUInteger size = width*height;
+        char *rgba = (char *)malloc(size); srand(120);
+        for(NSUInteger i=0; i < size; ++i){rgba[i] = rand()%256;}
+        CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceGray();
+        CGContextRef bitmapContext =
+        CGBitmapContextCreate(rgba, width, height, 8, width, colorSpace, kCGImageAlphaNone);
+        CFRelease(colorSpace);
+        noiseImageRef = CGBitmapContextCreateImage(bitmapContext);
+        CFRelease(bitmapContext);
+        free(rgba);
+    });
+
+    CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
+    CGContextSaveGState(context);
+    CGContextSetAlpha(context, opacity);
+    CGContextSetBlendMode(context, kCGBlendModeScreen);
+
+    if ( [[self window] respondsToSelector:@selector(backingScaleFactor)] &&
+       [[self window] backingScaleFactor] == 2 ) {
+        CGContextScaleCTM(context, 0.5, 0.5);
+    }
+
+    CGRect imageRect = (CGRect){CGPointZero, CGImageGetWidth(noiseImageRef), CGImageGetHeight(noiseImageRef)};
+    CGContextDrawTiledImage(context, imageRect, noiseImageRef);
+    CGContextRestoreGState(context);
+}
+
 - (void)drawRect:(NSRect)dirtyRect
 {
     INAppStoreWindow *window = (INAppStoreWindow *)[self window];
@@ -226,21 +244,13 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
         }
         
         if (IN_RUNNING_LION && drawsAsMainWindow) {
-            static CGImageRef noisePattern = nil;
-            if (noisePattern == nil) {
-                noisePattern = createNoiseImageRef(128, 128, 0.015);
-            }
-
             CGPathRef noiseClippingPath = 
             createClippingPathWithRectAndRadius(NSInsetRect(drawingRect, 1, 1), INCornerClipRadius);
             CGContextAddPath(context, noiseClippingPath);
             CGContextClip(context);
             CGPathRelease(noiseClippingPath);
             
-            CGContextSetBlendMode(context, kCGBlendModePlusLighter);
-            CGRect noisePatternRect = CGRectZero;
-            noisePatternRect.size = CGSizeMake(CGImageGetWidth(noisePattern), CGImageGetHeight(noisePattern)); 
-            CGContextDrawTiledImage(context, noisePatternRect, noisePattern);
+            [self drawNoiseWithOpacity:0.1];
         }        
     }
 }
