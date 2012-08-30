@@ -223,7 +223,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0420;
-				ORGANIZATIONNAME = "PCWiz Computer";
+				ORGANIZATIONNAME = "Indragie Karunaratne";
 			};
 			buildConfigurationList = 03970EEF1315CE4400F15C7E /* Build configuration list for PBXProject "SampleApp" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -472,6 +472,7 @@
 				030C7A7C15EE8D730050DFB5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		03970EEF1315CE4400F15C7E /* Build configuration list for PBXProject "SampleApp" */ = {
 			isa = XCConfigurationList;
