@@ -138,7 +138,7 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 - (void)_doInitialWindowSetup;
 - (void)_createTitlebarView;
 - (void)_setupTrafficLightsTrackingArea;
-- (void)_recalculateFrameForTitleBarView;
+- (void)_recalculateFrameForTitleBarContainer;
 - (void)_repositionContentView;
 - (void)_layoutTrafficLightsAndContent;
 - (CGFloat)_minimumTitlebarHeight;
@@ -271,10 +271,32 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 
 @end
 
+@interface INTitlebarContainer : NSView
+@end
+
+@implementation INTitlebarContainer
+- (void)mouseDragged:(NSEvent *)theEvent
+{
+    NSWindow *window = [self window];
+    NSPoint where =  [window convertBaseToScreen:[theEvent locationInWindow]];
+    NSPoint origin = [window frame].origin;
+    while ((theEvent = [NSApp nextEventMatchingMask:NSLeftMouseDownMask | NSLeftMouseDraggedMask | NSLeftMouseUpMask untilDate:[NSDate distantFuture] inMode:NSEventTrackingRunLoopMode dequeue:YES]) && ([theEvent type] != NSLeftMouseUp)) {
+        @autoreleasepool {
+            NSPoint now = [window convertBaseToScreen:[theEvent locationInWindow]];
+            origin.x += now.x - where.x;
+            origin.y += now.y - where.y;
+            [window setFrameOrigin:origin];
+            where = now;
+        }
+    }
+}
+@end
+
 @implementation INAppStoreWindow{
     CGFloat _cachedTitleBarHeight;  
     BOOL _setFullScreenButtonRightMargin;
     INAppStoreWindowDelegateProxy *_delegateProxy;
+    INTitlebarContainer *_titleBarContainer;
 }
 
 @synthesize titleBarView = _titleBarView;
@@ -369,13 +391,9 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
         [_titleBarView release];
         _titleBarView = [newTitleBarView retain];
         #endif
-        // Configure the view properties and add it as a subview of the theme frame
-        NSView *themeFrame = [[self contentView] superview];
-        NSView *firstSubview = [[themeFrame subviews] objectAtIndex:0];
-        [self _recalculateFrameForTitleBarView];
-        [themeFrame addSubview:_titleBarView positioned:NSWindowBelow relativeTo:firstSubview];
-        [self _layoutTrafficLightsAndContent];
-        [self _displayWindowAndTitlebar];
+        [_titleBarView setFrame:[_titleBarContainer bounds]];
+        [_titleBarView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+        [_titleBarContainer addSubview:_titleBarView];
     }
 }
 
@@ -479,7 +497,6 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     _centerTrafficLightButtons = YES;
     _titleBarHeight = [self _minimumTitlebarHeight];
 	_trafficLightButtonsLeftMargin = [self _defaultTrafficLightLeftMargin];
-    [self setMovableByWindowBackground:YES];
     _delegateProxy = [INAppStoreWindowDelegateProxy alloc];
     
     /** -----------------------------------------
@@ -508,7 +525,7 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 - (void)_layoutTrafficLightsAndContent
 {
     // Reposition/resize the title bar view as needed
-    [self _recalculateFrameForTitleBarView];
+    [self _recalculateFrameForTitleBarContainer];
     
     NSButton *close = [self standardWindowButton:NSWindowCloseButton];
     NSButton *minimize = [self standardWindowButton:NSWindowMiniaturizeButton];
@@ -518,7 +535,7 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     NSRect closeFrame = [close frame];
     NSRect minimizeFrame = [minimize frame];
     NSRect zoomFrame = [zoom frame];
-    NSRect titleBarFrame = [_titleBarView frame];
+    NSRect titleBarFrame = [_titleBarContainer frame];
     CGFloat buttonOrigin = 0.0;
     if ( self.centerTrafficLightButtons ) {
         buttonOrigin = round(NSMidY(titleBarFrame) - INMidHeight(closeFrame));
@@ -542,7 +559,7 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
         if( fullScreen ) {
             NSRect fullScreenFrame = [fullScreen frame];
             if ( !_setFullScreenButtonRightMargin ) {
-                self.fullScreenButtonRightMargin = NSWidth([_titleBarView frame]) - NSMaxX(fullScreen.frame);
+                self.fullScreenButtonRightMargin = NSWidth([_titleBarContainer frame]) - NSMaxX(fullScreen.frame);
             }
 			fullScreenFrame.origin.x = NSWidth(titleBarFrame) - NSWidth(fullScreenFrame) - _fullScreenButtonRightMargin;
             if( self.centerFullScreenButton ) {
@@ -584,9 +601,17 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 - (void)_createTitlebarView
 {
     // Create the title bar view
+    INTitlebarContainer *container = [[INTitlebarContainer alloc] initWithFrame:NSZeroRect];
+    // Configure the view properties and add it as a subview of the theme frame
+    NSView *themeFrame = [[self contentView] superview];
+    NSView *firstSubview = [[themeFrame subviews] objectAtIndex:0];
+    [self _recalculateFrameForTitleBarContainer];
+    [themeFrame addSubview:container positioned:NSWindowBelow relativeTo:firstSubview];
     #if __has_feature(objc_arc)
+    _titleBarContainer = container;
     self.titleBarView = [[INTitlebarView alloc] initWithFrame:NSZeroRect];
     #else
+    _titleBarContainer = [container autorelease];
     self.titleBarView = [[[INTitlebarView alloc] initWithFrame:NSZeroRect] autorelease];
     #endif
 }
@@ -603,12 +628,12 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     [[[self contentView] superview] viewDidEndLiveResize];
 }
 
-- (void)_recalculateFrameForTitleBarView
+- (void)_recalculateFrameForTitleBarContainer
 {
     NSView *themeFrame = [[self contentView] superview];
     NSRect themeFrameRect = [themeFrame frame];
     NSRect titleFrame = NSMakeRect(0.0, NSMaxY(themeFrameRect) - _titleBarHeight, NSWidth(themeFrameRect), _titleBarHeight);
-    [_titleBarView setFrame:titleFrame];
+    [_titleBarContainer setFrame:titleFrame];
 }
 
 - (void)_repositionContentView
