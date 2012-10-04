@@ -279,6 +279,12 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 {
     NSWindow *window = [self window];
     NSPoint where =  [window convertBaseToScreen:[theEvent locationInWindow]];
+	
+	if ([window isMovableByWindowBackground]) {
+		[super mouseDragged: theEvent];
+		return;
+	}
+	
     NSPoint origin = [window frame].origin;
     while ((theEvent = [NSApp nextEventMatchingMask:NSLeftMouseDownMask | NSLeftMouseDraggedMask | NSLeftMouseUpMask untilDate:[NSDate distantFuture] inMode:NSEventTrackingRunLoopMode dequeue:YES]) && ([theEvent type] != NSLeftMouseUp)) {
         @autoreleasepool {
