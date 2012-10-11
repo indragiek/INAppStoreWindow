@@ -383,7 +383,7 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     [super setContentView:aView];
 
 #if IN_COMPILING_LION
-	if (NSAppKitVersionNumber >= NSAppKitVersionNumber10_7)
+	if (IN_RUNNING_LION)
 		[self layoutIfNeeded];
 #endif
 	
