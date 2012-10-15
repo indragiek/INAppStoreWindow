@@ -48,6 +48,7 @@
 /** Set whether the fullscreen or traffic light buttons are horizontally centered */
 @property (nonatomic) BOOL centerFullScreenButton;
 @property (nonatomic) BOOL centerTrafficLightButtons;
+@property (nonatomic) BOOL verticalTrafficLightButtons;
 
 /** If you want to hide the title bar in fullscreen mode, set this boolean to YES */
 @property (nonatomic) BOOL hideTitleBarInFullScreen;
