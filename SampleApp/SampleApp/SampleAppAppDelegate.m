@@ -28,7 +28,7 @@
     self.window.trafficLightButtonsLeftMargin = 7.0;
     self.window.fullScreenButtonRightMargin = 7.0;   
     self.window.centerFullScreenButton = YES;
-    self.window.titleBarHeight = 40.0;
+    self.window.titleBarHeight = 60.0;
     
     // set checkboxes
     self.centerFullScreen.state = self.window.centerFullScreenButton;
