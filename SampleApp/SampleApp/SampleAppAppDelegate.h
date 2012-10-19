@@ -14,6 +14,7 @@
     INAppStoreWindow *_window;
     NSButton *_centerFullScreen;
     NSButton *_centerTrafficLight;
+    NSButton *_verticalTrafficLight;
     NSSlider *_fullScreenRightMarginSlider;
     NSSlider *_trafficLightLeftMargin;
     NSButton *_showsBaselineSeparator;
@@ -24,6 +25,7 @@
 @property (assign) IBOutlet INAppStoreWindow *window;
 @property (assign) IBOutlet NSButton *centerFullScreen;
 @property (assign) IBOutlet NSButton *centerTrafficLight;
+@property (assign) IBOutlet NSButton *verticalTrafficLight;
 @property (assign) IBOutlet NSSlider *fullScreenRightMarginSlider;
 @property (assign) IBOutlet NSSlider *trafficLightLeftMargin;
 @property (assign) IBOutlet NSButton *showsBaselineSeparator;

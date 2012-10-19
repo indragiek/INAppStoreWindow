@@ -309,6 +309,7 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 @synthesize titleBarHeight = _titleBarHeight;
 @synthesize centerFullScreenButton = _centerFullScreenButton;
 @synthesize centerTrafficLightButtons = _centerTrafficLightButtons;
+@synthesize verticalTrafficLightButtons = _verticalTrafficLightButtons;
 @synthesize hideTitleBarInFullScreen = _hideTitleBarInFullScreen;
 @synthesize titleBarDrawingBlock = _titleBarDrawingBlock;
 @synthesize showsBaselineSeparator = _showsBaselineSeparator;
@@ -489,6 +490,16 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     }
 }
 
+
+- (void)setVerticalTrafficLightButtons:(BOOL)verticalTrafficLightButtons
+{
+    if ( _verticalTrafficLightButtons != verticalTrafficLightButtons ) {
+        _verticalTrafficLightButtons = verticalTrafficLightButtons;
+        [self _layoutTrafficLightsAndContent];
+        [self _setupTrafficLightsTrackingArea];
+    }
+}
+
 - (void)setDelegate:(id<NSWindowDelegate>)anObject
 {
     [_delegateProxy setSecondaryDelegate:anObject];
@@ -549,17 +560,33 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     NSRect zoomFrame = [zoom frame];
     NSRect titleBarFrame = [_titleBarContainer frame];
     CGFloat buttonOrigin = 0.0;
-    if ( self.centerTrafficLightButtons ) {
-        buttonOrigin = round(NSMidY(titleBarFrame) - INMidHeight(closeFrame));
+    if ( !self.verticalTrafficLightButtons ) {
+        if ( self.centerTrafficLightButtons ) {
+            buttonOrigin = round(NSMidY(titleBarFrame) - INMidHeight(closeFrame));
+        } else {
+            buttonOrigin = NSMaxY(titleBarFrame) - NSHeight(closeFrame) - INButtonTopOffset;
+        }
+        closeFrame.origin.y = buttonOrigin;
+        minimizeFrame.origin.y = buttonOrigin;
+        zoomFrame.origin.y = buttonOrigin;
+        closeFrame.origin.x = _trafficLightButtonsLeftMargin;
+        minimizeFrame.origin.x = _trafficLightButtonsLeftMargin + [self _trafficLightSeparation];
+        zoomFrame.origin.x = _trafficLightButtonsLeftMargin + [self _trafficLightSeparation] * 2;
     } else {
-        buttonOrigin = NSMaxY(titleBarFrame) - NSHeight(closeFrame) - INButtonTopOffset;
+        // in vertical orientation, adjust spacing to match iTunes
+        CGFloat groupHeight = NSHeight(closeFrame) + 2*([self _trafficLightSeparation]-2);
+        if ( self.centerTrafficLightButtons ) {
+            buttonOrigin = round( NSMidY(titleBarFrame) - 0.5*groupHeight );
+        } else {
+            buttonOrigin = NSMaxY(titleBarFrame) - groupHeight - INButtonTopOffset - 2;
+        }
+        closeFrame.origin.x = _trafficLightButtonsLeftMargin;
+        minimizeFrame.origin.x = _trafficLightButtonsLeftMargin;
+        zoomFrame.origin.x = _trafficLightButtonsLeftMargin;
+        closeFrame.origin.y = buttonOrigin + 2*([self _trafficLightSeparation]-2);
+        minimizeFrame.origin.y = buttonOrigin + ([self _trafficLightSeparation]-2);
+        zoomFrame.origin.y = buttonOrigin;
     }
-    closeFrame.origin.y = buttonOrigin;
-    minimizeFrame.origin.y = buttonOrigin;
-    zoomFrame.origin.y = buttonOrigin;
-	closeFrame.origin.x = _trafficLightButtonsLeftMargin;
-    minimizeFrame.origin.x = _trafficLightButtonsLeftMargin + [self _trafficLightSeparation];
-    zoomFrame.origin.x = _trafficLightButtonsLeftMargin + [self _trafficLightSeparation] * 2;
     [close setFrame:closeFrame];
     [minimize setFrame:minimizeFrame];
     [zoom setFrame:zoomFrame];
