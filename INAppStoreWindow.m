@@ -100,7 +100,6 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 @end
 
 @implementation INAppStoreWindowDelegateProxy
-@synthesize secondaryDelegate = _secondaryDelegate;
 
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)selector
 {
@@ -528,6 +527,11 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     _titleBarHeight = [self _minimumTitlebarHeight];
 	_trafficLightButtonsLeftMargin = [self _defaultTrafficLightLeftMargin];
     _delegateProxy = [INAppStoreWindowDelegateProxy alloc];
+
+    // if the delegate is nil set use super to set the delegate to the proxy
+    if (self.delegate == nil) {
+        [super setDelegate:_delegateProxy];
+    }
     
     /** -----------------------------------------
      - The window automatically does layout every time its moved or resized, which means that the traffic lights and content view get reset at the original positions, so we need to put them back in place

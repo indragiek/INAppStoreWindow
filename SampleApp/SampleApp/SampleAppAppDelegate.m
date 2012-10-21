@@ -11,16 +11,6 @@
 
 @implementation SampleAppAppDelegate
 
-@synthesize sheet = _sheet;
-@synthesize window = _window;
-@synthesize centerFullScreen = _centerFullScreen;
-@synthesize centerTrafficLight = _centerTrafficLight;
-@synthesize verticalTrafficLight = _verticalTrafficLight;
-@synthesize fullScreenRightMarginSlider = _fullScreenRightMarginSlider;
-@synthesize trafficLightLeftMargin = _trafficLightLeftMargin;
-@synthesize showsBaselineSeparator = _showsBaselineSeparator;
-@synthesize windowControllers = _windowControllers;
-
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     self.windowControllers = [NSMutableArray array];
@@ -37,24 +27,6 @@
     self.showsBaselineSeparator.state = self.window.showsBaselineSeparator;
     self.fullScreenRightMarginSlider.doubleValue = self.window.fullScreenButtonRightMargin;
     self.trafficLightLeftMargin.doubleValue = self.window.trafficLightButtonsLeftMargin;
-}
-
-- (void)windowDidBecomeKey:(NSNotification *)notification{
-    [self.centerFullScreen setEnabled:YES];
-    [self.centerTrafficLight setEnabled:YES];
-    [self.verticalTrafficLight setEnabled:YES];
-    [self.showsBaselineSeparator setEnabled:YES];
-    [self.fullScreenRightMarginSlider setEnabled:YES];
-    [self.trafficLightLeftMargin setEnabled:YES];
-}
-
-- (void)windowDidResignKey:(NSNotification *)notification{
-    [self.centerFullScreen setEnabled:NO];
-    [self.centerTrafficLight setEnabled:NO];
-    [self.verticalTrafficLight setEnabled:NO];
-    [self.showsBaselineSeparator setEnabled:NO];
-    [self.fullScreenRightMarginSlider setEnabled:NO];
-    [self.trafficLightLeftMargin setEnabled:NO];
 }
 
 - (IBAction)showSheetAction:(id)sender
