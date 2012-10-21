@@ -391,6 +391,13 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 	[self _repositionContentView];
 }
 
+- (void)setTitle:(NSString *)aString
+{
+	[super setTitle:aString];
+	[self _layoutTrafficLightsAndContent];
+	[self _displayWindowAndTitlebar];
+}
+
 #pragma mark -
 #pragma mark Accessors
 
