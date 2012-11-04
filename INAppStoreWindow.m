@@ -112,8 +112,7 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 {
     if ([self.secondaryDelegate respondsToSelector:aSelector]) {
         return YES;
-    } else if ([NSStringFromSelector(aSelector) isEqualToString:@"window:willPositionSheet:usingRect:"]) {
-        //TODO: not sure if there is a better way to do this check
+    } else if (aSelector == @selector(window:willPositionSheet:usingRect:)) {
         return YES;
     }
     return NO;
