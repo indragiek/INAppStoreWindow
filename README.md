@@ -56,7 +56,7 @@ self.titleView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
 
 ### Autolayout
 
-Sometimes you may wish to have the titlebar grow or shrink or set minimum window size according to the autolayout of components inside. In this case, rather than adding subviews to the provided `titleBarView`, call `setTitleBarView:` passing your own `INTitleBarView` with `translateAutoresizingMaskIntoConstraints = NO`. See SampleAutolayoutApp.
+Sometimes you may wish to have the titlebar animate, grow/shrink, or set minimum window size according to the autolayout of components inside. In this case, rather than adding subviews to the provided `titleBarView`, call `setTitleBarView:` passing your own `INTitleBarView` with its `translateAutoresizingMaskIntoConstraints = NO`. Note that in this case, the `titleBarHeight` property has no effect. See SampleAutolayoutApp.
 
 ### Layout of the traffic light and full screen buttons
 

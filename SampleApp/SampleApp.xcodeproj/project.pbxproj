@@ -64,6 +64,7 @@
 		03970F1A1315CECF00F15C7E /* SampleWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SampleWindowController.h; sourceTree = "<group>"; };
 		03970F1B1315CECF00F15C7E /* SampleWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SampleWindowController.m; sourceTree = "<group>"; };
 		03970F1D1315D2CB00F15C7E /* SampleWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SampleWindow.xib; sourceTree = "<group>"; };
+		D03469A5164D6980004CDB74 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		D069B6EC164C3C11007AF17B /* SampleAutolayoutApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SampleAutolayoutApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D069B6F1164C3C11007AF17B /* SampleAutolayoutApp-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SampleAutolayoutApp-Info.plist"; sourceTree = "<group>"; };
 		D069B6F3164C3C11007AF17B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -140,6 +141,7 @@
 		03970EEA1315CE4400F15C7E = {
 			isa = PBXGroup;
 			children = (
+				D03469A5164D6980004CDB74 /* README.md */,
 				03970EFF1315CE4400F15C7E /* SampleApp */,
 				030C7A6615EE8D730050DFB5 /* SampleDocumentApp */,
 				D069B6EF164C3C11007AF17B /* SampleAutolayoutApp */,
@@ -661,6 +663,7 @@
 				D069B703164C3C11007AF17B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
