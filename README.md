@@ -54,11 +54,17 @@ self.titleView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
 [self.window.titleBarView addSubview:self.titleView];
 ```
 
-### Centering the traffic light and full screen buttons
+### Autolayout
+
+Sometimes you may wish to have the titlebar grow or shrink or set minimum window size according to the autolayout of components inside. In this case, rather than adding subviews to the provided `titleBarView`, call `setTitleBarView:` passing your own `INTitleBarView` with `translateAutoresizingMaskIntoConstraints = NO`. See SampleAutolayoutApp.
+
+### Layout of the traffic light and full screen buttons
 
 The vertical centering of the traffic light and full screen buttons can be controlled through two properties: `centerTrafficLightButtons` and `centerFullScreenButton`.
 
 The traffic light buttons are vertically centered by default.
+
+The traffic light buttons may be set to a vertical orientation (as in the iTunes miniplayer) by setting the property `verticalTrafficLightButtons = YES`.
 
 ### Hiding the title bar in fullscreen
 
