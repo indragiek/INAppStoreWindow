@@ -195,14 +195,15 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     } else {
         CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];        
         
-        NSColor *startColor = nil;
-        NSColor *endColor = nil;
+        NSColor *startColor = drawsAsMainWindow ? window.titleBarStartColor : window.inactiveTitleBarStartColor;
+        NSColor *endColor = drawsAsMainWindow ? window.titleBarEndColor : window.titleBarEndColor;
+		
         if (IN_RUNNING_LION) {
-            startColor = drawsAsMainWindow ? IN_COLOR_MAIN_START_L : IN_COLOR_NOTMAIN_START_L;
-            endColor = drawsAsMainWindow ? IN_COLOR_MAIN_END_L : IN_COLOR_NOTMAIN_END_L;
+            startColor = startColor ? startColor : drawsAsMainWindow ? IN_COLOR_MAIN_START_L : IN_COLOR_NOTMAIN_START_L;
+            endColor = endColor ? endColor : drawsAsMainWindow ? IN_COLOR_MAIN_END_L : IN_COLOR_NOTMAIN_END_L;
         } else {
-            startColor = drawsAsMainWindow ? IN_COLOR_MAIN_START : IN_COLOR_NOTMAIN_START;
-            endColor = drawsAsMainWindow ? IN_COLOR_MAIN_END : IN_COLOR_NOTMAIN_END;
+            startColor = startColor ? startColor : drawsAsMainWindow ? IN_COLOR_MAIN_START : IN_COLOR_NOTMAIN_START;
+            endColor = endColor ? endColor : drawsAsMainWindow ? IN_COLOR_MAIN_END : IN_COLOR_NOTMAIN_END;
         }
         
         NSRect clippingRect = drawingRect;
@@ -224,11 +225,12 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
         CGGradientRelease(gradient);
 
         if ([window showsBaselineSeparator]) {
-            NSColor *bottomColor = nil;
+            NSColor *bottomColor = drawsAsMainWindow ? window.baselineSeparatorColor : window.inactiveBaselineSeparatorColor;
+			
             if (IN_RUNNING_LION) {
-              bottomColor = drawsAsMainWindow ? IN_COLOR_MAIN_BOTTOM_L : IN_COLOR_NOTMAIN_BOTTOM_L;
+				bottomColor = bottomColor ? bottomColor : drawsAsMainWindow ? IN_COLOR_MAIN_BOTTOM_L : IN_COLOR_NOTMAIN_BOTTOM_L;
             } else {
-              bottomColor = drawsAsMainWindow ? IN_COLOR_MAIN_BOTTOM : IN_COLOR_NOTMAIN_BOTTOM;
+				bottomColor = bottomColor ? bottomColor : drawsAsMainWindow ? IN_COLOR_MAIN_BOTTOM : IN_COLOR_NOTMAIN_BOTTOM;
             }
             
             NSRect bottomRect = NSMakeRect(0.0, NSMinY(drawingRect), NSWidth(drawingRect), 1.0);
@@ -321,6 +323,12 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 @synthesize showsBaselineSeparator = _showsBaselineSeparator;
 @synthesize fullScreenButtonRightMargin = _fullScreenButtonRightMargin;
 @synthesize trafficLightButtonsLeftMargin = _trafficLightButtonsLeftMargin;
+@synthesize titleBarStartColor = _titleBarStartColor;
+@synthesize titleBarEndColor = _titleBarEndColor;
+@synthesize baselineSeparatorColor = _baselineSeparatorColor;
+@synthesize inactiveTitleBarStartColor = _inactiveTitleBarStartColor;
+@synthesize inactiveTitleBarEndColor = _inactiveTitleBarEndColor;
+@synthesize inactiveBaselineSeparatorColor = _inactiveBaselineSeparatorColor;
 
 #pragma mark -
 #pragma mark Initialization
