@@ -86,6 +86,20 @@ A lot of time and effort has gone into making the custom titlebar in INAppStoreW
 
 This block gets passed some useful parameters like if the window is the main one(`drawsAsMainWindow`), the drawing rect of the title bar(`drawingRect`), and a pre-made clipping path with rounded corners at the top(`clippingPath`).
 
+### Setting the title bar colors
+
+If you just want to adjust the color of the title bar without drawing the whole thing yourself, there are a few properties to help you do so:
+
+```obj-c
+self.window.titleBarStartColor     = [NSColor colorWithCalibratedWhite: 0.6 alpha: 1.0];
+self.window.titleBarEndColor       = [NSColor colorWithCalibratedWhite: 0.9 alpha: 1.0];
+self.window.baselineSeparatorColor = [NSColor colorWithCalibratedWhite: 0.2 alpha: 1.0];
+
+self.window.inactiveTitleBarEndColor       = [NSColor colorWithCalibratedWhite: 0.95 alpha: 1.0];
+self.window.inactiveTitleBarStartColor     = [NSColor colorWithCalibratedWhite: 0.8  alpha: 1.0];
+self.window.inactiveBaselineSeparatorColor = [NSColor colorWithCalibratedWhite: 0.4  alpha: 1.0];
+```
+
 
 ## Authors
 

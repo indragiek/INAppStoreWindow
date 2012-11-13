@@ -60,6 +60,15 @@
 @property (nonatomic) CGFloat trafficLightButtonsLeftMargin;
 @property (nonatomic) CGFloat fullScreenButtonRightMargin;
 
+/** The colors of the title bar background gradient and baseline separator, in main and non-main variants. */
+@property (INAppStoreWindowRetain) NSColor* titleBarStartColor;
+@property (INAppStoreWindowRetain) NSColor* titleBarEndColor;
+@property (INAppStoreWindowRetain) NSColor* baselineSeparatorColor;
+
+@property (INAppStoreWindowRetain) NSColor* inactiveTitleBarStartColor;
+@property (INAppStoreWindowRetain) NSColor* inactiveTitleBarEndColor;
+@property (INAppStoreWindowRetain) NSColor* inactiveBaselineSeparatorColor;
+
 
 /** So much logic and work has gone into this window subclass to achieve a custom title bar,
  it would be a shame to have to re-invent that just to change the look. So this block can be used
