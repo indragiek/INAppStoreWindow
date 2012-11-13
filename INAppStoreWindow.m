@@ -243,8 +243,15 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
         }
         
         if (IN_RUNNING_LION && drawsAsMainWindow) {
+			CGRect noiseRect = NSInsetRect(drawingRect, 1.0, 1.0);
+			
+			if (![window showsBaselineSeparator]) {
+				noiseRect.origin.y    -= 1.0;
+				noiseRect.size.height += 1.0;
+			}
+			
             CGPathRef noiseClippingPath = 
-            createClippingPathWithRectAndRadius(NSInsetRect(drawingRect, 1, 1), INCornerClipRadius);
+            createClippingPathWithRectAndRadius(noiseRect, INCornerClipRadius);
             CGContextAddPath(context, noiseClippingPath);
             CGContextClip(context);
             CGPathRelease(noiseClippingPath);
