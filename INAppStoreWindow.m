@@ -49,6 +49,33 @@
 const CGFloat INCornerClipRadius = 4.0;
 const CGFloat INButtonTopOffset = 3.0;
 
+
+@interface NSColor (INAdditions)
+- (CGColorRef)IN_CGColorCreate;
+@end
+
+@implementation NSColor (INAdditions)
+- (CGColorRef)IN_CGColorCreate
+{
+    if([self isEqualTo:[NSColor blackColor]]) return CGColorGetConstantColor(kCGColorBlack);
+    if([self isEqualTo:[NSColor whiteColor]]) return CGColorGetConstantColor(kCGColorWhite);
+    if([self isEqualTo:[NSColor clearColor]]) return CGColorGetConstantColor(kCGColorClear);
+    NSColor *rgbColor = [self colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
+    CGFloat components[4];
+    [rgbColor getComponents:components];
+    
+    CGColorSpaceRef theColorSpace = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGB);
+    CGColorRef theColor = CGColorCreate(theColorSpace, components);
+    CGColorSpaceRelease(theColorSpace);
+
+     #if !__has_feature(objc_arc)
+    return (CGColorRef)[(id)theColor autorelease];
+    #else
+    return theColor;
+    #endif
+}
+@end
+
 NS_INLINE CGFloat INMidHeight(NSRect aRect){
     return (aRect.size.height * (CGFloat)0.5);
 }
@@ -68,29 +95,14 @@ static inline CGPathRef createClippingPathWithRectAndRadius(NSRect rect, CGFloat
 
 static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSColor *endingColor)
 {
-    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceGray();
-    CGFloat startingComponents[2];
-    [startingColor getWhite:&startingComponents[0] alpha:&startingComponents[1]];
-    
-    CGFloat endingComponents[2];
-    [endingColor getWhite:&endingComponents[0] alpha:&endingComponents[1]];
-    
-    CGFloat compontents[4] = {
-        startingComponents[0],
-        startingComponents[1],
-        endingComponents[0],
-        endingComponents[1],
-    };
-    
-    CGFloat locations[2] = {
-        0.0f,
-        1.0f,
-    };
-    
-    CGGradientRef gradient = 
-    CGGradientCreateWithColorComponents(colorSpace, 
-                                        (const CGFloat *)&compontents, 
-                                        (const CGFloat *)&locations, 2);
+    CGFloat locations[2] = {0.0f, 1.0f, };
+    #if __has_feature(objc_arc)
+    CFArrayRef colors = (__bridge CFArrayRef)[NSArray arrayWithObjects:(__bridge id)[startingColor IN_CGColorCreate], (__bridge id)[endingColor IN_CGColorCreate], nil];
+    #else
+    CFArrayRef colors = (CFArrayRef)[NSArray arrayWithObjects:(id)[startingColor IN_CGColorCreate], (id)[endingColor IN_CGColorCreate], nil];
+    #endif
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, colors, locations);
     CGColorSpaceRelease(colorSpace);
     return gradient;
 }
@@ -199,11 +211,11 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
         NSColor *endColor = drawsAsMainWindow ? window.titleBarEndColor : window.titleBarEndColor;
         
         if (IN_RUNNING_LION) {
-            startColor = startColor ? startColor : drawsAsMainWindow ? IN_COLOR_MAIN_START_L : IN_COLOR_NOTMAIN_START_L;
-            endColor = endColor ? endColor : drawsAsMainWindow ? IN_COLOR_MAIN_END_L : IN_COLOR_NOTMAIN_END_L;
+            startColor = startColor ?: (drawsAsMainWindow ? IN_COLOR_MAIN_START_L : IN_COLOR_NOTMAIN_START_L);
+            endColor = endColor ?: (drawsAsMainWindow ? IN_COLOR_MAIN_END_L : IN_COLOR_NOTMAIN_END_L);
         } else {
-            startColor = startColor ? startColor : drawsAsMainWindow ? IN_COLOR_MAIN_START : IN_COLOR_NOTMAIN_START;
-            endColor = endColor ? endColor : drawsAsMainWindow ? IN_COLOR_MAIN_END : IN_COLOR_NOTMAIN_END;
+            startColor = startColor ?: (drawsAsMainWindow ? IN_COLOR_MAIN_START : IN_COLOR_NOTMAIN_START);
+            endColor = endColor ?: (drawsAsMainWindow ? IN_COLOR_MAIN_END : IN_COLOR_NOTMAIN_END);
         }
         
         NSRect clippingRect = drawingRect;
