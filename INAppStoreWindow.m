@@ -124,8 +124,7 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 {
     if ([self.secondaryDelegate respondsToSelector:aSelector]) {
         return YES;
-    } else if ([NSStringFromSelector(aSelector) isEqualToString:@"window:willPositionSheet:usingRect:"]) {
-        //TODO: not sure if there is a better way to do this check
+    } else if (aSelector == @selector(window:willPositionSheet:usingRect:)) {
         return YES;
     }
     return NO;
@@ -378,6 +377,16 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 #pragma mark -
 #pragma mark NSWindow Overrides
 
+-(void) awakeFromNib
+{
+    [super awakeFromNib];
+    
+    // if the delegate is nil set use super to set the delegate to the proxy
+    if (self.delegate == nil) {
+        [super setDelegate:_delegateProxy];
+    }
+}
+
 - (void)becomeKeyWindow
 {
     [super becomeKeyWindow];
@@ -555,10 +564,10 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     _trafficLightButtonsLeftMargin = [self _defaultTrafficLightLeftMargin];
     _delegateProxy = [INAppStoreWindowDelegateProxy alloc];
 
-    // if the delegate is nil set use super to set the delegate to the proxy
-    if (self.delegate == nil) {
-        [super setDelegate:_delegateProxy];
-    }
+    // Don't set the window delegate here since at this time the secondary delegate have not been put into place
+    // and the window will be interrogating the delegate of it's capabilities, perhaps caching
+    // the interrogation result somewhere. Thus it might skew the interrogation results and prevents some delegate methods
+    // from being called (`windowWillClose:` is among those).
     
     /** -----------------------------------------
      - The window automatically does layout every time its moved or resized, which means that the traffic lights and content view get reset at the original positions, so we need to put them back in place
