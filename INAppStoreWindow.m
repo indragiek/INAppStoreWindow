@@ -377,14 +377,6 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 #pragma mark -
 #pragma mark NSWindow Overrides
 
-- (void)awakeFromNib
-{
-    [super awakeFromNib];
-    if (self.delegate == nil) {
-        [super setDelegate:_delegateProxy];
-    }
-}
-
 - (void)becomeKeyWindow
 {
     [super becomeKeyWindow];
@@ -543,6 +535,7 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 - (void)setDelegate:(id<NSWindowDelegate>)anObject
 {
     [_delegateProxy setSecondaryDelegate:anObject];
+    [super setDelegate:nil];
     [super setDelegate:_delegateProxy];    
 }
 
@@ -561,8 +554,7 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     _titleBarHeight = [self _minimumTitlebarHeight];
     _trafficLightButtonsLeftMargin = [self _defaultTrafficLightLeftMargin];
     _delegateProxy = [INAppStoreWindowDelegateProxy alloc];
-
-    // When creating a window from code, this method gets called *before* the delegate outlet has been set, therefore it is too early to perform a check for whether the delegate is nil. 
+    [super setDelegate:_delegateProxy];
     
     /** -----------------------------------------
      - The window automatically does layout every time its moved or resized, which means that the traffic lights and content view get reset at the original positions, so we need to put them back in place
