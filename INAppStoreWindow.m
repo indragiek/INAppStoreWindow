@@ -377,11 +377,9 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 #pragma mark -
 #pragma mark NSWindow Overrides
 
--(void) awakeFromNib
+- (void)awakeFromNib
 {
     [super awakeFromNib];
-    
-    // if the delegate is nil set use super to set the delegate to the proxy
     if (self.delegate == nil) {
         [super setDelegate:_delegateProxy];
     }
@@ -564,10 +562,7 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     _trafficLightButtonsLeftMargin = [self _defaultTrafficLightLeftMargin];
     _delegateProxy = [INAppStoreWindowDelegateProxy alloc];
 
-    // Don't set the window delegate here since at this time the secondary delegate have not been put into place
-    // and the window will be interrogating the delegate of it's capabilities, perhaps caching
-    // the interrogation result somewhere. Thus it might skew the interrogation results and prevents some delegate methods
-    // from being called (`windowWillClose:` is among those).
+    // When creating a window from code, this method gets called *before* the delegate outlet has been set, therefore it is too early to perform a check for whether the delegate is nil. 
     
     /** -----------------------------------------
      - The window automatically does layout every time its moved or resized, which means that the traffic lights and content view get reset at the original positions, so we need to put them back in place
