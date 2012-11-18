@@ -717,12 +717,17 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 {
     NSView *contentView = [self contentView];
     NSRect windowFrame = [self frame];
-    NSRect newFrame = [contentView frame];
+    NSRect currentContentFrame = [contentView frame];
+    NSRect newFrame = currentContentFrame;
+
     CGFloat titleHeight = NSHeight(windowFrame) - NSHeight(newFrame);
     CGFloat extraHeight = _titleBarHeight - titleHeight;
     newFrame.size.height -= extraHeight;
-    [contentView setFrame:newFrame];
-    [contentView setNeedsDisplay:YES];
+
+    if (!NSEqualRects(currentContentFrame, newFrame)) {
+        [contentView setFrame:newFrame];
+        [contentView setNeedsDisplay:YES];
+    }
 }
 
 - (CGFloat)_minimumTitlebarHeight
