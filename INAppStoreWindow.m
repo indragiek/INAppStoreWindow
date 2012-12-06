@@ -280,7 +280,6 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
         // Get settings from "System Preferences" >  "Appearance" > "Double-click on windows title bar to minimize"
         NSString *const MDAppleMiniaturizeOnDoubleClickKey = @"AppleMiniaturizeOnDoubleClick";
         NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-        [userDefaults addSuiteNamed:NSGlobalDomain];
         BOOL shouldMiniaturize = [[userDefaults objectForKey:MDAppleMiniaturizeOnDoubleClickKey] boolValue];
         if (shouldMiniaturize) {
             [[self window] miniaturize:self];
