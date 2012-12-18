@@ -207,7 +207,7 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
         CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];        
         
         NSColor *startColor = drawsAsMainWindow ? window.titleBarStartColor : window.inactiveTitleBarStartColor;
-        NSColor *endColor = drawsAsMainWindow ? window.titleBarEndColor : window.titleBarEndColor;
+        NSColor *endColor = drawsAsMainWindow ? window.titleBarEndColor : window.inactiveTitleBarEndColor;
         
         if (IN_RUNNING_LION) {
             startColor = startColor ?: (drawsAsMainWindow ? IN_COLOR_MAIN_START_L : IN_COLOR_NOTMAIN_START_L);
