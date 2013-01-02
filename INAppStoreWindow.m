@@ -411,12 +411,6 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 - (void)setContentView:(NSView *)aView
 {
     [super setContentView:aView];
-
-#if IN_COMPILING_LION
-    if (IN_RUNNING_LION)
-        [self layoutIfNeeded];
-#endif
-    
     [self _repositionContentView];
 }
 
