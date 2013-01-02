@@ -51,15 +51,12 @@ const CGFloat INButtonTopOffset = 3.0;
 
 
 @interface NSColor (INAdditions)
-- (CGColorRef)IN_CGColorCreate;
+- (CGColorRef)IN_CGColorCreate CF_RETURNS_RETAINED;
 @end
 
 @implementation NSColor (INAdditions)
 - (CGColorRef)IN_CGColorCreate
 {
-    if([self isEqualTo:[NSColor blackColor]]) return CGColorGetConstantColor(kCGColorBlack);
-    if([self isEqualTo:[NSColor whiteColor]]) return CGColorGetConstantColor(kCGColorWhite);
-    if([self isEqualTo:[NSColor clearColor]]) return CGColorGetConstantColor(kCGColorClear);
     NSColor *rgbColor = [self colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
     CGFloat components[4];
     [rgbColor getComponents:components];
@@ -67,12 +64,7 @@ const CGFloat INButtonTopOffset = 3.0;
     CGColorSpaceRef theColorSpace = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGB);
     CGColorRef theColor = CGColorCreate(theColorSpace, components);
     CGColorSpaceRelease(theColorSpace);
-
-     #if !__has_feature(objc_arc)
-    return (CGColorRef)[(id)theColor autorelease];
-    #else
-    return theColor;
-    #endif
+	return theColor;
 }
 @end
 
@@ -96,14 +88,18 @@ static inline CGPathRef createClippingPathWithRectAndRadius(NSRect rect, CGFloat
 static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSColor *endingColor)
 {
     CGFloat locations[2] = {0.0f, 1.0f, };
+	CGColorRef cgStartingColor = [startingColor IN_CGColorCreate];
+	CGColorRef cgEndingColor = [endingColor IN_CGColorCreate];
     #if __has_feature(objc_arc)
-    CFArrayRef colors = (__bridge CFArrayRef)[NSArray arrayWithObjects:(__bridge id)[startingColor IN_CGColorCreate], (__bridge id)[endingColor IN_CGColorCreate], nil];
+    CFArrayRef colors = (__bridge CFArrayRef)[NSArray arrayWithObjects:(__bridge id)cgStartingColor, (__bridge id)cgEndingColor, nil];
     #else
-    CFArrayRef colors = (CFArrayRef)[NSArray arrayWithObjects:(id)[startingColor IN_CGColorCreate], (id)[endingColor IN_CGColorCreate], nil];
+    CFArrayRef colors = (CFArrayRef)[NSArray arrayWithObjects:(id)cgStartingColor, (id)cgEndingColor, nil];
     #endif
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
     CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, colors, locations);
     CGColorSpaceRelease(colorSpace);
+	CGColorRelease(cgStartingColor);
+	CGColorRelease(cgEndingColor);
     return gradient;
 }
 
