@@ -119,7 +119,7 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
 
 #pragma mark - Init and Dealloc
 
-- (id)initWithSize:(NSSize)size groupIdentifier:(NSString *)groupIdentifier
+- (instancetype)initWithSize:(NSSize)size groupIdentifier:(NSString *)groupIdentifier
 {
     self = [super initWithFrame:NSMakeRect(0, 0, size.width, size.height)];
     if (self) {

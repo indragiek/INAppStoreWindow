@@ -62,7 +62,7 @@
 @property (nonatomic) CGFloat trafficLightButtonsLeftMargin;
 @property (nonatomic) CGFloat fullScreenButtonRightMargin;
 
-/** If not nil, default window buttons are hidden and the their provided alternatives used */
+/** If not nil, default window buttons are hidden and the their provided alternatives is used. */
 @property (INAppStoreWindowRetain) INWindowButton *closeButton;
 @property (INAppStoreWindowRetain) INWindowButton *minimizeButton;
 @property (INAppStoreWindowRetain) INWindowButton *zoomButton;
