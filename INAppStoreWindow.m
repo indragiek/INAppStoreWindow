@@ -547,44 +547,9 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     return [_delegateProxy secondaryDelegate];
 }
 
-#pragma mark -
-#pragma mark Private
-
-- (void)_doInitialWindowSetup
-{
-    _showsBaselineSeparator = YES;
-    _centerTrafficLightButtons = YES;
-    _titleBarHeight = [self _minimumTitlebarHeight];
-    _trafficLightButtonsLeftMargin = [self _defaultTrafficLightLeftMargin];
-    _delegateProxy = [INAppStoreWindowDelegateProxy alloc];
-    [super setDelegate:_delegateProxy];
-    
-    /** -----------------------------------------
-     - The window automatically does layout every time its moved or resized, which means that the traffic lights and content view get reset at the original positions, so we need to put them back in place
-     - NSWindow is hardcoded to redraw the traffic lights in a specific rect, so when they are moved down, only part of the buttons get redrawn, causing graphical artifacts. Therefore, the window must be force redrawn every time it becomes key/resigns key
-     ----------------------------------------- **/
-    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-    [nc addObserver:self selector:@selector(_layoutTrafficLightsAndContent) name:NSWindowDidResizeNotification object:self];
-    [nc addObserver:self selector:@selector(_layoutTrafficLightsAndContent) name:NSWindowDidMoveNotification object:self];
-    [nc addObserver:self selector:@selector(_layoutTrafficLightsAndContent) name:NSWindowDidEndSheetNotification object:self];
-
-    [nc addObserver:self selector:@selector(_updateTitlebarView) name:NSApplicationDidBecomeActiveNotification object:nil];
-    [nc addObserver:self selector:@selector(_updateTitlebarView) name:NSApplicationDidResignActiveNotification object:nil];
-    #if IN_COMPILING_LION
-    if (IN_RUNNING_LION) {
-        [nc addObserver:self selector:@selector(_setupTrafficLightsTrackingArea) name:NSWindowDidExitFullScreenNotification object:nil];
-        [nc addObserver:self selector:@selector(windowWillEnterFullScreen:) name:NSWindowWillEnterFullScreenNotification object:nil];
-        [nc addObserver:self selector:@selector(windowWillExitFullScreen:) name:NSWindowWillExitFullScreenNotification object:nil];
-    }
-    #endif
-    [self _createTitlebarView];
-    [self _layoutTrafficLightsAndContent];
-    [self _setupTrafficLightsTrackingArea];
-}
-
 - (void)setCloseButton:(INWindowButton *)closeButton {
     if (_closeButton != closeButton) {
-        [_closeButton removeFromSuperview];       
+        [_closeButton removeFromSuperview];
         _closeButton = closeButton;
         if (_closeButton) {
             [_closeButton setFrameOrigin:[[self standardWindowButton:NSWindowCloseButton] frame].origin];
@@ -624,6 +589,41 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
             [[self themeFrameView] addSubview:_fullScreenButton];
         }
     }
+}
+
+#pragma mark -
+#pragma mark Private
+
+- (void)_doInitialWindowSetup
+{
+    _showsBaselineSeparator = YES;
+    _centerTrafficLightButtons = YES;
+    _titleBarHeight = [self _minimumTitlebarHeight];
+    _trafficLightButtonsLeftMargin = [self _defaultTrafficLightLeftMargin];
+    _delegateProxy = [INAppStoreWindowDelegateProxy alloc];
+    [super setDelegate:_delegateProxy];
+    
+    /** -----------------------------------------
+     - The window automatically does layout every time its moved or resized, which means that the traffic lights and content view get reset at the original positions, so we need to put them back in place
+     - NSWindow is hardcoded to redraw the traffic lights in a specific rect, so when they are moved down, only part of the buttons get redrawn, causing graphical artifacts. Therefore, the window must be force redrawn every time it becomes key/resigns key
+     ----------------------------------------- **/
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    [nc addObserver:self selector:@selector(_layoutTrafficLightsAndContent) name:NSWindowDidResizeNotification object:self];
+    [nc addObserver:self selector:@selector(_layoutTrafficLightsAndContent) name:NSWindowDidMoveNotification object:self];
+    [nc addObserver:self selector:@selector(_layoutTrafficLightsAndContent) name:NSWindowDidEndSheetNotification object:self];
+
+    [nc addObserver:self selector:@selector(_updateTitlebarView) name:NSApplicationDidBecomeActiveNotification object:nil];
+    [nc addObserver:self selector:@selector(_updateTitlebarView) name:NSApplicationDidResignActiveNotification object:nil];
+    #if IN_COMPILING_LION
+    if (IN_RUNNING_LION) {
+        [nc addObserver:self selector:@selector(_setupTrafficLightsTrackingArea) name:NSWindowDidExitFullScreenNotification object:nil];
+        [nc addObserver:self selector:@selector(windowWillEnterFullScreen:) name:NSWindowWillEnterFullScreenNotification object:nil];
+        [nc addObserver:self selector:@selector(windowWillExitFullScreen:) name:NSWindowWillExitFullScreenNotification object:nil];
+    }
+    #endif
+    [self _createTitlebarView];
+    [self _layoutTrafficLightsAndContent];
+    [self _setupTrafficLightsTrackingArea];
 }
 
 - (NSButton *)_windowButtonToLayout:(NSWindowButton)defaultButtonType orUserProvided:(NSButton *)userButton {
