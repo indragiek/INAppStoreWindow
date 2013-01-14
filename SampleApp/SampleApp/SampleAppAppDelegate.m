@@ -29,6 +29,7 @@
     self.fullScreenRightMarginSlider.doubleValue = self.window.fullScreenButtonRightMargin;
     self.trafficLightLeftMargin.doubleValue = self.window.trafficLightButtonsLeftMargin;
     
+    self.window.showsTitle = YES;
     [self setupCloseButton];
     [self setupMinimizeButton];
     [self setupZoomButton];

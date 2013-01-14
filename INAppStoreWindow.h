@@ -62,6 +62,9 @@
 @property (nonatomic) CGFloat trafficLightButtonsLeftMargin;
 @property (nonatomic) CGFloat fullScreenButtonRightMargin;
 
+/** Adjust the visibility of the window's title. */
+@property (nonatomic) BOOL showsTitle;
+
 /** If not nil, default window buttons are hidden and the their provided alternatives is used. */
 @property (INAppStoreWindowRetain) INWindowButton *closeButton;
 @property (INAppStoreWindowRetain) INWindowButton *minimizeButton;

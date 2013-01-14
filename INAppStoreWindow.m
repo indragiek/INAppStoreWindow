@@ -278,9 +278,71 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
             [self drawNoiseWithOpacity:0.1];
         }        
     }
+    
+    if ([window showsTitle]) {
+        NSRect titleTextRect;
+        NSDictionary *titleTextStyles = nil;
+        [self getWindowTitleFrame:&titleTextRect textAttributes:&titleTextStyles];
+        [window.title drawInRect:titleTextRect withAttributes:titleTextStyles];
+    }
 }
 
-- (void)mouseUp:(NSEvent *)theEvent 
+- (void)getWindowTitleFrame:(out NSRect *)frame textAttributes:(out NSDictionary **)attributes {
+    #if __has_feature(objc_arc)
+    NSShadow *titleTextShadow = [[NSShadow alloc] init];
+    #else
+    NSShadow *titleTextShadow = [[[NSShadow alloc] init] autorelease];
+    #endif
+    titleTextShadow.shadowBlurRadius = 0.0;
+    titleTextShadow.shadowOffset = NSMakeSize(0, -1);
+    titleTextShadow.shadowColor = [NSColor colorWithDeviceWhite:1.0 alpha:0.5];
+    NSColor *titleTextColor = nil;
+    BOOL drawsAsMainWindow = ([self.window isMainWindow] && [[NSApplication sharedApplication] isActive]);
+    if (drawsAsMainWindow) {
+        titleTextColor = [NSColor colorWithDeviceWhite:56.0/255.0 alpha:1.0];
+    }
+    else {
+        titleTextColor = [NSColor colorWithDeviceWhite:56.0/255.0 alpha:0.5];
+    }
+    NSDictionary *titleTextStyles = [NSDictionary dictionaryWithObjectsAndKeys:
+                                     [NSFont titleBarFontOfSize:[NSFont systemFontSizeForControlSize:NSRegularControlSize]], NSFontAttributeName,
+                                     titleTextColor, NSForegroundColorAttributeName,
+                                     titleTextShadow, NSShadowAttributeName,
+                                     nil];
+    NSSize titleSize = [self.window.title sizeWithAttributes:titleTextStyles];
+    NSRect titleTextRect;
+    titleTextRect.size = titleSize;
+    
+    NSButton *docIconButton = [self.window standardWindowButton:NSWindowDocumentIconButton];
+    NSButton *versionsButton = [self.window standardWindowButton:NSWindowDocumentVersionsButton];
+    if (docIconButton) {
+        NSRect docIconButtonFrame = [self convertRect:docIconButton.frame fromView:docIconButton.superview];
+        titleTextRect.origin.x = NSMaxX(docIconButtonFrame) + 4.0;
+        titleTextRect.origin.y = NSMidY(docIconButtonFrame) - titleSize.height/2 + 1;
+    }
+    else if (versionsButton) {
+        NSRect versionsButtonFrame = [self convertRect:versionsButton.frame fromView:versionsButton.superview];
+        titleTextRect.origin.x = NSMinX(versionsButtonFrame) - titleSize.width - 1;
+        
+        NSDocument *document = (NSDocument *)[(NSWindowController *)self.window.windowController document];
+        if ([document hasUnautosavedChanges] || [document isDocumentEdited]) {
+            titleTextRect.origin.x -= 20;
+        }
+    }
+    else {
+        titleTextRect.origin.x = NSMidX(self.bounds) - titleSize.width/2;
+    }
+    titleTextRect.origin.y = NSMaxY(self.bounds) - titleSize.height - 2.0;
+    
+    if (frame) {
+        *frame = titleTextRect;
+    }
+    if (attributes) {
+        *attributes = titleTextStyles;
+    }
+}
+
+- (void)mouseUp:(NSEvent *)theEvent
 {
     if ([theEvent clickCount] == 2) {
         // Get settings from "System Preferences" >  "Appearance" > "Double-click on windows title bar to minimize"
@@ -509,6 +571,13 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     return _fullScreenButtonRightMargin;
 }
 
+- (void)setShowsTitle:(BOOL)showsTitle {
+    if (_showsTitle != showsTitle) {
+        _showsTitle = showsTitle;
+        [self _displayWindowAndTitlebar];
+    }
+}
+
 - (void)setCenterFullScreenButton:(BOOL)centerFullScreenButton{
     if( _centerFullScreenButton != centerFullScreenButton ) {
         _centerFullScreenButton = centerFullScreenButton;
@@ -720,6 +789,10 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     #endif
     
     [self _repositionContentView];
+}
+
+- (void)undoManagerDidCloseUndoGroupNotification:(NSNotification *)notification {
+    [self _displayWindowAndTitlebar];
 }
 
 - (void)windowWillEnterFullScreen:(NSNotification *)notification 
