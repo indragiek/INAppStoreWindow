@@ -43,7 +43,6 @@
     closeButton.inactiveImage = [NSImage imageNamed:@"close-inactive-disabled-color.tiff"];
     closeButton.pressedImage = [NSImage imageNamed:@"close-pd-color.tiff"];
     closeButton.rolloverImage = [NSImage imageNamed:@"close-rollover-color.tiff"];
-//    [closeButton setEnabled:NO];
     self.window.closeButton = closeButton;
 }
 

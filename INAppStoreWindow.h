@@ -66,7 +66,7 @@
 @property (INAppStoreWindowRetain) INWindowButton *closeButton;
 @property (INAppStoreWindowRetain) INWindowButton *minimizeButton;
 @property (INAppStoreWindowRetain) INWindowButton *zoomButton;
-
+@property (INAppStoreWindowRetain) INWindowButton *fullScreenButton;
 
 /** The colors of the title bar background gradient and baseline separator, in main and non-main variants. */
 @property (INAppStoreWindowRetain) NSColor *titleBarStartColor;

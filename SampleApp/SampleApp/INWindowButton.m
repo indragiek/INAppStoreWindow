@@ -123,9 +123,7 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
 
 - (void)dealloc
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:INWindowButtonGroupDidUpdateRolloverStateNotification
-                                                  object:self.group];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [super dealloc];
 }
 
@@ -168,6 +166,8 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
     if (self.window) {
         [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidBecomeKeyNotification object:self.window];
         [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidResignKeyNotification object:self.window];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowWillEnterFullScreenNotification object:self.window];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowWillExitFullScreenNotification object:self.window];
     }
     if (newWindow != nil) {
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -178,11 +178,29 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
                                                  selector:@selector(windowDidChangeFocus:)
                                                      name:NSWindowDidResignKeyNotification
                                                    object:newWindow];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(windowWillEnterFullScreen:)
+                                                     name:NSWindowWillEnterFullScreenNotification
+                                                   object:newWindow];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(windowWillExitFullScreen:)
+                                                     name:NSWindowWillExitFullScreenNotification
+                                                   object:newWindow];
     }
 }
 
 - (void)windowDidChangeFocus:(NSNotification *)n {
     [self updateImage];
+}
+
+- (void)windowWillEnterFullScreen:(NSNotification *)n {
+    [self.group resetMouseCaptures];
+    [self setHidden:YES];
+}
+
+- (void)windowWillExitFullScreen:(NSNotification *)n {
+    [self.group resetMouseCaptures];
+    [self setHidden:NO];
 }
 
 #pragma mark - Event Handling

@@ -586,7 +586,7 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
         [_closeButton removeFromSuperview];       
         _closeButton = closeButton;
         if (_closeButton) {
-            _closeButton.frame = [[self standardWindowButton:NSWindowCloseButton] frame];
+            [_closeButton setFrameOrigin:[[self standardWindowButton:NSWindowCloseButton] frame].origin];
             [[self themeFrameView] addSubview:_closeButton];
         }
     }
@@ -597,7 +597,7 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
         [_minimizeButton removeFromSuperview];
         _minimizeButton = minimizeButton;
         if (_minimizeButton) {
-            _minimizeButton.frame = [[self standardWindowButton:NSWindowMiniaturizeButton] frame];
+            [_minimizeButton setFrameOrigin:[[self standardWindowButton:NSWindowMiniaturizeButton] frame].origin];
             [[self themeFrameView] addSubview:_minimizeButton];
         }
     }
@@ -608,8 +608,19 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
         [_zoomButton removeFromSuperview];
         _zoomButton = zoomButton;
         if (_zoomButton) {
-            _zoomButton.frame = [[self standardWindowButton:NSWindowZoomButton] frame];
+            [_zoomButton setFrameOrigin:[[self standardWindowButton:NSWindowZoomButton] frame].origin];
             [[self themeFrameView] addSubview:_zoomButton];
+        }
+    }
+}
+
+- (void)setFullScreenButton:(INWindowButton *)fullScreenButton {
+    if (_fullScreenButton != fullScreenButton) {
+        [_fullScreenButton removeFromSuperview];
+        _fullScreenButton = fullScreenButton;
+        if (_fullScreenButton) {
+            [_fullScreenButton setFrameOrigin:[[self standardWindowButton:NSWindowFullScreenButton] frame].origin];
+            [[self themeFrameView] addSubview:_fullScreenButton];
         }
     }
 }
@@ -635,6 +646,10 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 
 - (NSButton *)_zoomButtonToLayout {
     return [self _windowButtonToLayout:NSWindowZoomButton orUserProvided:self.zoomButton];
+}
+
+- (NSButton *)_fullScreenButtonToLayout {
+    return [self _windowButtonToLayout:NSWindowFullScreenButton orUserProvided:self.fullScreenButton];
 }
 
 - (void)_layoutTrafficLightsAndContent
@@ -686,7 +701,7 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     #if IN_COMPILING_LION
     // Set the frame of the FullScreen button in Lion if available
     if ( IN_RUNNING_LION ) {
-        NSButton *fullScreen = [self standardWindowButton:NSWindowFullScreenButton];        
+        NSButton *fullScreen = [self _fullScreenButtonToLayout];
         if( fullScreen ) {
             NSRect fullScreenFrame = [fullScreen frame];
             if ( !_setFullScreenButtonRightMargin ) {
