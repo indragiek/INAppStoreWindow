@@ -59,7 +59,7 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
 }
 
 - (void)setNumberOfCaptures:(NSInteger)numberOfCaptures {
-    if (_numberOfCaptures != numberOfCaptures) {
+    if (_numberOfCaptures != numberOfCaptures && numberOfCaptures >= 0) {
         _numberOfCaptures = numberOfCaptures;
         [[NSNotificationCenter defaultCenter] postNotificationName:INWindowButtonGroupDidUpdateRolloverStateNotification
                                                             object:self];
@@ -139,6 +139,8 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
     [self updateRollOverImage];
 }
 
+#pragma mark - Tracking Area
+
 - (void)updateTrackingAreas {
     [super updateTrackingAreas];
     
@@ -146,7 +148,7 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
         [self removeTrackingArea:self.mouseTrackingArea];
     }
     
-    self.mouseTrackingArea = [[NSTrackingArea alloc] initWithRect:self.bounds
+    self.mouseTrackingArea = [[NSTrackingArea alloc] initWithRect:NSInsetRect(self.bounds, -4, -4)
                                                           options:NSTrackingMouseEnteredAndExited | NSTrackingActiveAlways
                                                             owner:self
                                                          userInfo:nil];
@@ -154,8 +156,10 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
     [self addTrackingArea:self.mouseTrackingArea];
 }
 
-- (void)viewDidMoveToSuperview {
-    if (self.superview) {
+#pragma mark - Window State Handling
+
+- (void)viewDidMoveToWindow {
+    if (self.window) {
         [self updateImage];
     }
 }
@@ -181,6 +185,27 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
     [self updateImage];
 }
 
+#pragma mark - Event Handling
+
+- (void)viewDidEndLiveResize {
+    [super viewDidEndLiveResize];
+    [self.group resetMouseCaptures];
+}
+
+- (void)mouseEntered:(NSEvent *)theEvent {
+    [super mouseEntered:theEvent];
+    [self.group didCaptureMousePointer];
+    [self updateRollOverImage];
+}
+
+- (void)mouseExited:(NSEvent *)theEvent {
+    [super mouseExited:theEvent];
+    [self.group didReleaseMousePointer];
+    [self updateRollOverImage];
+}
+
+#pragma mark - Button Appearance
+
 - (void)setPressedImage:(NSImage *)pressedImage {
     self.alternateImage = pressedImage;
 }
@@ -196,18 +221,6 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
     } else {
         self.image = self.inactiveImage;
     }
-}
-
-- (void)mouseEntered:(NSEvent *)theEvent {
-    [super mouseEntered:theEvent];
-    [self.group didCaptureMousePointer];
-    [self updateRollOverImage];
-}
-
-- (void)mouseExited:(NSEvent *)theEvent {
-    [super mouseExited:theEvent];
-    [self.group didReleaseMousePointer];
-    [self updateRollOverImage];
 }
 
 - (void)updateRollOverImage {
