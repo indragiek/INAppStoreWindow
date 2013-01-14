@@ -12,8 +12,8 @@
 
 @property (nonatomic, copy, readonly) NSString *groupIdentifier;
 
-@property (nonatomic, strong) NSImage *active;
-@property (nonatomic, strong) NSImage *activeNotKeyWindow;
+@property (nonatomic, strong) NSImage *activeImage;
+@property (nonatomic, strong) NSImage *activeNotKeyWindowImage;
 @property (nonatomic, strong) NSImage *inactiveImage;
 @property (nonatomic, strong) NSImage *rolloverImage;
 @property (nonatomic, strong) NSImage *pressedImage;

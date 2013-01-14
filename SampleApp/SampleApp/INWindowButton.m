@@ -22,6 +22,8 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
 - (void)didReleaseMousePointer;
 - (BOOL)shouldDisplayRollOver;
 
+- (void)resetMouseCaptures;
+
 @end
 
 @interface INWindowButtonGroup ()
@@ -56,20 +58,28 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
     return self;
 }
 
+- (void)setNumberOfCaptures:(NSInteger)numberOfCaptures {
+    if (_numberOfCaptures != numberOfCaptures) {
+        _numberOfCaptures = numberOfCaptures;
+        [[NSNotificationCenter defaultCenter] postNotificationName:INWindowButtonGroupDidUpdateRolloverStateNotification
+                                                            object:self];
+    }
+}
+
 - (void)didCaptureMousePointer {
     self.numberOfCaptures++;
-    [[NSNotificationCenter defaultCenter] postNotificationName:INWindowButtonGroupDidUpdateRolloverStateNotification
-                                                        object:self];
 }
 
 - (void)didReleaseMousePointer {
     self.numberOfCaptures--;
-    [[NSNotificationCenter defaultCenter] postNotificationName:INWindowButtonGroupDidUpdateRolloverStateNotification
-                                                        object:self];
 }
 
 - (BOOL)shouldDisplayRollOver {
     return (self.numberOfCaptures > 0);
+}
+
+- (void)resetMouseCaptures {
+    self.numberOfCaptures = 0;
 }
 
 @end
@@ -89,6 +99,8 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
     INWindowButton *button = [[self alloc] initWithSize:size groupIdentifier:groupID];
     return button;
 }
+
+#pragma mark - Init and Dealloc
 
 - (id)initWithSize:(NSSize)size groupIdentifier:(NSString *)groupIdentifier
 {
@@ -116,6 +128,8 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
                                                   object:self.group];
     [super dealloc];
 }
+
+#pragma mark - Group
 
 - (INWindowButtonGroup *)group {
     return [INWindowButtonGroup groupWithIdentifier:self.groupIdentifier];
@@ -146,6 +160,27 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
     }
 }
 
+- (void)viewWillMoveToWindow:(NSWindow *)newWindow {
+    if (self.window) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidBecomeKeyNotification object:self.window];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidResignKeyNotification object:self.window];
+    }
+    if (newWindow != nil) {
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(windowDidChangeFocus:)
+                                                     name:NSWindowDidBecomeKeyNotification
+                                                   object:newWindow];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(windowDidChangeFocus:)
+                                                     name:NSWindowDidResignKeyNotification
+                                                   object:newWindow];
+    }
+}
+
+- (void)windowDidChangeFocus:(NSNotification *)n {
+    [self updateImage];
+}
+
 - (void)setPressedImage:(NSImage *)pressedImage {
     self.alternateImage = pressedImage;
 }
@@ -156,9 +191,8 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
 
 - (void)setEnabled:(BOOL)enabled {
     [super setEnabled:enabled];
-    
     if (enabled) {
-        self.image = self.active;
+        self.image = self.activeImage;
     } else {
         self.image = self.inactiveImage;
     }
@@ -177,10 +211,10 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
 }
 
 - (void)updateRollOverImage {
-    if ([self.group shouldDisplayRollOver]) {
+    if ([self.group shouldDisplayRollOver] && [self isEnabled]) {
         self.image = self.rolloverImage;
     } else {
-        self.image = self.active;
+        [self updateImage];
     }
 }
 
@@ -194,9 +228,9 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
 
 - (void)updateActiveImage {
     if ([self.window isKeyWindow]) {
-        self.image = self.active;
+        self.image = self.activeImage;
     } else {
-        self.image = self.activeNotKeyWindow;
+        self.image = self.activeNotKeyWindowImage;
     }
 }
 
