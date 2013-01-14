@@ -36,16 +36,6 @@
 		E924075816A2F4F200989DF3 /* close-pd-color.tiff in Resources */ = {isa = PBXBuildFile; fileRef = E924074016A2F4F200989DF3 /* close-pd-color.tiff */; };
 		E924075916A2F4F200989DF3 /* close-rollover-color.tiff in Resources */ = {isa = PBXBuildFile; fileRef = E924074116A2F4F200989DF3 /* close-rollover-color.tiff */; };
 		E924075A16A2F4F200989DF3 /* close-rollover-color.tiff in Resources */ = {isa = PBXBuildFile; fileRef = E924074116A2F4F200989DF3 /* close-rollover-color.tiff */; };
-		E924075B16A2F4F200989DF3 /* closedirty-active-color.tiff in Resources */ = {isa = PBXBuildFile; fileRef = E924074216A2F4F200989DF3 /* closedirty-active-color.tiff */; };
-		E924075C16A2F4F200989DF3 /* closedirty-active-color.tiff in Resources */ = {isa = PBXBuildFile; fileRef = E924074216A2F4F200989DF3 /* closedirty-active-color.tiff */; };
-		E924075D16A2F4F200989DF3 /* closedirty-activenokey-color.tiff in Resources */ = {isa = PBXBuildFile; fileRef = E924074316A2F4F200989DF3 /* closedirty-activenokey-color.tiff */; };
-		E924075E16A2F4F200989DF3 /* closedirty-activenokey-color.tiff in Resources */ = {isa = PBXBuildFile; fileRef = E924074316A2F4F200989DF3 /* closedirty-activenokey-color.tiff */; };
-		E924075F16A2F4F200989DF3 /* closedirty-inactive-disabled-color.tiff in Resources */ = {isa = PBXBuildFile; fileRef = E924074416A2F4F200989DF3 /* closedirty-inactive-disabled-color.tiff */; };
-		E924076016A2F4F200989DF3 /* closedirty-inactive-disabled-color.tiff in Resources */ = {isa = PBXBuildFile; fileRef = E924074416A2F4F200989DF3 /* closedirty-inactive-disabled-color.tiff */; };
-		E924076116A2F4F200989DF3 /* closedirty-pd-color.tiff in Resources */ = {isa = PBXBuildFile; fileRef = E924074516A2F4F200989DF3 /* closedirty-pd-color.tiff */; };
-		E924076216A2F4F200989DF3 /* closedirty-pd-color.tiff in Resources */ = {isa = PBXBuildFile; fileRef = E924074516A2F4F200989DF3 /* closedirty-pd-color.tiff */; };
-		E924076316A2F4F200989DF3 /* closedirty-rollover-color.tiff in Resources */ = {isa = PBXBuildFile; fileRef = E924074616A2F4F200989DF3 /* closedirty-rollover-color.tiff */; };
-		E924076416A2F4F200989DF3 /* closedirty-rollover-color.tiff in Resources */ = {isa = PBXBuildFile; fileRef = E924074616A2F4F200989DF3 /* closedirty-rollover-color.tiff */; };
 		E924076516A2F4F200989DF3 /* minimize-active-color.tiff in Resources */ = {isa = PBXBuildFile; fileRef = E924074716A2F4F200989DF3 /* minimize-active-color.tiff */; };
 		E924076616A2F4F200989DF3 /* minimize-active-color.tiff in Resources */ = {isa = PBXBuildFile; fileRef = E924074716A2F4F200989DF3 /* minimize-active-color.tiff */; };
 		E924076716A2F4F200989DF3 /* minimize-activenokey-color.tiff in Resources */ = {isa = PBXBuildFile; fileRef = E924074816A2F4F200989DF3 /* minimize-activenokey-color.tiff */; };
@@ -106,11 +96,6 @@
 		E924073F16A2F4F200989DF3 /* close-inactive-disabled-color.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "close-inactive-disabled-color.tiff"; sourceTree = "<group>"; };
 		E924074016A2F4F200989DF3 /* close-pd-color.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "close-pd-color.tiff"; sourceTree = "<group>"; };
 		E924074116A2F4F200989DF3 /* close-rollover-color.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "close-rollover-color.tiff"; sourceTree = "<group>"; };
-		E924074216A2F4F200989DF3 /* closedirty-active-color.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "closedirty-active-color.tiff"; sourceTree = "<group>"; };
-		E924074316A2F4F200989DF3 /* closedirty-activenokey-color.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "closedirty-activenokey-color.tiff"; sourceTree = "<group>"; };
-		E924074416A2F4F200989DF3 /* closedirty-inactive-disabled-color.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "closedirty-inactive-disabled-color.tiff"; sourceTree = "<group>"; };
-		E924074516A2F4F200989DF3 /* closedirty-pd-color.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "closedirty-pd-color.tiff"; sourceTree = "<group>"; };
-		E924074616A2F4F200989DF3 /* closedirty-rollover-color.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "closedirty-rollover-color.tiff"; sourceTree = "<group>"; };
 		E924074716A2F4F200989DF3 /* minimize-active-color.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "minimize-active-color.tiff"; sourceTree = "<group>"; };
 		E924074816A2F4F200989DF3 /* minimize-activenokey-color.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "minimize-activenokey-color.tiff"; sourceTree = "<group>"; };
 		E924074916A2F4F200989DF3 /* minimize-inactive-disabled-color.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "minimize-inactive-disabled-color.tiff"; sourceTree = "<group>"; };
@@ -255,11 +240,6 @@
 				E924073F16A2F4F200989DF3 /* close-inactive-disabled-color.tiff */,
 				E924074016A2F4F200989DF3 /* close-pd-color.tiff */,
 				E924074116A2F4F200989DF3 /* close-rollover-color.tiff */,
-				E924074216A2F4F200989DF3 /* closedirty-active-color.tiff */,
-				E924074316A2F4F200989DF3 /* closedirty-activenokey-color.tiff */,
-				E924074416A2F4F200989DF3 /* closedirty-inactive-disabled-color.tiff */,
-				E924074516A2F4F200989DF3 /* closedirty-pd-color.tiff */,
-				E924074616A2F4F200989DF3 /* closedirty-rollover-color.tiff */,
 				E924074716A2F4F200989DF3 /* minimize-active-color.tiff */,
 				E924074816A2F4F200989DF3 /* minimize-activenokey-color.tiff */,
 				E924074916A2F4F200989DF3 /* minimize-inactive-disabled-color.tiff */,
@@ -352,11 +332,6 @@
 				E924075616A2F4F200989DF3 /* close-inactive-disabled-color.tiff in Resources */,
 				E924075816A2F4F200989DF3 /* close-pd-color.tiff in Resources */,
 				E924075A16A2F4F200989DF3 /* close-rollover-color.tiff in Resources */,
-				E924075C16A2F4F200989DF3 /* closedirty-active-color.tiff in Resources */,
-				E924075E16A2F4F200989DF3 /* closedirty-activenokey-color.tiff in Resources */,
-				E924076016A2F4F200989DF3 /* closedirty-inactive-disabled-color.tiff in Resources */,
-				E924076216A2F4F200989DF3 /* closedirty-pd-color.tiff in Resources */,
-				E924076416A2F4F200989DF3 /* closedirty-rollover-color.tiff in Resources */,
 				E924076616A2F4F200989DF3 /* minimize-active-color.tiff in Resources */,
 				E924076816A2F4F200989DF3 /* minimize-activenokey-color.tiff in Resources */,
 				E924076A16A2F4F200989DF3 /* minimize-inactive-disabled-color.tiff in Resources */,
@@ -383,11 +358,6 @@
 				E924075516A2F4F200989DF3 /* close-inactive-disabled-color.tiff in Resources */,
 				E924075716A2F4F200989DF3 /* close-pd-color.tiff in Resources */,
 				E924075916A2F4F200989DF3 /* close-rollover-color.tiff in Resources */,
-				E924075B16A2F4F200989DF3 /* closedirty-active-color.tiff in Resources */,
-				E924075D16A2F4F200989DF3 /* closedirty-activenokey-color.tiff in Resources */,
-				E924075F16A2F4F200989DF3 /* closedirty-inactive-disabled-color.tiff in Resources */,
-				E924076116A2F4F200989DF3 /* closedirty-pd-color.tiff in Resources */,
-				E924076316A2F4F200989DF3 /* closedirty-rollover-color.tiff in Resources */,
 				E924076516A2F4F200989DF3 /* minimize-active-color.tiff in Resources */,
 				E924076716A2F4F200989DF3 /* minimize-activenokey-color.tiff in Resources */,
 				E924076916A2F4F200989DF3 /* minimize-inactive-disabled-color.tiff in Resources */,
