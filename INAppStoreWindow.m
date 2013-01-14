@@ -378,6 +378,7 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     [_closeButton release];
     [_minimizeButton release];
     [_zoomButton release];
+    [_fullScreenButton release];
     [super dealloc];    
     #endif
 }

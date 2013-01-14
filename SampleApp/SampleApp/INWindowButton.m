@@ -67,6 +67,14 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
     return self;
 }
 
+#if !__has_feature(objc_arc)
+- (void)dealloc
+{
+    [_identifier release];
+    [super dealloc];
+}
+#endif
+
 - (void)setNumberOfCaptures:(NSInteger)numberOfCaptures {
     if (_numberOfCaptures != numberOfCaptures && numberOfCaptures >= 0) {
         _numberOfCaptures = numberOfCaptures;
@@ -133,7 +141,14 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    #if !__has_feature(objc_arc)
+    [_activeImage release];
+    [_inactiveImage release];
+    [_activeNotKeyWindowImage release];
+    [_rolloverImage release];
+    [_groupIdentifier release];
     [super dealloc];
+    #endif
 }
 
 #pragma mark - Group
