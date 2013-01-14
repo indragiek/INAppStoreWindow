@@ -16,6 +16,7 @@
 //
 
 #import "INAppStoreWindow.h"
+#import "INWindowButton.h"
 
 #define IN_RUNNING_LION (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_6)
 #define IN_COMPILING_LION __MAC_OS_X_VERSION_MAX_ALLOWED >= 1070
@@ -374,6 +375,9 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     #if !__has_feature(objc_arc)
 //    [_delegateProxy release];
     [_titleBarView release];
+    [_closeButton release];
+    [_minimizeButton release];
+    [_zoomButton release];
     [super dealloc];    
     #endif
 }
@@ -577,14 +581,70 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     [self _setupTrafficLightsTrackingArea];
 }
 
+- (void)setCloseButton:(INWindowButton *)closeButton {
+    if (_closeButton != closeButton) {
+        [_closeButton removeFromSuperview];       
+        _closeButton = closeButton;
+        if (_closeButton) {
+            _closeButton.frame = [[self standardWindowButton:NSWindowCloseButton] frame];
+            [[self themeFrameView] addSubview:_closeButton];
+        }
+    }
+}
+
+- (void)setMinimizeButton:(INWindowButton *)minimizeButton {
+    if (_minimizeButton != minimizeButton) {
+        [_minimizeButton removeFromSuperview];
+        _minimizeButton = minimizeButton;
+        if (_minimizeButton) {
+            _minimizeButton.frame = [[self standardWindowButton:NSWindowMiniaturizeButton] frame];
+            [[self themeFrameView] addSubview:_minimizeButton];
+        }
+    }
+}
+
+- (void)setZoomButton:(INWindowButton *)zoomButton {
+    if (_zoomButton != zoomButton) {
+        [_zoomButton removeFromSuperview];
+        _zoomButton = zoomButton;
+        if (_zoomButton) {
+            _zoomButton.frame = [[self standardWindowButton:NSWindowZoomButton] frame];
+            [[self themeFrameView] addSubview:_zoomButton];
+        }
+    }
+}
+
+- (NSButton *)_windowButtonToLayout:(NSWindowButton)defaultButtonType orUserProvided:(NSButton *)userButton {
+    NSButton *defaultButton = [self standardWindowButton:defaultButtonType];
+    if (userButton) {
+        [defaultButton setHidden:YES];
+        defaultButton = userButton;
+    } else if ([defaultButton superview] != [self themeFrameView]) {
+        [defaultButton setHidden:NO];
+    }
+    return defaultButton;
+}
+
+- (NSButton *)_closeButtonToLayout {
+    return [self _windowButtonToLayout:NSWindowCloseButton orUserProvided:self.closeButton];
+}
+
+- (NSButton *)_minimizeButtonToLayout {
+    return [self _windowButtonToLayout:NSWindowMiniaturizeButton orUserProvided:self.minimizeButton];
+}
+
+- (NSButton *)_zoomButtonToLayout {
+    return [self _windowButtonToLayout:NSWindowZoomButton orUserProvided:self.zoomButton];
+}
+
 - (void)_layoutTrafficLightsAndContent
 {
     // Reposition/resize the title bar view as needed
     [self _recalculateFrameForTitleBarContainer];
     
-    NSButton *close = [self standardWindowButton:NSWindowCloseButton];
-    NSButton *minimize = [self standardWindowButton:NSWindowMiniaturizeButton];
-    NSButton *zoom = [self standardWindowButton:NSWindowZoomButton];
+    NSButton *close = [self _closeButtonToLayout];
+    NSButton *minimize = [self _minimizeButtonToLayout];
+    NSButton *zoom = [self _zoomButtonToLayout];
     
     // Set the frame of the window buttons
     NSRect closeFrame = [close frame];
@@ -669,15 +729,18 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     }
 }
 
+- (NSView *)themeFrameView {
+    return [[self contentView] superview];
+}
+
 - (void)_createTitlebarView
 {
     // Create the title bar view
     INTitlebarContainer *container = [[INTitlebarContainer alloc] initWithFrame:NSZeroRect];
     // Configure the view properties and add it as a subview of the theme frame
-    NSView *themeFrame = [[self contentView] superview];
-    NSView *firstSubview = [[themeFrame subviews] objectAtIndex:0];
+    NSView *firstSubview = [[[self themeFrameView] subviews] objectAtIndex:0];
     [self _recalculateFrameForTitleBarContainer];
-    [themeFrame addSubview:container positioned:NSWindowBelow relativeTo:firstSubview];
+    [[self themeFrameView] addSubview:container positioned:NSWindowBelow relativeTo:firstSubview];
     #if __has_feature(objc_arc)
     _titleBarContainer = container;
     self.titleBarView = [[INTitlebarView alloc] initWithFrame:NSZeroRect];
@@ -695,14 +758,13 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 // Solution for tracking area issue thanks to @Perspx (Alex Rozanski) <https://gist.github.com/972958>
 - (void)_setupTrafficLightsTrackingArea
 {
-    [[[self contentView] superview] viewWillStartLiveResize];
-    [[[self contentView] superview] viewDidEndLiveResize];
+    [[self themeFrameView] viewWillStartLiveResize];
+    [[self themeFrameView] viewDidEndLiveResize];
 }
 
 - (void)_recalculateFrameForTitleBarContainer
 {
-    NSView *themeFrame = [[self contentView] superview];
-    NSRect themeFrameRect = [themeFrame frame];
+    NSRect themeFrameRect = [[self themeFrameView] frame];
     NSRect titleFrame = NSMakeRect(0.0, NSMaxY(themeFrameRect) - _titleBarHeight, NSWidth(themeFrameRect), _titleBarHeight);
     [_titleBarContainer setFrame:titleFrame];
 }
@@ -739,7 +801,7 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 {
     static CGFloat trafficLightLeftMargin = 0.0;
     if ( !trafficLightLeftMargin ) {
-        NSButton *close = [self standardWindowButton:NSWindowCloseButton];
+        NSButton *close = [self _closeButtonToLayout];
         trafficLightLeftMargin = NSMinX(close.frame);
     }
     return trafficLightLeftMargin;
@@ -749,8 +811,8 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 {
     static CGFloat trafficLightSeparation = 0.0;
     if ( !trafficLightSeparation ) {
-        NSButton *close = [self standardWindowButton:NSWindowCloseButton];
-        NSButton *minimize = [self standardWindowButton:NSWindowMiniaturizeButton];
+        NSButton *close = [self _closeButtonToLayout];
+        NSButton *minimize = [self _minimizeButtonToLayout];
         trafficLightSeparation = NSMinX(minimize.frame) - NSMinX(close.frame);
     }
     return trafficLightSeparation;    

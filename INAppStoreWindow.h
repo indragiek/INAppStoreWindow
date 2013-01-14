@@ -25,6 +25,8 @@
 #define INAppStoreWindowRetain nonatomic, retain
 #endif
 
+@class INWindowButton;
+
 /** @class INTitlebarView
  Draws a default style Mac OS X title bar.
  */
@@ -59,6 +61,12 @@
 /** Adjust the left and right padding of the trafficlight and fullscreen buttons */
 @property (nonatomic) CGFloat trafficLightButtonsLeftMargin;
 @property (nonatomic) CGFloat fullScreenButtonRightMargin;
+
+/** If not nil, default window buttons are hidden and the their provided alternatives used */
+@property (INAppStoreWindowRetain) INWindowButton *closeButton;
+@property (INAppStoreWindowRetain) INWindowButton *minimizeButton;
+@property (INAppStoreWindowRetain) INWindowButton *zoomButton;
+
 
 /** The colors of the title bar background gradient and baseline separator, in main and non-main variants. */
 @property (INAppStoreWindowRetain) NSColor *titleBarStartColor;
