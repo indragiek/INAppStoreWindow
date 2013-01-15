@@ -16,6 +16,7 @@
 //
 
 #import "INAppStoreWindow.h"
+#import "INWindowButton.h"
 
 #define IN_RUNNING_LION (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_6)
 #define IN_COMPILING_LION __MAC_OS_X_VERSION_MAX_ALLOWED >= 1070
@@ -34,6 +35,9 @@
 #define IN_COLOR_NOTMAIN_START [NSColor colorWithDeviceWhite:0.851 alpha:1.0]
 #define IN_COLOR_NOTMAIN_END [NSColor colorWithDeviceWhite:0.929 alpha:1.0]
 #define IN_COLOR_NOTMAIN_BOTTOM [NSColor colorWithDeviceWhite:0.600 alpha:1.0]
+
+#define IN_COLOR_MAIN_TITLE_TEXT [NSColor colorWithDeviceWhite:56.0/255.0 alpha:1.0]
+#define IN_COLOR_NOTMAIN_TITLE_TEXT [NSColor colorWithDeviceWhite:56.0/255.0 alpha:0.5]
 
 /** Lion */
 
@@ -275,11 +279,75 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
             CGPathRelease(noiseClippingPath);
             
             [self drawNoiseWithOpacity:0.1];
-        }        
+        }
+    }
+    
+    if ([window showsTitle] && (([window styleMask] & NSFullScreenWindowMask) == 0 || window.showsTitleInFullscreen)) {
+        NSRect titleTextRect;
+        NSDictionary *titleTextStyles = nil;
+        [self getTitleFrame:&titleTextRect textAttributes:&titleTextStyles forWindow:window];
+        [window.title drawInRect:titleTextRect withAttributes:titleTextStyles];
     }
 }
 
-- (void)mouseUp:(NSEvent *)theEvent 
+- (void)getTitleFrame:(out NSRect *)frame textAttributes:(out NSDictionary **)attributes forWindow:(in INAppStoreWindow *)window
+{
+    BOOL drawsAsMainWindow = ([window isMainWindow] && [[NSApplication sharedApplication] isActive]);
+    
+    NSShadow *titleTextShadow = drawsAsMainWindow ? window.titleTextShadow : window.inactiveTitleTextShadow;
+    if (titleTextShadow == nil) {
+        #if __has_feature(objc_arc)
+        titleTextShadow = [[NSShadow alloc] init];
+        #else
+        titleTextShadow = [[[NSShadow alloc] init] autorelease];
+        #endif
+        titleTextShadow.shadowBlurRadius = 0.0;
+        titleTextShadow.shadowOffset = NSMakeSize(0, -1);
+        titleTextShadow.shadowColor = [NSColor colorWithDeviceWhite:1.0 alpha:0.5];
+    }
+    
+    NSColor *titleTextColor = drawsAsMainWindow ? window.titleTextColor : window.inactiveTitleTextColor;
+    titleTextColor = titleTextColor ? titleTextColor : drawsAsMainWindow ? IN_COLOR_MAIN_TITLE_TEXT : IN_COLOR_NOTMAIN_TITLE_TEXT;
+    
+    NSDictionary *titleTextStyles = [NSDictionary dictionaryWithObjectsAndKeys:
+                                     [NSFont titleBarFontOfSize:[NSFont systemFontSizeForControlSize:NSRegularControlSize]], NSFontAttributeName,
+                                     titleTextColor, NSForegroundColorAttributeName,
+                                     titleTextShadow, NSShadowAttributeName,
+                                     nil];
+    NSSize titleSize = [window.title sizeWithAttributes:titleTextStyles];
+    NSRect titleTextRect;
+    titleTextRect.size = titleSize;
+    
+    NSButton *docIconButton = [window standardWindowButton:NSWindowDocumentIconButton];
+    NSButton *versionsButton = [window standardWindowButton:NSWindowDocumentVersionsButton];
+    if (docIconButton) {
+        NSRect docIconButtonFrame = [self convertRect:docIconButton.frame fromView:docIconButton.superview];
+        titleTextRect.origin.x = NSMaxX(docIconButtonFrame) + 4.0;
+        titleTextRect.origin.y = NSMidY(docIconButtonFrame) - titleSize.height/2 + 1;
+    }
+    else if (versionsButton) {
+        NSRect versionsButtonFrame = [self convertRect:versionsButton.frame fromView:versionsButton.superview];
+        titleTextRect.origin.x = NSMinX(versionsButtonFrame) - titleSize.width - 1;
+        
+        NSDocument *document = (NSDocument *)[(NSWindowController *)self.window.windowController document];
+        if ([document hasUnautosavedChanges] || [document isDocumentEdited]) {
+            titleTextRect.origin.x -= 20;
+        }
+    }
+    else {
+        titleTextRect.origin.x = NSMidX(self.bounds) - titleSize.width/2;
+    }
+    titleTextRect.origin.y = NSMaxY(self.bounds) - titleSize.height - 2.0;
+    
+    if (frame) {
+        *frame = titleTextRect;
+    }
+    if (attributes) {
+        *attributes = titleTextStyles;
+    }
+}
+
+- (void)mouseUp:(NSEvent *)theEvent
 {
     if ([theEvent clickCount] == 2) {
         // Get settings from "System Preferences" >  "Appearance" > "Double-click on windows title bar to minimize"
@@ -374,6 +442,10 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     #if !__has_feature(objc_arc)
 //    [_delegateProxy release];
     [_titleBarView release];
+    [_closeButton release];
+    [_minimizeButton release];
+    [_zoomButton release];
+    [_fullScreenButton release];
     [super dealloc];    
     #endif
 }
@@ -504,6 +576,13 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     return _fullScreenButtonRightMargin;
 }
 
+- (void)setShowsTitle:(BOOL)showsTitle {
+    if (_showsTitle != showsTitle) {
+        _showsTitle = showsTitle;
+        [self _displayWindowAndTitlebar];
+    }
+}
+
 - (void)setCenterFullScreenButton:(BOOL)centerFullScreenButton{
     if( _centerFullScreenButton != centerFullScreenButton ) {
         _centerFullScreenButton = centerFullScreenButton;
@@ -542,6 +621,58 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     return [_delegateProxy secondaryDelegate];
 }
 
+- (void)setCloseButton:(INWindowButton *)closeButton {
+    if (_closeButton != closeButton) {
+        [_closeButton removeFromSuperview];
+        _closeButton = closeButton;
+        if (_closeButton) {
+            _closeButton.target = self;
+            _closeButton.action = @selector(performClose:);
+            [_closeButton setFrameOrigin:[[self standardWindowButton:NSWindowCloseButton] frame].origin];
+            [[self themeFrameView] addSubview:_closeButton];
+        }
+    }
+}
+
+- (void)setMinimizeButton:(INWindowButton *)minimizeButton {
+    if (_minimizeButton != minimizeButton) {
+        [_minimizeButton removeFromSuperview];
+        _minimizeButton = minimizeButton;
+        if (_minimizeButton) {
+            _minimizeButton.target = self;
+            _minimizeButton.action = @selector(performMiniaturize:);
+            [_minimizeButton setFrameOrigin:[[self standardWindowButton:NSWindowMiniaturizeButton] frame].origin];
+            [[self themeFrameView] addSubview:_minimizeButton];
+        }
+    }
+}
+
+- (void)setZoomButton:(INWindowButton *)zoomButton {
+    if (_zoomButton != zoomButton) {
+        [_zoomButton removeFromSuperview];
+        _zoomButton = zoomButton;
+        if (_zoomButton) {
+            _zoomButton.target = self;
+            _zoomButton.action = @selector(performZoom:);
+            [_zoomButton setFrameOrigin:[[self standardWindowButton:NSWindowZoomButton] frame].origin];
+            [[self themeFrameView] addSubview:_zoomButton];
+        }
+    }
+}
+
+- (void)setFullScreenButton:(INWindowButton *)fullScreenButton {
+    if (_fullScreenButton != fullScreenButton) {
+        [_fullScreenButton removeFromSuperview];
+        _fullScreenButton = fullScreenButton;
+        if (_fullScreenButton) {
+            _fullScreenButton.target = self;
+            _fullScreenButton.action = @selector(toggleFullScreen:);
+            [_fullScreenButton setFrameOrigin:[[self standardWindowButton:NSWindowFullScreenButton] frame].origin];
+            [[self themeFrameView] addSubview:_fullScreenButton];
+        }
+    }
+}
+
 #pragma mark -
 #pragma mark Private
 
@@ -577,14 +708,41 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     [self _setupTrafficLightsTrackingArea];
 }
 
+- (NSButton *)_windowButtonToLayout:(NSWindowButton)defaultButtonType orUserProvided:(NSButton *)userButton {
+    NSButton *defaultButton = [self standardWindowButton:defaultButtonType];
+    if (userButton) {
+        [defaultButton setHidden:YES];
+        defaultButton = userButton;
+    } else if ([defaultButton superview] != [self themeFrameView]) {
+        [defaultButton setHidden:NO];
+    }
+    return defaultButton;
+}
+
+- (NSButton *)_closeButtonToLayout {
+    return [self _windowButtonToLayout:NSWindowCloseButton orUserProvided:self.closeButton];
+}
+
+- (NSButton *)_minimizeButtonToLayout {
+    return [self _windowButtonToLayout:NSWindowMiniaturizeButton orUserProvided:self.minimizeButton];
+}
+
+- (NSButton *)_zoomButtonToLayout {
+    return [self _windowButtonToLayout:NSWindowZoomButton orUserProvided:self.zoomButton];
+}
+
+- (NSButton *)_fullScreenButtonToLayout {
+    return [self _windowButtonToLayout:NSWindowFullScreenButton orUserProvided:self.fullScreenButton];
+}
+
 - (void)_layoutTrafficLightsAndContent
 {
     // Reposition/resize the title bar view as needed
     [self _recalculateFrameForTitleBarContainer];
     
-    NSButton *close = [self standardWindowButton:NSWindowCloseButton];
-    NSButton *minimize = [self standardWindowButton:NSWindowMiniaturizeButton];
-    NSButton *zoom = [self standardWindowButton:NSWindowZoomButton];
+    NSButton *close = [self _closeButtonToLayout];
+    NSButton *minimize = [self _minimizeButtonToLayout];
+    NSButton *zoom = [self _zoomButtonToLayout];
     
     // Set the frame of the window buttons
     NSRect closeFrame = [close frame];
@@ -626,7 +784,7 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     #if IN_COMPILING_LION
     // Set the frame of the FullScreen button in Lion if available
     if ( IN_RUNNING_LION ) {
-        NSButton *fullScreen = [self standardWindowButton:NSWindowFullScreenButton];        
+        NSButton *fullScreen = [self _fullScreenButtonToLayout];
         if( fullScreen ) {
             NSRect fullScreenFrame = [fullScreen frame];
             if ( !_setFullScreenButtonRightMargin ) {
@@ -644,6 +802,10 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     #endif
     
     [self _repositionContentView];
+}
+
+- (void)undoManagerDidCloseUndoGroupNotification:(NSNotification *)notification {
+    [self _displayWindowAndTitlebar];
 }
 
 - (void)windowWillEnterFullScreen:(NSNotification *)notification 
@@ -669,15 +831,18 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     }
 }
 
+- (NSView *)themeFrameView {
+    return [[self contentView] superview];
+}
+
 - (void)_createTitlebarView
 {
     // Create the title bar view
     INTitlebarContainer *container = [[INTitlebarContainer alloc] initWithFrame:NSZeroRect];
     // Configure the view properties and add it as a subview of the theme frame
-    NSView *themeFrame = [[self contentView] superview];
-    NSView *firstSubview = [[themeFrame subviews] objectAtIndex:0];
+    NSView *firstSubview = [[[self themeFrameView] subviews] objectAtIndex:0];
     [self _recalculateFrameForTitleBarContainer];
-    [themeFrame addSubview:container positioned:NSWindowBelow relativeTo:firstSubview];
+    [[self themeFrameView] addSubview:container positioned:NSWindowBelow relativeTo:firstSubview];
     #if __has_feature(objc_arc)
     _titleBarContainer = container;
     self.titleBarView = [[INTitlebarView alloc] initWithFrame:NSZeroRect];
@@ -695,14 +860,13 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 // Solution for tracking area issue thanks to @Perspx (Alex Rozanski) <https://gist.github.com/972958>
 - (void)_setupTrafficLightsTrackingArea
 {
-    [[[self contentView] superview] viewWillStartLiveResize];
-    [[[self contentView] superview] viewDidEndLiveResize];
+    [[self themeFrameView] viewWillStartLiveResize];
+    [[self themeFrameView] viewDidEndLiveResize];
 }
 
 - (void)_recalculateFrameForTitleBarContainer
 {
-    NSView *themeFrame = [[self contentView] superview];
-    NSRect themeFrameRect = [themeFrame frame];
+    NSRect themeFrameRect = [[self themeFrameView] frame];
     NSRect titleFrame = NSMakeRect(0.0, NSMaxY(themeFrameRect) - _titleBarHeight, NSWidth(themeFrameRect), _titleBarHeight);
     [_titleBarContainer setFrame:titleFrame];
 }
@@ -739,7 +903,7 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 {
     static CGFloat trafficLightLeftMargin = 0.0;
     if ( !trafficLightLeftMargin ) {
-        NSButton *close = [self standardWindowButton:NSWindowCloseButton];
+        NSButton *close = [self _closeButtonToLayout];
         trafficLightLeftMargin = NSMinX(close.frame);
     }
     return trafficLightLeftMargin;
@@ -749,8 +913,8 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 {
     static CGFloat trafficLightSeparation = 0.0;
     if ( !trafficLightSeparation ) {
-        NSButton *close = [self standardWindowButton:NSWindowCloseButton];
-        NSButton *minimize = [self standardWindowButton:NSWindowMiniaturizeButton];
+        NSButton *close = [self _closeButtonToLayout];
+        NSButton *minimize = [self _minimizeButtonToLayout];
         trafficLightSeparation = NSMinX(minimize.frame) - NSMinX(close.frame);
     }
     return trafficLightSeparation;    
