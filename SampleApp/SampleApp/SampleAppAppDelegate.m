@@ -8,6 +8,7 @@
 
 #import "SampleAppAppDelegate.h"
 #import "SampleWindowController.h"
+#import "INWindowButton.h"
 
 @implementation SampleAppAppDelegate
 
@@ -27,6 +28,41 @@
     self.showsBaselineSeparator.state = self.window.showsBaselineSeparator;
     self.fullScreenRightMarginSlider.doubleValue = self.window.fullScreenButtonRightMargin;
     self.trafficLightLeftMargin.doubleValue = self.window.trafficLightButtonsLeftMargin;
+    
+    self.window.showsTitle = YES;
+    [self setupCloseButton];
+    [self setupMinimizeButton];
+    [self setupZoomButton];
+}
+
+- (void)setupCloseButton {
+    INWindowButton *closeButton = [INWindowButton windowButtonWithSize:NSMakeSize(14, 16) groupIdentifier:nil];
+    closeButton.activeImage = [NSImage imageNamed:@"close-active-color.tiff"];
+    closeButton.activeNotKeyWindowImage = [NSImage imageNamed:@"close-activenokey-color.tiff"];
+    closeButton.inactiveImage = [NSImage imageNamed:@"close-inactive-disabled-color.tiff"];
+    closeButton.pressedImage = [NSImage imageNamed:@"close-pd-color.tiff"];
+    closeButton.rolloverImage = [NSImage imageNamed:@"close-rollover-color.tiff"];
+    self.window.closeButton = closeButton;
+}
+
+- (void)setupMinimizeButton {
+    INWindowButton *button = [INWindowButton windowButtonWithSize:NSMakeSize(14, 16) groupIdentifier:nil];
+    button.activeImage = [NSImage imageNamed:@"minimize-active-color.tiff"];
+    button.activeNotKeyWindowImage = [NSImage imageNamed:@"minimize-activenokey-color.tiff"];
+    button.inactiveImage = [NSImage imageNamed:@"minimize-inactive-disabled-color.tiff"];
+    button.pressedImage = [NSImage imageNamed:@"minimize-pd-color.tiff"];
+    button.rolloverImage = [NSImage imageNamed:@"minimize-rollover-color.tiff"];
+    self.window.minimizeButton = button;
+}
+
+- (void)setupZoomButton {
+    INWindowButton *button = [INWindowButton windowButtonWithSize:NSMakeSize(14, 16) groupIdentifier:nil];
+    button.activeImage = [NSImage imageNamed:@"zoom-active-color.tiff"];
+    button.activeNotKeyWindowImage = [NSImage imageNamed:@"zoom-activenokey-color.tiff"];
+    button.inactiveImage = [NSImage imageNamed:@"zoom-inactive-disabled-color.tiff"];
+    button.pressedImage = [NSImage imageNamed:@"zoom-pd-color.tiff"];
+    button.rolloverImage = [NSImage imageNamed:@"zoom-rollover-color.tiff"];
+    self.window.zoomButton = button;
 }
 
 - (IBAction)showSheetAction:(id)sender
