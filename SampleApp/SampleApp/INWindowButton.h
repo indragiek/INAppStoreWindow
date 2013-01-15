@@ -19,7 +19,7 @@
 
 /**
  A concrete NSButton subclass that allows to mimic standart window title bar "traffic light" buttons
- and replace their graphics with a custom ones.
+ and replace their graphics with custom ones.
  */
 @interface INWindowButton : NSButton
 
