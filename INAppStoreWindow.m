@@ -927,7 +927,6 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     [_titleBarView setNeedsDisplay:YES];
 }
 
-
 - (void)_updateTitlebarView
 {
     [_titleBarView setNeedsDisplay:YES];

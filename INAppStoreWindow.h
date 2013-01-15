@@ -33,32 +33,45 @@
 @interface INTitlebarView : NSView
 @end
 
-/** @class INAppStoreWindow 
+/**
+ @class INAppStoreWindow
  Creates a window similar to the Mac App Store window, with centered traffic lights and an 
  enlarged title bar. This does not handle creating the toolbar.
  */
 @interface INAppStoreWindow : NSWindow
 
-/** The height of the title bar. By default, this is set to the standard title bar height. */
+/** 
+ The height of the title bar. By default, this is set to the standard title bar height. 
+ */
 @property (nonatomic) CGFloat titleBarHeight;
 
-/** The title bar view itself. Add subviews to this view that you want to show in the title bar 
+/** 
+ The title bar view itself. Add subviews to this view that you want to show in the title bar
  (e.g. buttons, a toolbar, etc.). This view can also be set if you want to use a different 
- styled title bar aside from the default one (textured, etc.). */
+ styled title bar aside from the default one (textured, etc.). 
+ */
 @property (INAppStoreWindowRetain) NSView *titleBarView;
 
-/** Set whether the fullscreen or traffic light buttons are horizontally centered */
+/** 
+ Set whether the fullscreen or traffic light buttons are horizontally centered 
+ */
 @property (nonatomic) BOOL centerFullScreenButton;
 @property (nonatomic) BOOL centerTrafficLightButtons;
 @property (nonatomic) BOOL verticalTrafficLightButtons;
 
-/** If you want to hide the title bar in fullscreen mode, set this boolean to YES */
+/** 
+ If you want to hide the title bar in fullscreen mode, set this boolean to YES 
+ */
 @property (nonatomic) BOOL hideTitleBarInFullScreen;
 
-/** Use this API to hide the baseline INAppStoreWindow draws between itself and the main window contents. */
+/** 
+ Use this API to hide the baseline INAppStoreWindow draws between itself and the main window contents. 
+ */
 @property (nonatomic) BOOL showsBaselineSeparator;
 
-/** Adjust the left and right padding of the trafficlight and fullscreen buttons */
+/** 
+ Adjust the left and right padding of the trafficlight and fullscreen buttons 
+ */
 @property (nonatomic) CGFloat trafficLightButtonsLeftMargin;
 @property (nonatomic) CGFloat fullScreenButtonRightMargin;
 
@@ -67,13 +80,17 @@
 @property (nonatomic) BOOL showsTitle;
 @property (nonatomic) BOOL showsTitleInFullscreen;
 
-/** If not nil, default window buttons are hidden and the their provided alternatives is used. */
+/** 
+ If not nil, default window buttons are hidden and the their provided alternatives is used. 
+ */
 @property (INAppStoreWindowRetain) INWindowButton *closeButton;
 @property (INAppStoreWindowRetain) INWindowButton *minimizeButton;
 @property (INAppStoreWindowRetain) INWindowButton *zoomButton;
 @property (INAppStoreWindowRetain) INWindowButton *fullScreenButton;
 
-/** The colors of the title bar background gradient and baseline separator, in main and non-main variants. */
+/** 
+ The colors of the title bar background gradient and baseline separator, in main and non-main variants. 
+ */
 @property (INAppStoreWindowRetain) NSColor *titleBarStartColor;
 @property (INAppStoreWindowRetain) NSColor *titleBarEndColor;
 @property (INAppStoreWindowRetain) NSColor *baselineSeparatorColor;
@@ -86,14 +103,12 @@
 @property (INAppStoreWindowRetain) NSColor *inactiveTitleTextColor;
 @property (INAppStoreWindowRetain) NSShadow *inactiveTitleTextShadow;
 
-/** So much logic and work has gone into this window subclass to achieve a custom title bar,
+/**
+ So much logic and work has gone into this window subclass to achieve a custom title bar,
  it would be a shame to have to re-invent that just to change the look. So this block can be used
  to override the default Mac App Store style titlebar drawing with your own drawing code!
  */
 typedef void (^INAppStoreWindowTitleBarDrawingBlock)(BOOL drawsAsMainWindow, 
                                                      CGRect drawingRect, CGPathRef clippingPath);
 @property (INAppStoreWindowCopy) INAppStoreWindowTitleBarDrawingBlock titleBarDrawingBlock;
-
-- (void)setTitleBarDrawingBlock:(INAppStoreWindowTitleBarDrawingBlock)titleBarDrawingBlock;
-
 @end

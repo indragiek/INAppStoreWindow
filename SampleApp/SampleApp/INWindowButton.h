@@ -18,7 +18,7 @@
 #import <Cocoa/Cocoa.h>
 
 /**
- A concrete NSButton subclass that allows to mimic standart window title bar "traffic light" buttons
+ A concrete NSButton subclass that allows to mimic standard window title bar "traffic light" buttons
  and replace their graphics with custom ones.
  */
 @interface INWindowButton : NSButton
