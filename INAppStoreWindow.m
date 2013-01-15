@@ -626,6 +626,8 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
         [_closeButton removeFromSuperview];
         _closeButton = closeButton;
         if (_closeButton) {
+            _closeButton.target = self;
+            _closeButton.action = @selector(performClose:);
             [_closeButton setFrameOrigin:[[self standardWindowButton:NSWindowCloseButton] frame].origin];
             [[self themeFrameView] addSubview:_closeButton];
         }
@@ -637,6 +639,8 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
         [_minimizeButton removeFromSuperview];
         _minimizeButton = minimizeButton;
         if (_minimizeButton) {
+            _minimizeButton.target = self;
+            _minimizeButton.action = @selector(performMiniaturize:);
             [_minimizeButton setFrameOrigin:[[self standardWindowButton:NSWindowMiniaturizeButton] frame].origin];
             [[self themeFrameView] addSubview:_minimizeButton];
         }
@@ -648,6 +652,8 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
         [_zoomButton removeFromSuperview];
         _zoomButton = zoomButton;
         if (_zoomButton) {
+            _zoomButton.target = self;
+            _zoomButton.action = @selector(performZoom:);
             [_zoomButton setFrameOrigin:[[self standardWindowButton:NSWindowZoomButton] frame].origin];
             [[self themeFrameView] addSubview:_zoomButton];
         }
@@ -659,6 +665,8 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
         [_fullScreenButton removeFromSuperview];
         _fullScreenButton = fullScreenButton;
         if (_fullScreenButton) {
+            _fullScreenButton.target = self;
+            _fullScreenButton.action = @selector(toggleFullScreen:);
             [_fullScreenButton setFrameOrigin:[[self standardWindowButton:NSWindowFullScreenButton] frame].origin];
             [[self themeFrameView] addSubview:_fullScreenButton];
         }

@@ -37,8 +37,6 @@
 
 - (void)setupCloseButton {
     INWindowButton *closeButton = [INWindowButton windowButtonWithSize:NSMakeSize(14, 16) groupIdentifier:nil];
-    closeButton.target = self.window;
-    closeButton.action = @selector(performClose:);
     closeButton.activeImage = [NSImage imageNamed:@"close-active-color.tiff"];
     closeButton.activeNotKeyWindowImage = [NSImage imageNamed:@"close-activenokey-color.tiff"];
     closeButton.inactiveImage = [NSImage imageNamed:@"close-inactive-disabled-color.tiff"];
@@ -49,8 +47,6 @@
 
 - (void)setupMinimizeButton {
     INWindowButton *button = [INWindowButton windowButtonWithSize:NSMakeSize(14, 16) groupIdentifier:nil];
-    button.target = self.window;
-    button.action = @selector(performMiniaturize:);
     button.activeImage = [NSImage imageNamed:@"minimize-active-color.tiff"];
     button.activeNotKeyWindowImage = [NSImage imageNamed:@"minimize-activenokey-color.tiff"];
     button.inactiveImage = [NSImage imageNamed:@"minimize-inactive-disabled-color.tiff"];
@@ -61,8 +57,6 @@
 
 - (void)setupZoomButton {
     INWindowButton *button = [INWindowButton windowButtonWithSize:NSMakeSize(14, 16) groupIdentifier:nil];
-    button.target = self.window;
-    button.action = @selector(performZoom:);
     button.activeImage = [NSImage imageNamed:@"zoom-active-color.tiff"];
     button.activeNotKeyWindowImage = [NSImage imageNamed:@"zoom-activenokey-color.tiff"];
     button.inactiveImage = [NSImage imageNamed:@"zoom-inactive-disabled-color.tiff"];
