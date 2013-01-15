@@ -62,8 +62,10 @@
 @property (nonatomic) CGFloat trafficLightButtonsLeftMargin;
 @property (nonatomic) CGFloat fullScreenButtonRightMargin;
 
-/** Adjust the visibility of the window's title. */
+/** Adjust the visibility of the window's title. If `YES`, title will be shown even if titleBarDrawingBlock is set.
+ To draw title on your own, set this property to `NO` and draw title inside titleBarDrawingBlock. */
 @property (nonatomic) BOOL showsTitle;
+@property (nonatomic) BOOL showsTitleInFullscreen;
 
 /** If not nil, default window buttons are hidden and the their provided alternatives is used. */
 @property (INAppStoreWindowRetain) INWindowButton *closeButton;
@@ -75,11 +77,14 @@
 @property (INAppStoreWindowRetain) NSColor *titleBarStartColor;
 @property (INAppStoreWindowRetain) NSColor *titleBarEndColor;
 @property (INAppStoreWindowRetain) NSColor *baselineSeparatorColor;
+@property (INAppStoreWindowRetain) NSColor *titleTextColor;
+@property (INAppStoreWindowRetain) NSShadow *titleTextShadow;
 
 @property (INAppStoreWindowRetain) NSColor *inactiveTitleBarStartColor;
 @property (INAppStoreWindowRetain) NSColor *inactiveTitleBarEndColor;
 @property (INAppStoreWindowRetain) NSColor *inactiveBaselineSeparatorColor;
-
+@property (INAppStoreWindowRetain) NSColor *inactiveTitleTextColor;
+@property (INAppStoreWindowRetain) NSShadow *inactiveTitleTextShadow;
 
 /** So much logic and work has gone into this window subclass to achieve a custom title bar,
  it would be a shame to have to re-invent that just to change the look. So this block can be used

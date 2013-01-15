@@ -36,6 +36,9 @@
 #define IN_COLOR_NOTMAIN_END [NSColor colorWithDeviceWhite:0.929 alpha:1.0]
 #define IN_COLOR_NOTMAIN_BOTTOM [NSColor colorWithDeviceWhite:0.600 alpha:1.0]
 
+#define IN_COLOR_MAIN_TITLE_TEXT [NSColor colorWithDeviceWhite:56.0/255.0 alpha:1.0]
+#define IN_COLOR_NOTMAIN_TITLE_TEXT [NSColor colorWithDeviceWhite:56.0/255.0 alpha:0.5]
+
 /** Lion */
 
 #define IN_COLOR_MAIN_START_L [NSColor colorWithDeviceWhite:0.66 alpha:1.0]
@@ -276,45 +279,47 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
             CGPathRelease(noiseClippingPath);
             
             [self drawNoiseWithOpacity:0.1];
-        }        
+        }
     }
     
-    if ([window showsTitle]) {
+    if ([window showsTitle] && (([window styleMask] & NSFullScreenWindowMask) == 0 || window.showsTitleInFullscreen)) {
         NSRect titleTextRect;
         NSDictionary *titleTextStyles = nil;
-        [self getWindowTitleFrame:&titleTextRect textAttributes:&titleTextStyles];
+        [self getTitleFrame:&titleTextRect textAttributes:&titleTextStyles forWindow:window];
         [window.title drawInRect:titleTextRect withAttributes:titleTextStyles];
     }
 }
 
-- (void)getWindowTitleFrame:(out NSRect *)frame textAttributes:(out NSDictionary **)attributes {
-    #if __has_feature(objc_arc)
-    NSShadow *titleTextShadow = [[NSShadow alloc] init];
-    #else
-    NSShadow *titleTextShadow = [[[NSShadow alloc] init] autorelease];
-    #endif
-    titleTextShadow.shadowBlurRadius = 0.0;
-    titleTextShadow.shadowOffset = NSMakeSize(0, -1);
-    titleTextShadow.shadowColor = [NSColor colorWithDeviceWhite:1.0 alpha:0.5];
-    NSColor *titleTextColor = nil;
-    BOOL drawsAsMainWindow = ([self.window isMainWindow] && [[NSApplication sharedApplication] isActive]);
-    if (drawsAsMainWindow) {
-        titleTextColor = [NSColor colorWithDeviceWhite:56.0/255.0 alpha:1.0];
+- (void)getTitleFrame:(out NSRect *)frame textAttributes:(out NSDictionary **)attributes forWindow:(in INAppStoreWindow *)window
+{
+    BOOL drawsAsMainWindow = ([window isMainWindow] && [[NSApplication sharedApplication] isActive]);
+    
+    NSShadow *titleTextShadow = drawsAsMainWindow ? window.titleTextShadow : window.inactiveTitleTextShadow;
+    if (titleTextShadow == nil) {
+        #if __has_feature(objc_arc)
+        titleTextShadow = [[NSShadow alloc] init];
+        #else
+        titleTextShadow = [[[NSShadow alloc] init] autorelease];
+        #endif
+        titleTextShadow.shadowBlurRadius = 0.0;
+        titleTextShadow.shadowOffset = NSMakeSize(0, -1);
+        titleTextShadow.shadowColor = [NSColor colorWithDeviceWhite:1.0 alpha:0.5];
     }
-    else {
-        titleTextColor = [NSColor colorWithDeviceWhite:56.0/255.0 alpha:0.5];
-    }
+    
+    NSColor *titleTextColor = drawsAsMainWindow ? window.titleTextColor : window.inactiveTitleTextColor;
+    titleTextColor = titleTextColor ? titleTextColor : drawsAsMainWindow ? IN_COLOR_MAIN_TITLE_TEXT : IN_COLOR_NOTMAIN_TITLE_TEXT;
+    
     NSDictionary *titleTextStyles = [NSDictionary dictionaryWithObjectsAndKeys:
                                      [NSFont titleBarFontOfSize:[NSFont systemFontSizeForControlSize:NSRegularControlSize]], NSFontAttributeName,
                                      titleTextColor, NSForegroundColorAttributeName,
                                      titleTextShadow, NSShadowAttributeName,
                                      nil];
-    NSSize titleSize = [self.window.title sizeWithAttributes:titleTextStyles];
+    NSSize titleSize = [window.title sizeWithAttributes:titleTextStyles];
     NSRect titleTextRect;
     titleTextRect.size = titleSize;
     
-    NSButton *docIconButton = [self.window standardWindowButton:NSWindowDocumentIconButton];
-    NSButton *versionsButton = [self.window standardWindowButton:NSWindowDocumentVersionsButton];
+    NSButton *docIconButton = [window standardWindowButton:NSWindowDocumentIconButton];
+    NSButton *versionsButton = [window standardWindowButton:NSWindowDocumentVersionsButton];
     if (docIconButton) {
         NSRect docIconButtonFrame = [self convertRect:docIconButton.frame fromView:docIconButton.superview];
         titleTextRect.origin.x = NSMaxX(docIconButtonFrame) + 4.0;
