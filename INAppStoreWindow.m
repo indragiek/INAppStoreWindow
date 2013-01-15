@@ -681,6 +681,7 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     _showsBaselineSeparator = YES;
     _centerTrafficLightButtons = YES;
     _titleBarHeight = [self _minimumTitlebarHeight];
+    _cachedTitleBarHeight = _titleBarHeight;
     _trafficLightButtonsLeftMargin = [self _defaultTrafficLightLeftMargin];
     _delegateProxy = [INAppStoreWindowDelegateProxy alloc];
     [super setDelegate:_delegateProxy];
