@@ -375,7 +375,8 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
         [super mouseDragged: theEvent];
         return;
     }
-    
+    NSUInteger masks = [window styleMask];
+    if (!(masks & NSFullScreenWindowMask)) {
     NSPoint origin = [window frame].origin;
     while ((theEvent = [NSApp nextEventMatchingMask:NSLeftMouseDownMask | NSLeftMouseDraggedMask | NSLeftMouseUpMask untilDate:[NSDate distantFuture] inMode:NSEventTrackingRunLoopMode dequeue:YES]) && ([theEvent type] != NSLeftMouseUp)) {
         @autoreleasepool {
@@ -385,6 +386,7 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
             [window setFrameOrigin:origin];
             where = now;
         }
+    }
     }
 }
 @end
