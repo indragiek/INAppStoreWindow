@@ -51,7 +51,6 @@
 
 /** Corner clipping radius **/
 const CGFloat INCornerClipRadius = 4.0;
-const CGFloat INButtonTopOffset = 3.0;
 
 
 @interface NSColor (INAdditions)
@@ -686,6 +685,8 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     _cachedTitleBarHeight = _titleBarHeight;
     _trafficLightButtonsLeftMargin = [self _defaultTrafficLightLeftMargin];
     _delegateProxy = [INAppStoreWindowDelegateProxy alloc];
+    _trafficLightButtonsTopMargin = 3.f;
+    _fullScreenButtonTopMargin = 3.f;
     [super setDelegate:_delegateProxy];
     
     /** -----------------------------------------
@@ -742,7 +743,6 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 {
     // Reposition/resize the title bar view as needed
     [self _recalculateFrameForTitleBarContainer];
-    
     NSButton *close = [self _closeButtonToLayout];
     NSButton *minimize = [self _minimizeButtonToLayout];
     NSButton *zoom = [self _zoomButtonToLayout];
@@ -753,31 +753,31 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     NSRect zoomFrame = [zoom frame];
     NSRect titleBarFrame = [_titleBarContainer frame];
     CGFloat buttonOrigin = 0.0;
-    if ( !self.verticalTrafficLightButtons ) {
-        if ( self.centerTrafficLightButtons ) {
+    CGFloat trafficLightSeparation = [self _trafficLightSeparation];
+    if (!self.verticalTrafficLightButtons) {
+        if (self.centerTrafficLightButtons) {
             buttonOrigin = round(NSMidY(titleBarFrame) - INMidHeight(closeFrame));
         } else {
-            buttonOrigin = NSMaxY(titleBarFrame) - NSHeight(closeFrame) - INButtonTopOffset;
+            buttonOrigin = NSMaxY(titleBarFrame) - NSHeight(closeFrame) - self.trafficLightButtonsTopMargin;
         }
         closeFrame.origin.y = buttonOrigin;
         minimizeFrame.origin.y = buttonOrigin;
         zoomFrame.origin.y = buttonOrigin;
-        closeFrame.origin.x = _trafficLightButtonsLeftMargin;
-        minimizeFrame.origin.x = _trafficLightButtonsLeftMargin + [self _trafficLightSeparation];
-        zoomFrame.origin.x = _trafficLightButtonsLeftMargin + [self _trafficLightSeparation] * 2;
+        closeFrame.origin.x = self.trafficLightButtonsLeftMargin;
+        minimizeFrame.origin.x = self.trafficLightButtonsLeftMargin + trafficLightSeparation;
+        zoomFrame.origin.x = self.trafficLightButtonsLeftMargin + trafficLightSeparation * 2.f;
     } else {
-        // in vertical orientation, adjust spacing to match iTunes
-        CGFloat groupHeight = NSHeight(closeFrame) + 2*([self _trafficLightSeparation]-2);
-        if ( self.centerTrafficLightButtons ) {
-            buttonOrigin = round( NSMidY(titleBarFrame) - 0.5*groupHeight );
+        CGFloat groupHeight = NSHeight(closeFrame) + 2.f * trafficLightSeparation;
+        if (self.centerTrafficLightButtons)  {
+            buttonOrigin = round(NSMidY(titleBarFrame) - groupHeight / 2.f);
         } else {
-            buttonOrigin = NSMaxY(titleBarFrame) - groupHeight - INButtonTopOffset - 2;
+            buttonOrigin = NSMaxY(titleBarFrame) - groupHeight - self.trafficLightButtonsTopMargin;
         }
-        closeFrame.origin.x = _trafficLightButtonsLeftMargin;
-        minimizeFrame.origin.x = _trafficLightButtonsLeftMargin;
-        zoomFrame.origin.x = _trafficLightButtonsLeftMargin;
-        closeFrame.origin.y = buttonOrigin + 2*([self _trafficLightSeparation]-2);
-        minimizeFrame.origin.y = buttonOrigin + ([self _trafficLightSeparation]-2);
+        closeFrame.origin.x = self.trafficLightButtonsLeftMargin;
+        minimizeFrame.origin.x = self.trafficLightButtonsLeftMargin;
+        zoomFrame.origin.x = self.trafficLightButtonsLeftMargin;
+        closeFrame.origin.y = buttonOrigin + 2.f * trafficLightSeparation;
+        minimizeFrame.origin.y = buttonOrigin + trafficLightSeparation;
         zoomFrame.origin.y = buttonOrigin;
     }
     [close setFrame:closeFrame];
@@ -786,24 +786,23 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     
     #if IN_COMPILING_LION
     // Set the frame of the FullScreen button in Lion if available
-    if ( IN_RUNNING_LION ) {
+    if (IN_RUNNING_LION) {
         NSButton *fullScreen = [self _fullScreenButtonToLayout];
-        if( fullScreen ) {
+        if (fullScreen) {
             NSRect fullScreenFrame = [fullScreen frame];
-            if ( !_setFullScreenButtonRightMargin ) {
+            if (!_setFullScreenButtonRightMargin) {
                 self.fullScreenButtonRightMargin = NSWidth([_titleBarContainer frame]) - NSMaxX(fullScreen.frame);
             }
             fullScreenFrame.origin.x = NSWidth(titleBarFrame) - NSWidth(fullScreenFrame) - _fullScreenButtonRightMargin;
-            if( self.centerFullScreenButton ) {
+            if (self.centerFullScreenButton) {
                 fullScreenFrame.origin.y = round(NSMidY(titleBarFrame) - INMidHeight(fullScreenFrame));
             } else {
-                fullScreenFrame.origin.y = NSMaxY(titleBarFrame) - NSHeight(fullScreenFrame) - INButtonTopOffset;
+                fullScreenFrame.origin.y = NSMaxY(titleBarFrame) - NSHeight(fullScreenFrame) - self.trafficLightButtonsTopMargin;
             }
             [fullScreen setFrame:fullScreenFrame];
         }
     }
     #endif
-    
     [self _repositionContentView];
 }
 
@@ -914,8 +913,13 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 
 - (CGFloat)_trafficLightSeparation
 {
+    // Use a user defined separation if there is one
+    if (self.trafficLightSeparation)
+        return self.trafficLightSeparation;
+    
+    // Otherwise use the system default
     static CGFloat trafficLightSeparation = 0.0;
-    if ( !trafficLightSeparation ) {
+    if (!trafficLightSeparation) {
         NSButton *close = [self _closeButtonToLayout];
         NSButton *minimize = [self _minimizeButtonToLayout];
         trafficLightSeparation = NSMinX(minimize.frame) - NSMinX(close.frame);

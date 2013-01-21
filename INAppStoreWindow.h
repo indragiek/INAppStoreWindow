@@ -57,6 +57,10 @@
  */
 @property (nonatomic) BOOL centerFullScreenButton;
 @property (nonatomic) BOOL centerTrafficLightButtons;
+
+/**
+ Whether the traffic light buttons are vertical
+ */
 @property (nonatomic) BOOL verticalTrafficLightButtons;
 
 /** 
@@ -70,10 +74,29 @@
 @property (nonatomic) BOOL showsBaselineSeparator;
 
 /** 
- Adjust the left and right padding of the trafficlight and fullscreen buttons 
+ Adjust the left padding of the traffic light buttons
  */
 @property (nonatomic) CGFloat trafficLightButtonsLeftMargin;
+
+/**
+ Adjusts the top padding of the traffic light buttons
+ */
+@property (nonatomic) CGFloat trafficLightButtonsTopMargin;
+
+/**
+ Adjusts the right padding of the fullscreen button
+ */
 @property (nonatomic) CGFloat fullScreenButtonRightMargin;
+
+/**
+ Adjusts the top padding of the fullscreen button
+ */
+@property (nonatomic) CGFloat fullScreenButtonTopMargin;
+
+/**
+ Separation between traffic lights.
+ */
+@property (nonatomic) CGFloat trafficLightSeparation;
 
 /** Adjust the visibility of the window's title. If `YES`, title will be shown even if titleBarDrawingBlock is set.
  To draw title on your own, set this property to `NO` and draw title inside titleBarDrawingBlock. */
