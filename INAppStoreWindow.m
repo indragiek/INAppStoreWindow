@@ -163,7 +163,7 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 - (void)_displayWindowAndTitlebar;
 - (void)_hideTitleBarView:(BOOL)hidden;
 - (CGFloat)_defaultTrafficLightLeftMargin;
-- (CGFloat)_trafficLightSeparation;
+- (CGFloat)_defaultTrafficLightSeparation;
 @end
 
 @implementation INTitlebarView
@@ -696,9 +696,7 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     _delegateProxy = [INAppStoreWindowDelegateProxy alloc];
     _trafficLightButtonsTopMargin = 3.f;
     _fullScreenButtonTopMargin = 3.f;
-    NSButton *close = [self _closeButtonToLayout];
-    NSButton *minimize = [self _minimizeButtonToLayout];
-    _trafficLightSeparation = NSMinX(minimize.frame) - NSMaxX(close.frame);
+    _trafficLightSeparation = [self _defaultTrafficLightSeparation];
     [super setDelegate:_delegateProxy];
     
     /** -----------------------------------------
@@ -904,7 +902,7 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 - (CGFloat)_minimumTitlebarHeight
 {
     static CGFloat minTitleHeight = 0.0;
-    if ( !minTitleHeight ) {
+    if (!minTitleHeight) {
         NSRect frameRect = [self frame];
         NSRect contentRect = [self contentRectForFrameRect:frameRect];
         minTitleHeight = NSHeight(frameRect) - NSHeight(contentRect);
@@ -915,11 +913,22 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 - (CGFloat)_defaultTrafficLightLeftMargin
 {
     static CGFloat trafficLightLeftMargin = 0.0;
-    if ( !trafficLightLeftMargin ) {
+    if (!trafficLightLeftMargin) {
         NSButton *close = [self _closeButtonToLayout];
         trafficLightLeftMargin = NSMinX(close.frame);
     }
     return trafficLightLeftMargin;
+}
+
+- (CGFloat)_defaultTrafficLightSeparation
+{
+    static CGFloat trafficLightSeparation = 0.0;
+    if (!trafficLightSeparation) {
+        NSButton *close = [self _closeButtonToLayout];
+        NSButton *minimize = [self _minimizeButtonToLayout];
+        trafficLightSeparation = NSMinX(minimize.frame) - NSMaxX(close.frame);
+    }
+    return trafficLightSeparation;
 }
 
 - (void)_displayWindowAndTitlebar
