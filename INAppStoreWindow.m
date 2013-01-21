@@ -610,6 +610,15 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     }
 }
 
+- (void)setTrafficLightSeparation:(CGFloat)trafficLightSeparation
+{
+    if (_trafficLightSeparation != trafficLightSeparation) {
+        _trafficLightSeparation = trafficLightSeparation;
+        [self _layoutTrafficLightsAndContent];
+        [self _setupTrafficLightsTrackingArea];
+    }
+}
+
 - (void)setDelegate:(id<NSWindowDelegate>)anObject
 {
     [_delegateProxy setSecondaryDelegate:anObject];
@@ -687,6 +696,9 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     _delegateProxy = [INAppStoreWindowDelegateProxy alloc];
     _trafficLightButtonsTopMargin = 3.f;
     _fullScreenButtonTopMargin = 3.f;
+    NSButton *close = [self _closeButtonToLayout];
+    NSButton *minimize = [self _minimizeButtonToLayout];
+    _trafficLightSeparation = NSMinX(minimize.frame) - NSMaxX(close.frame);
     [super setDelegate:_delegateProxy];
     
     /** -----------------------------------------
@@ -753,7 +765,6 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     NSRect zoomFrame = [zoom frame];
     NSRect titleBarFrame = [_titleBarContainer frame];
     CGFloat buttonOrigin = 0.0;
-    CGFloat trafficLightSeparation = [self _trafficLightSeparation];
     if (!self.verticalTrafficLightButtons) {
         if (self.centerTrafficLightButtons) {
             buttonOrigin = round(NSMidY(titleBarFrame) - INMidHeight(closeFrame));
@@ -764,10 +775,10 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
         minimizeFrame.origin.y = buttonOrigin;
         zoomFrame.origin.y = buttonOrigin;
         closeFrame.origin.x = self.trafficLightButtonsLeftMargin;
-        minimizeFrame.origin.x = self.trafficLightButtonsLeftMargin + trafficLightSeparation;
-        zoomFrame.origin.x = self.trafficLightButtonsLeftMargin + trafficLightSeparation * 2.f;
+        minimizeFrame.origin.x = NSMaxX(closeFrame) + self.trafficLightSeparation;
+        zoomFrame.origin.x = NSMaxX(minimizeFrame) + self.trafficLightSeparation;
     } else {
-        CGFloat groupHeight = NSHeight(closeFrame) + 2.f * trafficLightSeparation;
+        CGFloat groupHeight = NSHeight(closeFrame) + NSHeight(minimizeFrame) + NSHeight(zoomFrame) + 2.f * (self.trafficLightSeparation - 2.f);
         if (self.centerTrafficLightButtons)  {
             buttonOrigin = round(NSMidY(titleBarFrame) - groupHeight / 2.f);
         } else {
@@ -776,9 +787,9 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
         closeFrame.origin.x = self.trafficLightButtonsLeftMargin;
         minimizeFrame.origin.x = self.trafficLightButtonsLeftMargin;
         zoomFrame.origin.x = self.trafficLightButtonsLeftMargin;
-        closeFrame.origin.y = buttonOrigin + 2.f * trafficLightSeparation;
-        minimizeFrame.origin.y = buttonOrigin + trafficLightSeparation;
         zoomFrame.origin.y = buttonOrigin;
+        minimizeFrame.origin.y = NSMaxY(zoomFrame) + self.trafficLightSeparation - 2.f;
+        closeFrame.origin.y = NSMaxY(minimizeFrame) + self.trafficLightSeparation - 2.f;
     }
     [close setFrame:closeFrame];
     [minimize setFrame:minimizeFrame];
@@ -909,22 +920,6 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
         trafficLightLeftMargin = NSMinX(close.frame);
     }
     return trafficLightLeftMargin;
-}
-
-- (CGFloat)_trafficLightSeparation
-{
-    // Use a user defined separation if there is one
-    if (self.trafficLightSeparation)
-        return self.trafficLightSeparation;
-    
-    // Otherwise use the system default
-    static CGFloat trafficLightSeparation = 0.0;
-    if (!trafficLightSeparation) {
-        NSButton *close = [self _closeButtonToLayout];
-        NSButton *minimize = [self _minimizeButtonToLayout];
-        trafficLightSeparation = NSMinX(minimize.frame) - NSMinX(close.frame);
-    }
-    return trafficLightSeparation;    
 }
 
 - (void)_displayWindowAndTitlebar

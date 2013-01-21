@@ -18,6 +18,7 @@
 @property (assign) IBOutlet NSButton *verticalTrafficLight;
 @property (assign) IBOutlet NSSlider *fullScreenRightMarginSlider;
 @property (assign) IBOutlet NSSlider *trafficLightLeftMargin;
+@property (assign) IBOutlet NSSlider *trafficLightSeparation;
 @property (assign) IBOutlet NSButton *showsBaselineSeparator;
 @property (nonatomic, retain) NSMutableArray *windowControllers;
 

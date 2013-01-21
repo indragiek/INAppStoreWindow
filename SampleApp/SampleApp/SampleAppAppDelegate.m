@@ -28,6 +28,7 @@
     self.showsBaselineSeparator.state = self.window.showsBaselineSeparator;
     self.fullScreenRightMarginSlider.doubleValue = self.window.fullScreenButtonRightMargin;
     self.trafficLightLeftMargin.doubleValue = self.window.trafficLightButtonsLeftMargin;
+    self.trafficLightSeparation.doubleValue = self.window.trafficLightSeparation;
     
     self.window.showsTitle = YES;
     [self setupCloseButton];
@@ -102,9 +103,11 @@
 {
     if ( [sender isEqual:self.fullScreenRightMarginSlider] ) {
         self.window.fullScreenButtonRightMargin = [sender doubleValue];
-    } else {
+    } else if ( [sender isEqual:self.trafficLightLeftMargin]) {
         self.window.trafficLightButtonsLeftMargin = [sender doubleValue];
-    }    
+    }  else if ( [sender isEqual:self.trafficLightSeparation] ) {
+        self.window.trafficLightSeparation = [sender doubleValue];
+    }
 }
 
 - (void)dealloc
