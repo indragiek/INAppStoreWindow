@@ -26,6 +26,7 @@
 		03970F191315CE8D00F15C7E /* INAppStoreWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 03970F181315CE8D00F15C7E /* INAppStoreWindow.m */; };
 		03970F1C1315CECF00F15C7E /* SampleWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 03970F1B1315CECF00F15C7E /* SampleWindowController.m */; };
 		03970F1E1315D2CB00F15C7E /* SampleWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 03970F1D1315D2CB00F15C7E /* SampleWindow.xib */; };
+		5E750C2516B580210001B3C2 /* NSColor+INAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 5E750C2416B580210001B3C2 /* NSColor+INAdditions.m */; };
 		E924075116A2F4F200989DF3 /* close-active-color.tiff in Resources */ = {isa = PBXBuildFile; fileRef = E924073D16A2F4F200989DF3 /* close-active-color.tiff */; };
 		E924075216A2F4F200989DF3 /* close-active-color.tiff in Resources */ = {isa = PBXBuildFile; fileRef = E924073D16A2F4F200989DF3 /* close-active-color.tiff */; };
 		E924075316A2F4F200989DF3 /* close-activenokey-color.tiff in Resources */ = {isa = PBXBuildFile; fileRef = E924073E16A2F4F200989DF3 /* close-activenokey-color.tiff */; };
@@ -91,6 +92,8 @@
 		03970F1A1315CECF00F15C7E /* SampleWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SampleWindowController.h; sourceTree = "<group>"; };
 		03970F1B1315CECF00F15C7E /* SampleWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SampleWindowController.m; sourceTree = "<group>"; };
 		03970F1D1315D2CB00F15C7E /* SampleWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SampleWindow.xib; sourceTree = "<group>"; };
+		5E750C2316B580210001B3C2 /* NSColor+INAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSColor+INAdditions.h"; path = "../../NSColor+INAdditions.h"; sourceTree = "<group>"; };
+		5E750C2416B580210001B3C2 /* NSColor+INAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSColor+INAdditions.m"; path = "../../NSColor+INAdditions.m"; sourceTree = "<group>"; };
 		E924073D16A2F4F200989DF3 /* close-active-color.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "close-active-color.tiff"; sourceTree = "<group>"; };
 		E924073E16A2F4F200989DF3 /* close-activenokey-color.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "close-activenokey-color.tiff"; sourceTree = "<group>"; };
 		E924073F16A2F4F200989DF3 /* close-inactive-disabled-color.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "close-inactive-disabled-color.tiff"; sourceTree = "<group>"; };
@@ -228,6 +231,8 @@
 				03970F181315CE8D00F15C7E /* INAppStoreWindow.m */,
 				034754ED16AC7AEB00747D93 /* INWindowButton.h */,
 				034754EE16AC7AEB00747D93 /* INWindowButton.m */,
+				5E750C2316B580210001B3C2 /* NSColor+INAdditions.h */,
+				5E750C2416B580210001B3C2 /* NSColor+INAdditions.m */,
 			);
 			name = INAppStoreWindow;
 			sourceTree = "<group>";
@@ -394,6 +399,7 @@
 				03970F191315CE8D00F15C7E /* INAppStoreWindow.m in Sources */,
 				03970F1C1315CECF00F15C7E /* SampleWindowController.m in Sources */,
 				034754EF16AC7AEB00747D93 /* INWindowButton.m in Sources */,
+				5E750C2516B580210001B3C2 /* NSColor+INAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

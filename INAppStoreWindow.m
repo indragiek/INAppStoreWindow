@@ -17,6 +17,7 @@
 
 #import "INAppStoreWindow.h"
 #import "INWindowButton.h"
+#import "NSColor+INAdditions.h"
 
 #define IN_RUNNING_LION (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_6)
 #define IN_COMPILING_LION __MAC_OS_X_VERSION_MAX_ALLOWED >= 1070
@@ -51,25 +52,6 @@
 
 /** Corner clipping radius **/
 const CGFloat INCornerClipRadius = 4.0;
-
-
-@interface NSColor (INAdditions)
-- (CGColorRef)IN_CGColorCreate CF_RETURNS_RETAINED;
-@end
-
-@implementation NSColor (INAdditions)
-- (CGColorRef)IN_CGColorCreate
-{
-    NSColor *rgbColor = [self colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
-    CGFloat components[4];
-    [rgbColor getComponents:components];
-    
-    CGColorSpaceRef theColorSpace = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGB);
-    CGColorRef theColor = CGColorCreate(theColorSpace, components);
-    CGColorSpaceRelease(theColorSpace);
-	return theColor;
-}
-@end
 
 NS_INLINE CGFloat INMidHeight(NSRect aRect){
     return (aRect.size.height * (CGFloat)0.5);
