@@ -375,6 +375,7 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 @implementation INAppStoreWindow{
     CGFloat _cachedTitleBarHeight;  
     BOOL _setFullScreenButtonRightMargin;
+	BOOL _preventWindowFrameChange;
     INAppStoreWindowDelegateProxy *_delegateProxy;
     INTitlebarContainer *_titleBarContainer;
 }
@@ -663,6 +664,25 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
             [[self themeFrameView] addSubview:_fullScreenButton];
         }
     }
+}
+
+- (void)setStyleMask:(NSUInteger)styleMask
+{
+	_preventWindowFrameChange = YES;
+	[super setStyleMask:styleMask];
+	_preventWindowFrameChange = NO;
+}
+
+- (void)setFrame:(NSRect)frameRect display:(BOOL)flag
+{
+	if (!_preventWindowFrameChange)
+		[super setFrame:frameRect display:flag];
+}
+
+- (void)setFrame:(NSRect)frameRect display:(BOOL)displayFlag animate:(BOOL)animateFlag
+{
+	if (!_preventWindowFrameChange)
+		[super setFrame:frameRect display:displayFlag animate:animateFlag];
 }
 
 #pragma mark -
