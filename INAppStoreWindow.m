@@ -844,6 +844,25 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     }
 }
 
+- (void)setHideTitleBarInFullScreen:(BOOL)flag {
+    
+    if(_hideTitleBarInFullScreen!=flag) {
+        _hideTitleBarInFullScreen = flag;
+        if( flag ) {
+            BOOL isFullscreen = (([self styleMask] & NSFullScreenWindowMask) == NSFullScreenWindowMask);
+            if( isFullscreen ) {
+                INAppStoreWindow* win = self;
+                double delayInSeconds = 0.5f;
+                dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+                dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                    [win windowWillEnterFullScreen:nil];
+                });
+            }
+        }
+    }
+    
+}
+
 - (NSView *)themeFrameView {
     return [[self contentView] superview];
 }
