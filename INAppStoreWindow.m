@@ -97,7 +97,7 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)selector
 {
     NSMethodSignature *signature = [[self.secondaryDelegate class] instanceMethodSignatureForSelector:selector];
-    NSAssert(signature != nil, @"The method signature(%@) should not be nil becuase of the respondsToSelector: check", NSStringFromSelector(selector));
+    NSAssert(signature != nil, @"The method signature(%@) should not be nil because of the respondsToSelector: check", NSStringFromSelector(selector));
     return signature;
 }
 
