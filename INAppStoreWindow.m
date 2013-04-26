@@ -97,7 +97,9 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)selector
 {
     NSMethodSignature *signature = [[self.secondaryDelegate class] instanceMethodSignatureForSelector:selector];
-    NSAssert(signature != nil, @"The method signature(%@) should not be nil because of the respondsToSelector: check", NSStringFromSelector(selector));
+    if (!signature) {
+        signature = [super methodSignatureForSelector:selector];
+    }
     return signature;
 }
 
@@ -120,11 +122,15 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
 
 - (NSRect)window:(INAppStoreWindow *)window willPositionSheet:(NSWindow *)sheet usingRect:(NSRect)rect
 {
-    rect.origin.y = NSHeight(window.frame)-window.titleBarHeight;
+    // Somehow the forwarding machinery doesn't handle this.
+    if ([self.secondaryDelegate respondsToSelector:_cmd]) {
+        return [self.secondaryDelegate window:window willPositionSheet:sheet usingRect:rect];
+    }
+    rect.origin.y = NSHeight(window.frame) - window.titleBarHeight;
     return rect;
 }
 
--(BOOL)isKindOfClass:(Class)aClass
+- (BOOL)isKindOfClass:(Class)aClass
 {
     if (self.secondaryDelegate) {
         return [self.secondaryDelegate isKindOfClass:aClass];
