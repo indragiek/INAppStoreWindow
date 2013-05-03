@@ -483,6 +483,18 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
     [self _displayWindowAndTitlebar];
 }
 
+- (void)setMaxSize:(NSSize)size
+{
+	[super setMaxSize:size];
+	[self _layoutTrafficLightsAndContent];
+}
+
+- (void)setMinSize:(NSSize)size
+{
+	[super setMinSize:size];
+	[self _layoutTrafficLightsAndContent];
+}
+
 #pragma mark -
 #pragma mark Accessors
 
