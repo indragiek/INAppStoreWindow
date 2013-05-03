@@ -16,8 +16,6 @@
 //
 
 #import "INAppStoreWindow.h"
-#import "INWindowButton.h"
-#import "NSColor+INAdditions.h"
 
 #define IN_RUNNING_LION (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_6)
 #define IN_COMPILING_LION __MAC_OS_X_VERSION_MAX_ALLOWED >= 1070
@@ -57,7 +55,8 @@ NS_INLINE CGFloat INMidHeight(NSRect aRect){
     return (aRect.size.height * (CGFloat)0.5);
 }
 
-static inline CGPathRef INCreateClippingPathWithRectAndRadius(NSRect rect, CGFloat radius)
+CF_RETURNS_RETAINED
+NS_INLINE CGPathRef INCreateClippingPathWithRectAndRadius(NSRect rect, CGFloat radius)
 {
     CGMutablePathRef path = CGPathCreateMutable();
     CGPathMoveToPoint(path, NULL, NSMinX(rect), NSMinY(rect));
@@ -70,11 +69,25 @@ static inline CGPathRef INCreateClippingPathWithRectAndRadius(NSRect rect, CGFlo
     return path;
 }
 
-static inline CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSColor *endingColor)
+CF_RETURNS_RETAINED
+NS_INLINE CGColorRef INCreateCGColorFromNSColor(NSColor *color)
+{
+    NSColor *rgbColor = [color colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
+    CGFloat components[4];
+    [rgbColor getComponents:components];
+    
+    CGColorSpaceRef theColorSpace = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGB);
+    CGColorRef theColor = CGColorCreate(theColorSpace, components);
+    CGColorSpaceRelease(theColorSpace);
+	return theColor;
+}
+
+CF_RETURNS_RETAINED
+NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSColor *endingColor)
 {
     CGFloat locations[2] = {0.0f, 1.0f, };
-	CGColorRef cgStartingColor = [startingColor IN_CGColorCreate];
-	CGColorRef cgEndingColor = [endingColor IN_CGColorCreate];
+	CGColorRef cgStartingColor = INCreateCGColorFromNSColor(startingColor);
+	CGColorRef cgEndingColor = INCreateCGColorFromNSColor(endingColor);
     #if __has_feature(objc_arc)
     CFArrayRef colors = (__bridge CFArrayRef)[NSArray arrayWithObjects:(__bridge id)cgStartingColor, (__bridge id)cgEndingColor, nil];
     #else
