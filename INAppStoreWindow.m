@@ -826,7 +826,7 @@ static inline CGGradientRef createGradientWithColors(NSColor *startingColor, NSC
             if (self.centerFullScreenButton) {
                 fullScreenFrame.origin.y = round(NSMidY(titleBarFrame) - INMidHeight(fullScreenFrame));
             } else {
-                fullScreenFrame.origin.y = NSMaxY(titleBarFrame) - NSHeight(fullScreenFrame) - self.trafficLightButtonsTopMargin;
+                fullScreenFrame.origin.y = NSMaxY(titleBarFrame) - NSHeight(fullScreenFrame) - self.fullScreenButtonTopMargin;
             }
             [fullScreen setFrame:fullScreenFrame];
         }
