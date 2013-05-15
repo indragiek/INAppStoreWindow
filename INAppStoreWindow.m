@@ -286,6 +286,11 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
         NSRect titleTextRect;
         NSDictionary *titleTextStyles = nil;
         [self getTitleFrame:&titleTextRect textAttributes:&titleTextStyles forWindow:window];
+
+        if (window.verticallyCenterTitle) {
+            titleTextRect.origin.y = floorf(NSMidY(drawingRect) - (NSHeight(titleTextRect) / 2.f));
+        }
+
         [window.title drawInRect:titleTextRect withAttributes:titleTextStyles];
     }
 }
@@ -614,13 +619,20 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
     }
 }
 
-
 - (void)setVerticalTrafficLightButtons:(BOOL)verticalTrafficLightButtons
 {
     if ( _verticalTrafficLightButtons != verticalTrafficLightButtons ) {
         _verticalTrafficLightButtons = verticalTrafficLightButtons;
         [self _layoutTrafficLightsAndContent];
         [self _setupTrafficLightsTrackingArea];
+    }
+}
+
+- (void)setVerticallyCenterTitle:(BOOL)verticallyCenterTitle
+{
+    if ( _verticallyCenterTitle != verticallyCenterTitle ) {
+        _verticallyCenterTitle = verticallyCenterTitle;
+        [self _displayWindowAndTitlebar];
     }
 }
 
