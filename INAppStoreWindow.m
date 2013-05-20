@@ -313,9 +313,11 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
     
     NSColor *titleTextColor = drawsAsMainWindow ? window.titleTextColor : window.inactiveTitleTextColor;
     titleTextColor = titleTextColor ? titleTextColor : drawsAsMainWindow ? IN_COLOR_MAIN_TITLE_TEXT : IN_COLOR_NOTMAIN_TITLE_TEXT;
-    
+
+    NSFont *titleFont = window.titleFont ?: [NSFont titleBarFontOfSize:[NSFont systemFontSizeForControlSize:NSRegularControlSize]];
+
     NSDictionary *titleTextStyles = [NSDictionary dictionaryWithObjectsAndKeys:
-                                     [NSFont titleBarFontOfSize:[NSFont systemFontSizeForControlSize:NSRegularControlSize]], NSFontAttributeName,
+                                     titleFont, NSFontAttributeName,
                                      titleTextColor, NSForegroundColorAttributeName,
                                      titleTextShadow, NSShadowAttributeName,
                                      nil];
