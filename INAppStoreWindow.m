@@ -382,7 +382,6 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
         [super mouseDragged: theEvent];
         return;
     }
-    NSUInteger masks = [window styleMask];
     NSPoint origin = [window frame].origin;
     while ((theEvent = [NSApp nextEventMatchingMask:NSLeftMouseDownMask | NSLeftMouseDraggedMask | NSLeftMouseUpMask untilDate:[NSDate distantFuture] inMode:NSEventTrackingRunLoopMode dequeue:YES]) && ([theEvent type] != NSLeftMouseUp)) {
         @autoreleasepool {
