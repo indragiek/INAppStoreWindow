@@ -378,12 +378,11 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
     NSWindow *window = [self window];
     NSPoint where =  [window convertBaseToScreen:[theEvent locationInWindow]];
     
-    if ([window isMovableByWindowBackground]) {
+    if ([window isMovableByWindowBackground] || ([window styleMask] & NSFullScreenWindowMask) == NSFullScreenWindowMask) {
         [super mouseDragged: theEvent];
         return;
     }
     NSUInteger masks = [window styleMask];
-    if (!(masks & NSFullScreenWindowMask)) {
     NSPoint origin = [window frame].origin;
     while ((theEvent = [NSApp nextEventMatchingMask:NSLeftMouseDownMask | NSLeftMouseDraggedMask | NSLeftMouseUpMask untilDate:[NSDate distantFuture] inMode:NSEventTrackingRunLoopMode dequeue:YES]) && ([theEvent type] != NSLeftMouseUp)) {
         @autoreleasepool {
@@ -393,7 +392,6 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
             [window setFrameOrigin:origin];
             where = now;
         }
-    }
     }
 }
 @end
