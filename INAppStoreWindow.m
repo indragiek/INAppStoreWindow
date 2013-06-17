@@ -177,27 +177,27 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
         NSUInteger width = 124, height = width;
         NSUInteger size = width*height;
         char *rgba = (char *)malloc(size); srand(120);
-        for(NSUInteger i=0; i < size; ++i){rgba[i] = rand()%256;}
+        for(NSUInteger i=0; i < size; ++i){rgba[i] = (char)arc4random()%256;}
         CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceGray();
         CGContextRef bitmapContext =
-        CGBitmapContextCreate(rgba, width, height, 8, width, colorSpace, kCGImageAlphaNone);
+        CGBitmapContextCreate(rgba, width, height, 8, width, colorSpace, (CGBitmapInfo)kCGImageAlphaNone);
         CFRelease(colorSpace);
         noiseImageRef = CGBitmapContextCreateImage(bitmapContext);
         CFRelease(bitmapContext);
         free(rgba);
     });
-
+	
     CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
     CGContextSaveGState(context);
     CGContextSetAlpha(context, opacity);
     CGContextSetBlendMode(context, kCGBlendModeScreen);
-
+	
     if ( [[self window] respondsToSelector:@selector(backingScaleFactor)] ) {
         CGFloat scaleFactor = [[self window] backingScaleFactor];
         CGContextScaleCTM(context, 1/scaleFactor, 1/scaleFactor);
     }
-
-    CGRect imageRect = (CGRect){CGPointZero, CGImageGetWidth(noiseImageRef), CGImageGetHeight(noiseImageRef)};
+	
+    CGRect imageRect = (CGRect){CGPointZero, (CGSize){CGImageGetWidth(noiseImageRef), CGImageGetHeight(noiseImageRef)}};
     CGContextDrawTiledImage(context, imageRect, noiseImageRef);
     CGContextRestoreGState(context);
 }
@@ -213,7 +213,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
         window.titleBarDrawingBlock(drawsAsMainWindow, NSRectToCGRect(drawingRect), clippingPath);
         CGPathRelease(clippingPath);
     } else {
-        CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];        
+        CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
         
         NSColor *startColor = drawsAsMainWindow ? window.titleBarStartColor : window.inactiveTitleBarStartColor;
         NSColor *endColor = drawsAsMainWindow ? window.titleBarEndColor : window.inactiveTitleBarEndColor;
@@ -233,17 +233,17 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
             [[NSBezierPath bezierPathWithRect:self.bounds] fill];
         }
         #endif
-        clippingRect.size.height -= 1;        
+        clippingRect.size.height -= 1;
         CGPathRef clippingPath = INCreateClippingPathWithRectAndRadius(clippingRect, INCornerClipRadius);
         CGContextAddPath(context, clippingPath);
         CGContextClip(context);
         CGPathRelease(clippingPath);
         
         CGGradientRef gradient = INCreateGradientWithColors(startColor, endColor);
-        CGContextDrawLinearGradient(context, gradient, CGPointMake(NSMidX(drawingRect), NSMinY(drawingRect)), 
+        CGContextDrawLinearGradient(context, gradient, CGPointMake(NSMidX(drawingRect), NSMinY(drawingRect)),
                                     CGPointMake(NSMidX(drawingRect), NSMaxY(drawingRect)), 0);
         CGGradientRelease(gradient);
-
+		
         if ([window showsBaselineSeparator]) {
             NSColor *bottomColor = drawsAsMainWindow ? window.baselineSeparatorColor : window.inactiveBaselineSeparatorColor;
             
@@ -258,9 +258,9 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
             NSRectFill(bottomRect);
             
             if (IN_RUNNING_LION) {
-              bottomRect.origin.y += 1.0;
-              [[NSColor colorWithDeviceWhite:1.0 alpha:0.12] setFill];
-              [[NSBezierPath bezierPathWithRect:bottomRect] fill];
+                bottomRect.origin.y += 1.0;
+                [[NSColor colorWithDeviceWhite:1.0 alpha:0.12] setFill];
+                [[NSBezierPath bezierPathWithRect:bottomRect] fill];
             }
         }
         
@@ -272,7 +272,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
                 noiseRect.size.height += 1.0;
             }
             
-            CGPathRef noiseClippingPath = 
+            CGPathRef noiseClippingPath =
             INCreateClippingPathWithRectAndRadius(noiseRect, INCornerClipRadius);
             CGContextAddPath(context, noiseClippingPath);
             CGContextClip(context);
@@ -286,11 +286,11 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
         NSRect titleTextRect;
         NSDictionary *titleTextStyles = nil;
         [self getTitleFrame:&titleTextRect textAttributes:&titleTextStyles forWindow:window];
-
+		
         if (window.verticallyCenterTitle) {
-            titleTextRect.origin.y = floorf(NSMidY(drawingRect) - (NSHeight(titleTextRect) / 2.f));
+            titleTextRect.origin.y = floor(NSMidY(drawingRect) - (NSHeight(titleTextRect) / 2.f));
         }
-
+		
         [window.title drawInRect:titleTextRect withAttributes:titleTextStyles];
     }
 }
@@ -313,9 +313,9 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
     
     NSColor *titleTextColor = drawsAsMainWindow ? window.titleTextColor : window.inactiveTitleTextColor;
     titleTextColor = titleTextColor ? titleTextColor : drawsAsMainWindow ? IN_COLOR_MAIN_TITLE_TEXT : IN_COLOR_NOTMAIN_TITLE_TEXT;
-
+	
     NSFont *titleFont = window.titleFont ?: [NSFont titleBarFontOfSize:[NSFont systemFontSizeForControlSize:NSRegularControlSize]];
-
+	
     NSDictionary *titleTextStyles = [NSDictionary dictionaryWithObjectsAndKeys:
                                      titleFont, NSFontAttributeName,
                                      titleTextColor, NSForegroundColorAttributeName,
@@ -396,7 +396,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 @end
 
 @implementation INAppStoreWindow{
-    CGFloat _cachedTitleBarHeight;  
+    CGFloat _cachedTitleBarHeight;
     BOOL _setFullScreenButtonRightMargin;
 	BOOL _preventWindowFrameChange;
     INAppStoreWindowDelegateProxy *_delegateProxy;
@@ -453,7 +453,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
     [_minimizeButton release];
     [_zoomButton release];
     [_fullScreenButton release];
-    [super dealloc];    
+    [super dealloc];
     #endif
 }
 
@@ -536,7 +536,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
     return _titleBarView;
 }
 
-- (void)setTitleBarHeight:(CGFloat)newTitleBarHeight 
+- (void)setTitleBarHeight:(CGFloat)newTitleBarHeight
 {
     if (_titleBarHeight != newTitleBarHeight) {
         _cachedTitleBarHeight = newTitleBarHeight;
@@ -648,7 +648,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 {
     [_delegateProxy setSecondaryDelegate:anObject];
     [super setDelegate:nil];
-    [super setDelegate:_delegateProxy];    
+    [super setDelegate:_delegateProxy];
 }
 
 - (id<NSWindowDelegate>)delegate
@@ -751,7 +751,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
     [nc addObserver:self selector:@selector(_layoutTrafficLightsAndContent) name:NSWindowDidResizeNotification object:self];
     [nc addObserver:self selector:@selector(_layoutTrafficLightsAndContent) name:NSWindowDidMoveNotification object:self];
     [nc addObserver:self selector:@selector(_layoutTrafficLightsAndContent) name:NSWindowDidEndSheetNotification object:self];
-
+	
     [nc addObserver:self selector:@selector(_updateTitlebarView) name:NSApplicationDidBecomeActiveNotification object:nil];
     [nc addObserver:self selector:@selector(_updateTitlebarView) name:NSApplicationDidResignActiveNotification object:nil];
     #if IN_COMPILING_LION
@@ -863,7 +863,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
     [self _displayWindowAndTitlebar];
 }
 
-- (void)windowWillEnterFullScreen:(NSNotification *)notification 
+- (void)windowWillEnterFullScreen:(NSNotification *)notification
 {
     if (_hideTitleBarInFullScreen) {
         // Recalculate the views when entering from fullscreen
@@ -875,7 +875,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
     }
 }
 
-- (void)windowWillExitFullScreen:(NSNotification *)notification 
+- (void)windowWillExitFullScreen:(NSNotification *)notification
 {
     if (_hideTitleBarInFullScreen) {
         _titleBarHeight = _cachedTitleBarHeight;
@@ -913,7 +913,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
     #endif
 }
 
-- (void)_hideTitleBarView:(BOOL)hidden 
+- (void)_hideTitleBarView:(BOOL)hidden
 {
     [self.titleBarView setHidden:hidden];
 }
@@ -938,11 +938,11 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
     NSRect windowFrame = [self frame];
     NSRect currentContentFrame = [contentView frame];
     NSRect newFrame = currentContentFrame;
-
+	
     CGFloat titleHeight = NSHeight(windowFrame) - NSHeight(newFrame);
     CGFloat extraHeight = _titleBarHeight - titleHeight;
     newFrame.size.height -= extraHeight;
-
+	
     if (!NSEqualRects(currentContentFrame, newFrame)) {
         [contentView setFrame:newFrame];
         [contentView setNeedsDisplay:YES];
@@ -990,7 +990,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 - (void)_updateTitlebarView
 {
     [_titleBarView setNeedsDisplay:YES];
-
+	
     // "validate" any controls in the titlebar view
     BOOL isMainWindowAndActive = ([self isMainWindow] && [[NSApplication sharedApplication] isActive]);
     for (NSView *childView in [_titleBarView subviews]) {
