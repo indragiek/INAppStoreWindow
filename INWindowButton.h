@@ -58,7 +58,7 @@
  @param groupIdentifier ID of the group which will apply rollover effect to it's members. You may pass `nil`.
  @see initWithSize:groupIdentifier:
  */
-+ (instancetype)windowButtonWithSize:(NSSize)size groupIdentifier:(NSString *)groupID;
++ (instancetype)windowButtonWithSize:(NSSize)size groupIdentifier:(NSString *)groupIdentifier;
 
 /**
  @abstract Designated initializer.
