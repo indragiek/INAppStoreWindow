@@ -112,8 +112,8 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
 
 @implementation INWindowButton
 
-+ (instancetype)windowButtonWithSize:(NSSize)size groupIdentifier:(NSString *)groupID {
-    INWindowButton *button = [[self alloc] initWithSize:size groupIdentifier:groupID];
++ (instancetype)windowButtonWithSize:(NSSize)size groupIdentifier:(NSString *)groupIdentifier {
+    INWindowButton *button = [[self alloc] initWithSize:size groupIdentifier:groupIdentifier];
     return button;
 }
 
