@@ -836,7 +836,22 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
     [close setFrame:closeFrame];
     [minimize setFrame:minimizeFrame];
     [zoom setFrame:zoomFrame];
-    
+
+    NSRect titleBarViewFrame = [self.titleBarView frame];
+
+    NSButton *docIconButton = [self standardWindowButton:NSWindowDocumentIconButton];
+    if (docIconButton) {
+        NSRect docButtonIconFrame = [docIconButton frame];
+
+        if (self.verticallyCenterTitle) {
+            docButtonIconFrame.origin.y = floorf(NSMidY(titleBarFrame) - INMidHeight(docButtonIconFrame));
+        } else {
+            docButtonIconFrame.origin.y = NSMaxY(titleBarFrame) - NSHeight(docButtonIconFrame);
+        }
+
+        [docIconButton setFrame:docButtonIconFrame];
+    }
+
     #if IN_COMPILING_LION
     // Set the frame of the FullScreen button in Lion if available
     if (IN_RUNNING_LION) {
@@ -848,11 +863,51 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
             }
             fullScreenFrame.origin.x = NSWidth(titleBarFrame) - NSWidth(fullScreenFrame) - _fullScreenButtonRightMargin;
             if (self.centerFullScreenButton) {
-                fullScreenFrame.origin.y = round(NSMidY(titleBarFrame) - INMidHeight(fullScreenFrame));
+                fullScreenFrame.origin.y = floorf(NSMidY(titleBarFrame) - INMidHeight(fullScreenFrame));
             } else {
                 fullScreenFrame.origin.y = NSMaxY(titleBarFrame) - NSHeight(fullScreenFrame) - self.fullScreenButtonTopMargin;
             }
             [fullScreen setFrame:fullScreenFrame];
+        }
+
+        NSButton *versionsButton = [self standardWindowButton:NSWindowDocumentVersionsButton];
+        if (versionsButton) {
+            NSRect versionsButtonFrame = [versionsButton frame];
+
+            if (self.verticallyCenterTitle) {
+                versionsButtonFrame.origin.y = floorf(NSMidY(titleBarFrame) - INMidHeight(versionsButtonFrame));
+            } else {
+                versionsButtonFrame.origin.y = NSMaxY(titleBarFrame) - NSHeight(versionsButtonFrame);
+            }
+
+            [versionsButton setFrame:versionsButtonFrame];
+
+            // Also ensure that the title font is set
+            if (self.titleFont) {
+                [versionsButton setFont:self.titleFont];
+            }
+        }
+
+        NSTextField *separatorTextField;
+        
+        for (id subview in [[[self contentView] superview] subviews]) {
+            if ([subview isKindOfClass:[NSTextField class]]) {
+                NSTextField *textField = (NSTextField *)subview;
+                NSRect textFieldFrame = [textField frame];
+
+                if (self.verticallyCenterTitle) {
+                    textFieldFrame.origin.y = round(NSMidY(titleBarFrame) - INMidHeight(textFieldFrame));
+                } else {
+                    textFieldFrame.origin.y = NSMaxY(titleBarFrame) - NSHeight(textFieldFrame);
+                }
+
+                [textField setFrame:textFieldFrame];
+
+                // Also ensure that the font is set
+                if (self.titleFont) {
+                    [textField setFont:self.titleFont];
+                }
+            }
         }
     }
     #endif
