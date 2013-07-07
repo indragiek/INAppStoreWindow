@@ -837,8 +837,6 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
     [minimize setFrame:minimizeFrame];
     [zoom setFrame:zoomFrame];
 
-    NSRect titleBarViewFrame = [self.titleBarView frame];
-
     NSButton *docIconButton = [self standardWindowButton:NSWindowDocumentIconButton];
     if (docIconButton) {
         NSRect docButtonIconFrame = [docIconButton frame];
@@ -887,8 +885,6 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
                 [versionsButton setFont:self.titleFont];
             }
         }
-
-        NSTextField *separatorTextField;
         
         for (id subview in [[[self contentView] superview] subviews]) {
             if ([subview isKindOfClass:[NSTextField class]]) {
