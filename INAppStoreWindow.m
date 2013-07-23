@@ -713,6 +713,8 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 	_preventWindowFrameChange = YES;
 	[super setStyleMask:styleMask];
 	_preventWindowFrameChange = NO;
+	
+	[self _layoutTrafficLightsAndContent];
 }
 
 - (void)setFrame:(NSRect)frameRect display:(BOOL)flag
