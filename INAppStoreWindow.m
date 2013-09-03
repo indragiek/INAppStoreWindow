@@ -288,7 +288,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
         [self getTitleFrame:&titleTextRect textAttributes:&titleTextStyles forWindow:window];
 		
         if (window.verticallyCenterTitle) {
-            titleTextRect.origin.y = ceil(NSMidY(drawingRect) - (NSHeight(titleTextRect) / 2.f));
+            titleTextRect.origin.y = floor(NSMidY(drawingRect) - (NSHeight(titleTextRect) / 2.f) + 1);
         }
 		
         [window.title drawInRect:titleTextRect withAttributes:titleTextStyles];
