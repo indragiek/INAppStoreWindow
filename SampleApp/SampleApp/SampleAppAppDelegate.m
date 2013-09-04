@@ -25,7 +25,9 @@
     self.centerFullScreen.state = self.window.centerFullScreenButton;
     self.centerTrafficLight.state = self.window.centerTrafficLightButtons;
     self.verticalTrafficLight.state = self.window.verticalTrafficLightButtons;
+    self.verticallyCenterTitle.state = self.window.verticallyCenterTitle;
     self.showsBaselineSeparator.state = self.window.showsBaselineSeparator;
+    self.titleBarHeight.doubleValue = self.window.titleBarHeight;
     self.fullScreenRightMarginSlider.doubleValue = self.window.fullScreenButtonRightMargin;
     self.trafficLightLeftMargin.doubleValue = self.window.trafficLightButtonsLeftMargin;
     self.trafficLightSeparation.doubleValue = self.window.trafficLightSeparation;
@@ -94,6 +96,8 @@
         self.window.centerTrafficLightButtons = [sender state];
     } else if ( [sender isEqual:self.verticalTrafficLight] ) {
         self.window.verticalTrafficLightButtons = [sender state];
+    } else if ( [sender isEqual:self.verticallyCenterTitle] ) {
+        self.window.verticallyCenterTitle = [sender state];
     } else {
         self.window.showsBaselineSeparator = [sender state];
     }
@@ -101,7 +105,9 @@
 
 - (IBAction)sliderAction:(id)sender 
 {
-    if ( [sender isEqual:self.fullScreenRightMarginSlider] ) {
+    if ( [sender isEqual:self.titleBarHeight] ) {
+        self.window.titleBarHeight = round([sender doubleValue]);
+    } else if ( [sender isEqual:self.fullScreenRightMarginSlider] ) {
         self.window.fullScreenButtonRightMargin = [sender doubleValue];
     } else if ( [sender isEqual:self.trafficLightLeftMargin]) {
         self.window.trafficLightButtonsLeftMargin = [sender doubleValue];
