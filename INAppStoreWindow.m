@@ -664,6 +664,8 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
             _closeButton.target = self;
             _closeButton.action = @selector(performClose:);
             [_closeButton setFrameOrigin:[[self standardWindowButton:NSWindowCloseButton] frame].origin];
+            [_closeButton.cell accessibilitySetOverrideValue:NSAccessibilityCloseButtonSubrole forAttribute:NSAccessibilitySubroleAttribute];
+            [_closeButton.cell accessibilitySetOverrideValue:NSAccessibilityRoleDescription(NSAccessibilityButtonRole, NSAccessibilityCloseButtonSubrole) forAttribute:NSAccessibilityRoleDescriptionAttribute];
             [[self themeFrameView] addSubview:_closeButton];
         }
     }
@@ -677,6 +679,8 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
             _minimizeButton.target = self;
             _minimizeButton.action = @selector(performMiniaturize:);
             [_minimizeButton setFrameOrigin:[[self standardWindowButton:NSWindowMiniaturizeButton] frame].origin];
+            [_minimizeButton.cell accessibilitySetOverrideValue:NSAccessibilityMinimizeButtonSubrole forAttribute:NSAccessibilitySubroleAttribute];
+            [_minimizeButton.cell accessibilitySetOverrideValue:NSAccessibilityRoleDescription(NSAccessibilityButtonRole, NSAccessibilityMinimizeButtonSubrole) forAttribute:NSAccessibilityRoleDescriptionAttribute];
             [[self themeFrameView] addSubview:_minimizeButton];
         }
     }
@@ -690,6 +694,8 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
             _zoomButton.target = self;
             _zoomButton.action = @selector(performZoom:);
             [_zoomButton setFrameOrigin:[[self standardWindowButton:NSWindowZoomButton] frame].origin];
+            [_zoomButton.cell accessibilitySetOverrideValue:NSAccessibilityZoomButtonSubrole forAttribute:NSAccessibilitySubroleAttribute];
+            [_zoomButton.cell accessibilitySetOverrideValue:NSAccessibilityRoleDescription(NSAccessibilityButtonRole, NSAccessibilityZoomButtonSubrole) forAttribute:NSAccessibilityRoleDescriptionAttribute];
             [[self themeFrameView] addSubview:_zoomButton];
         }
     }
@@ -703,6 +709,8 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
             _fullScreenButton.target = self;
             _fullScreenButton.action = @selector(toggleFullScreen:);
             [_fullScreenButton setFrameOrigin:[[self standardWindowButton:NSWindowFullScreenButton] frame].origin];
+            [_fullScreenButton.cell accessibilitySetOverrideValue:NSAccessibilityFullScreenButtonSubrole forAttribute:NSAccessibilitySubroleAttribute];
+            [_fullScreenButton.cell accessibilitySetOverrideValue:NSAccessibilityRoleDescription(NSAccessibilityButtonRole, NSAccessibilityFullScreenButtonSubrole) forAttribute:NSAccessibilityRoleDescriptionAttribute];
             [[self themeFrameView] addSubview:_fullScreenButton];
         }
     }
