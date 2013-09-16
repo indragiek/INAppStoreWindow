@@ -94,7 +94,7 @@ You can enable title drawing by setting `showsTitle` property to `YES`. You can 
 
 A lot of time and effort has gone into making the custom titlebar in INAppStoreWindow function just right, it would be a shame to have to re-implement all this work just to draw your own custom title bar. So INAppStoreWindow has a `titleBarDrawingBlock` property that can be set to a block containing your own drawing code!
 
-[![](http://dribbble.com/system/assets/2398/7253/screenshots/541256/notepad.png)](http://dribbble.com/shots/541256-Notepad-App-Mockup)
+[![](http://dribbble.s3.amazonaws.com/users/7253/screenshots/541256/notepad.png)](http://dribbble.com/shots/541256-Notepad-App-Mockup)
 
 ```obj-c
 [self.window setTitleBarDrawingBlock:^(BOOL drawsAsMainWindow, CGRect drawingRect, CGPathRef clippingPath){
