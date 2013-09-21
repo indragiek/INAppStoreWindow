@@ -26,6 +26,7 @@
     self.centerTrafficLight.state = self.window.centerTrafficLightButtons;
     self.verticalTrafficLight.state = self.window.verticalTrafficLightButtons;
     self.verticallyCenterTitle.state = self.window.verticallyCenterTitle;
+    self.fitTitleBetweenTrafficAndFullScreenButtons.state = self.window.fitTitleBetweenTrafficLightAndFullScreenButtons;
     self.showsBaselineSeparator.state = self.window.showsBaselineSeparator;
     self.titleBarHeight.doubleValue = self.window.titleBarHeight;
     self.fullScreenRightMarginSlider.doubleValue = self.window.fullScreenButtonRightMargin;
@@ -98,6 +99,8 @@
         self.window.verticalTrafficLightButtons = [sender state];
     } else if ( [sender isEqual:self.verticallyCenterTitle] ) {
         self.window.verticallyCenterTitle = [sender state];
+    } else if ( [sender isEqual:self.fitTitleBetweenTrafficAndFullScreenButtons] ) {
+        self.window.fitTitleBetweenTrafficLightAndFullScreenButtons = [sender state];
     } else {
         self.window.showsBaselineSeparator = [sender state];
     }

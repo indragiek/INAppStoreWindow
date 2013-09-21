@@ -17,6 +17,7 @@
 @property (assign) IBOutlet NSButton *centerTrafficLight;
 @property (assign) IBOutlet NSButton *verticalTrafficLight;
 @property (assign) IBOutlet NSButton *verticallyCenterTitle;
+@property (assign) IBOutlet NSButton *fitTitleBetweenTrafficAndFullScreenButtons;
 @property (assign) IBOutlet NSSlider *fullScreenRightMarginSlider;
 @property (assign) IBOutlet NSSlider *trafficLightLeftMargin;
 @property (assign) IBOutlet NSSlider *trafficLightSeparation;
