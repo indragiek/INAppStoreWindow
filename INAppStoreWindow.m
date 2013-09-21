@@ -331,6 +331,9 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
     
     NSButton *docIconButton = [window standardWindowButton:NSWindowDocumentIconButton];
     NSButton *versionsButton = [window standardWindowButton:NSWindowDocumentVersionsButton];
+    NSButton *closeButton = window.closeButton ?: [window standardWindowButton:NSWindowCloseButton];
+    NSButton *minimizeButton = window.minimizeButton ?: [window standardWindowButton:NSWindowMiniaturizeButton];
+    NSButton *zoomButton = window.zoomButton ?: [window standardWindowButton:NSWindowZoomButton];
     if (docIconButton) {
         NSRect docIconButtonFrame = [self convertRect:docIconButton.frame fromView:docIconButton.superview];
         titleTextRect.origin.x = NSMaxX(docIconButtonFrame) + 4.0;
@@ -345,10 +348,10 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
             titleTextRect.origin.x -= 20;
         }
     }
-    else if (window.fitTitleBetweenTrafficLightAndFullScreenButtons && (window.closeButton || window.minimizeButton || window.zoomButton)) {
-        CGFloat closeMaxX = window.closeButton ? NSMaxX(window.closeButton.frame) : 0;
-        CGFloat minimizeMaxX = window.minimizeButton ? NSMaxX(window.minimizeButton.frame) : 0;
-        CGFloat zoomMaxX = window.zoomButton ? NSMaxX(window.zoomButton.frame) : 0;
+    else if (window.fitTitleBetweenTrafficLightAndFullScreenButtons && (closeButton || minimizeButton || zoomButton)) {
+        CGFloat closeMaxX = closeButton ? NSMaxX(closeButton.frame) : 0;
+        CGFloat minimizeMaxX = minimizeButton ? NSMaxX(minimizeButton.frame) : 0;
+        CGFloat zoomMaxX = zoomButton ? NSMaxX(zoomButton.frame) : 0;
         
         CGFloat adjustedX = MAX(MAX(closeMaxX, minimizeMaxX), zoomMaxX) + 8.0;
         CGFloat proposedX = NSMidX(self.bounds) - titleSize.width/2;
