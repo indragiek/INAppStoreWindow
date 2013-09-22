@@ -145,4 +145,5 @@
 typedef void (^INAppStoreWindowTitleBarDrawingBlock)(BOOL drawsAsMainWindow, 
                                                      CGRect drawingRect, CGPathRef clippingPath);
 @property (INAppStoreWindowCopy) INAppStoreWindowTitleBarDrawingBlock titleBarDrawingBlock;
+
 @end
