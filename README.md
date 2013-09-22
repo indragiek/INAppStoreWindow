@@ -1,6 +1,6 @@
 ## INAppStoreWindow: Mac App Store style NSWindow subclass
 
-INAppStoreWindow is an NSWindow subclass that mimics the appearance of the main window in the Mac App Store application. These modifications consist of enlarging the title bar, and centering the traffic lights (**note that this subclass does not handle the creation of a toolbar**). The end result looks like this:
+INAppStoreWindow is an NSWindow subclass that mimics the appearance of the main window in the Mac App Store application. These modifications consist of enlarging the title bar, and centering the traffic lights **(note that this subclass does not handle the creation of a toolbar)**. The end result looks like this:
 
 ![INAppStoreWindow](http://i41.tinypic.com/abidd1.png)
 
