@@ -362,7 +362,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
         NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
         BOOL shouldMiniaturize = [[userDefaults objectForKey:MDAppleMiniaturizeOnDoubleClickKey] boolValue];
         if (shouldMiniaturize) {
-            [[self window] miniaturize:self];
+            [[self window] performMiniaturize:self];
         }
     }
 }
