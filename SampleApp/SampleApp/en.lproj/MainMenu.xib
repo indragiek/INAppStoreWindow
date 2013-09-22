@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="4510" systemVersion="12F37" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="4504" systemVersion="12E55" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment defaultVersion="1060" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="4510"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="4504"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -650,15 +650,15 @@
         <window title="SampleApp" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="371" customClass="INAppStoreWindow">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowCollectionBehavior key="collectionBehavior" fullScreenPrimary="YES"/>
-            <rect key="contentRect" x="335" y="390" width="507" height="529"/>
+            <rect key="contentRect" x="335" y="390" width="480" height="466"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
             <value key="minSize" type="size" width="400" height="427"/>
             <view key="contentView" id="372">
-                <rect key="frame" x="0.0" y="0.0" width="507" height="529"/>
+                <rect key="frame" x="0.0" y="0.0" width="480" height="466"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <button verticalHuggingPriority="750" id="533">
-                        <rect key="frame" x="170" y="112" width="165" height="32"/>
+                        <rect key="frame" x="157" y="85" width="165" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="push" title="Show Window Sheet" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="534">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -669,7 +669,7 @@
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" id="570">
-                        <rect key="frame" x="136" y="80" width="233" height="32"/>
+                        <rect key="frame" x="123" y="53" width="233" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="push" title="Create New Window Controller" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="571">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -679,76 +679,8 @@
                             <action selector="createWindowController:" target="494" id="572"/>
                         </connections>
                     </button>
-                    <slider verticalHuggingPriority="750" id="544">
-                        <rect key="frame" x="141" y="264" width="225" height="21"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="40" doubleValue="10" tickMarkPosition="above" sliderType="linear" id="545"/>
-                        <connections>
-                            <action selector="sliderAction:" target="494" id="554"/>
-                        </connections>
-                    </slider>
-                    <slider verticalHuggingPriority="750" id="546">
-                        <rect key="frame" x="141" y="216" width="225" height="21"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="40" doubleValue="10" tickMarkPosition="above" sliderType="linear" id="547"/>
-                        <connections>
-                            <action selector="sliderAction:" target="494" id="555"/>
-                        </connections>
-                    </slider>
-                    <textField verticalHuggingPriority="750" id="548">
-                        <rect key="frame" x="140" y="243" width="227" height="17"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Full Screen Right Margin" id="549">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
-                    <textField verticalHuggingPriority="750" id="550">
-                        <rect key="frame" x="140" y="291" width="227" height="17"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Traffic Lights Left Margin" id="551">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
-                    <slider verticalHuggingPriority="750" id="593">
-                        <rect key="frame" x="141" y="166" width="225" height="21"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="40" doubleValue="10" tickMarkPosition="above" sliderType="linear" id="596"/>
-                        <connections>
-                            <action selector="sliderAction:" target="494" id="597"/>
-                        </connections>
-                    </slider>
-                    <textField verticalHuggingPriority="750" id="594">
-                        <rect key="frame" x="140" y="193" width="227" height="17"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Traffic Lights Separation" id="595">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
-                    <slider verticalHuggingPriority="750" id="dYP-gj-rp7">
-                        <rect key="frame" x="141" y="314" width="225" height="21"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <sliderCell key="cell" continuous="YES" state="on" alignment="left" minValue="22" maxValue="120" doubleValue="60" tickMarkPosition="above" sliderType="linear" id="sEH-v7-u5u"/>
-                        <connections>
-                            <action selector="sliderAction:" target="494" id="dER-dQ-qMq"/>
-                        </connections>
-                    </slider>
-                    <textField verticalHuggingPriority="750" id="r40-Iu-Aig">
-                        <rect key="frame" x="140" y="341" width="227" height="17"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Title Bar Height" id="B8P-Ti-cxj">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
                     <button id="536">
-                        <rect key="frame" x="105" y="493" width="296" height="18"/>
+                        <rect key="frame" x="139" y="430" width="202" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="Center Full Screen Button" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="537">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -759,7 +691,7 @@
                         </connections>
                     </button>
                     <button id="540">
-                        <rect key="frame" x="105" y="453" width="296" height="18"/>
+                        <rect key="frame" x="139" y="390" width="202" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="Center Traffic Light Buttons" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="541">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -770,7 +702,7 @@
                         </connections>
                     </button>
                     <button id="556">
-                        <rect key="frame" x="105" y="473" width="296" height="18"/>
+                        <rect key="frame" x="139" y="410" width="202" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="Shows Baseline Separator" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="557">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -780,8 +712,42 @@
                             <action selector="checkboxAction:" target="494" id="558"/>
                         </connections>
                     </button>
+                    <slider verticalHuggingPriority="750" id="544">
+                        <rect key="frame" x="128" y="237" width="225" height="21"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="40" doubleValue="10" tickMarkPosition="above" sliderType="linear" id="545"/>
+                        <connections>
+                            <action selector="sliderAction:" target="494" id="554"/>
+                        </connections>
+                    </slider>
+                    <slider verticalHuggingPriority="750" id="546">
+                        <rect key="frame" x="128" y="189" width="225" height="21"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="40" doubleValue="10" tickMarkPosition="above" sliderType="linear" id="547"/>
+                        <connections>
+                            <action selector="sliderAction:" target="494" id="555"/>
+                        </connections>
+                    </slider>
+                    <textField verticalHuggingPriority="750" id="548">
+                        <rect key="frame" x="127" y="216" width="227" height="17"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Full Screen Right Margin" id="549">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField verticalHuggingPriority="750" id="550">
+                        <rect key="frame" x="127" y="264" width="227" height="17"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Traffic Lights Left Margin" id="551">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
                     <button id="577">
-                        <rect key="frame" x="105" y="433" width="296" height="18"/>
+                        <rect key="frame" x="139" y="370" width="202" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="Vertical Traffic Light Buttons" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="578">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -791,8 +757,25 @@
                             <action selector="checkboxAction:" target="494" id="580"/>
                         </connections>
                     </button>
+                    <slider verticalHuggingPriority="750" id="593">
+                        <rect key="frame" x="128" y="139" width="225" height="21"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="40" doubleValue="10" tickMarkPosition="above" sliderType="linear" id="596"/>
+                        <connections>
+                            <action selector="sliderAction:" target="494" id="597"/>
+                        </connections>
+                    </slider>
+                    <textField verticalHuggingPriority="750" id="594">
+                        <rect key="frame" x="127" y="166" width="227" height="17"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Traffic Lights Separation" id="595">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
                     <button id="fog-Ln-ESu">
-                        <rect key="frame" x="105" y="413" width="296" height="18"/>
+                        <rect key="frame" x="139" y="350" width="202" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="Vertically Center Title" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="9PJ-Hl-Zl3">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -802,17 +785,23 @@
                             <action selector="checkboxAction:" target="494" id="CeO-FW-3vy"/>
                         </connections>
                     </button>
-                    <button id="hY5-Dc-y41">
-                        <rect key="frame" x="105" y="393" width="296" height="18"/>
+                    <slider verticalHuggingPriority="750" id="dYP-gj-rp7">
+                        <rect key="frame" x="128" y="287" width="225" height="21"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="Fit title between traffic &amp; fullscreen buttons" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="Xz6-Cd-mhE">
-                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
+                        <sliderCell key="cell" continuous="YES" state="on" alignment="left" minValue="22" maxValue="120" doubleValue="60" tickMarkPosition="above" sliderType="linear" id="sEH-v7-u5u"/>
                         <connections>
-                            <action selector="checkboxAction:" target="494" id="h0V-YC-43D"/>
+                            <action selector="sliderAction:" target="494" id="dER-dQ-qMq"/>
                         </connections>
-                    </button>
+                    </slider>
+                    <textField verticalHuggingPriority="750" id="r40-Iu-Aig">
+                        <rect key="frame" x="127" y="314" width="227" height="17"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Title Bar Height" id="B8P-Ti-cxj">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
                 </subviews>
                 <connections>
                     <outlet property="menu" destination="584" id="590"/>
@@ -827,7 +816,6 @@
             <connections>
                 <outlet property="centerFullScreen" destination="536" id="538"/>
                 <outlet property="centerTrafficLight" destination="540" id="543"/>
-                <outlet property="fitTitleBetweenTrafficAndFullScreenButtons" destination="hY5-Dc-y41" id="JvO-ui-PE7"/>
                 <outlet property="fullScreenRightMarginSlider" destination="546" id="561"/>
                 <outlet property="sheet" destination="563" id="576"/>
                 <outlet property="showsBaselineSeparator" destination="556" id="559"/>
