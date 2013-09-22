@@ -51,6 +51,9 @@
 /** Corner clipping radius **/
 const CGFloat INCornerClipRadius = 4.0;
 
+/** Padding used between traffic light/fullscreen buttons and title **/
+const CGFloat INTitleLeftRightMargin = 8.0;
+
 NS_INLINE CGFloat INMidHeight(NSRect aRect){
     return (aRect.size.height * (CGFloat)0.5);
 }
@@ -165,6 +168,10 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 - (void)_hideTitleBarView:(BOOL)hidden;
 - (CGFloat)_defaultTrafficLightLeftMargin;
 - (CGFloat)_defaultTrafficLightSeparation;
+- (NSButton *)_closeButtonToLayout;
+- (NSButton *)_minimizeButtonToLayout;
+- (NSButton *)_zoomButtonToLayout;
+- (NSButton *)_fullScreenButtonToLayout;
 @end
 
 @implementation INTitlebarView
@@ -316,7 +323,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 	
     NSFont *titleFont = window.titleFont ?: [NSFont titleBarFontOfSize:[NSFont systemFontSizeForControlSize:NSRegularControlSize]];
 	
-    NSMutableParagraphStyle *titleParagraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+    NSMutableParagraphStyle *titleParagraphStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
     [titleParagraphStyle setLineBreakMode:NSLineBreakByTruncatingTail];
     NSDictionary *titleTextStyles = [NSDictionary dictionaryWithObjectsAndKeys:
                                      titleFont, NSFontAttributeName,
@@ -331,13 +338,13 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
     
     NSButton *docIconButton = [window standardWindowButton:NSWindowDocumentIconButton];
     NSButton *versionsButton = [window standardWindowButton:NSWindowDocumentVersionsButton];
-    NSButton *closeButton = window.closeButton ?: [window standardWindowButton:NSWindowCloseButton];
-    NSButton *minimizeButton = window.minimizeButton ?: [window standardWindowButton:NSWindowMiniaturizeButton];
-    NSButton *zoomButton = window.zoomButton ?: [window standardWindowButton:NSWindowZoomButton];
+    NSButton *closeButton = [window _closeButtonToLayout];
+    NSButton *minimizeButton = [window _minimizeButtonToLayout];
+    NSButton *zoomButton = [window _zoomButtonToLayout];
     if (docIconButton) {
         NSRect docIconButtonFrame = [self convertRect:docIconButton.frame fromView:docIconButton.superview];
         titleTextRect.origin.x = NSMaxX(docIconButtonFrame) + 4.0;
-        titleTextRect.origin.y = NSMidY(docIconButtonFrame) - titleSize.height/2 + 1;
+        titleTextRect.origin.y = NSMidY(docIconButtonFrame) - titleSize.height / 2 + 1;
     }
     else if (versionsButton) {
         NSRect versionsButtonFrame = [self convertRect:versionsButton.frame fromView:versionsButton.superview];
@@ -348,29 +355,27 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
             titleTextRect.origin.x -= 20;
         }
     }
-    else if (window.fitTitleBetweenTrafficLightAndFullScreenButtons && (closeButton || minimizeButton || zoomButton)) {
-        CGFloat closeMaxX = closeButton ? NSMaxX(closeButton.frame) : 0;
-        CGFloat minimizeMaxX = minimizeButton ? NSMaxX(minimizeButton.frame) : 0;
-        CGFloat zoomMaxX = zoomButton ? NSMaxX(zoomButton.frame) : 0;
+    else if (closeButton || minimizeButton || zoomButton) {
+        CGFloat closeMaxX = NSMaxX(closeButton.frame);
+        CGFloat minimizeMaxX = NSMaxX(minimizeButton.frame);
+        CGFloat zoomMaxX = NSMaxX(zoomButton.frame);
         
         CGFloat adjustedX = MAX(MAX(closeMaxX, minimizeMaxX), zoomMaxX) + 8.0;
         CGFloat proposedX = NSMidX(self.bounds) - titleSize.width/2;
         
-        titleTextRect.origin.x = proposedX < adjustedX ? adjustedX : proposedX;
+        titleTextRect.origin.x = (proposedX < adjustedX) ? adjustedX : proposedX;
     }
     else {
         titleTextRect.origin.x = NSMidX(self.bounds) - titleSize.width/2;
     }
-    
-    if (window.fitTitleBetweenTrafficLightAndFullScreenButtons) {
-        NSButton *fullScreenButton = window.fullScreenButton ?: [window standardWindowButton:NSWindowFullScreenButton];
-        if (fullScreenButton) {
-            CGFloat fullScreenX = fullScreenButton.frame.origin.x;
-            CGFloat maxTitleX = NSMaxX(titleTextRect);
-            titleTextRect.size.width = (fullScreenX - 8.0) < NSMaxX(titleTextRect)
-                ? titleTextRect.size.width - (maxTitleX - fullScreenX) - 8.0
-                : titleTextRect.size.width;
-        }
+
+    NSButton *fullScreenButton = [window _fullScreenButtonToLayout];
+    if (fullScreenButton) {
+        CGFloat fullScreenX = fullScreenButton.frame.origin.x;
+        CGFloat maxTitleX = NSMaxX(titleTextRect);
+	    if ((fullScreenX - 8.0) < NSMaxX(titleTextRect)) {
+		    titleTextRect.size.width = titleTextRect.size.width - (maxTitleX - fullScreenX) - 8.0;
+	    }
     }
     
     titleTextRect.origin.y = NSMaxY(self.bounds) - titleSize.height - 2.0;
@@ -437,7 +442,6 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 @synthesize centerFullScreenButton = _centerFullScreenButton;
 @synthesize centerTrafficLightButtons = _centerTrafficLightButtons;
 @synthesize verticalTrafficLightButtons = _verticalTrafficLightButtons;
-@synthesize fitTitleBetweenTrafficLightAndFullScreenButtons = _fitTitleBetweenTrafficLightAndFullScreenButtons;
 @synthesize hideTitleBarInFullScreen = _hideTitleBarInFullScreen;
 @synthesize titleBarDrawingBlock = _titleBarDrawingBlock;
 @synthesize showsBaselineSeparator = _showsBaselineSeparator;
@@ -779,7 +783,6 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
     _trafficLightButtonsTopMargin = 3.f;
     _fullScreenButtonTopMargin = 3.f;
     _trafficLightSeparation = [self _defaultTrafficLightSeparation];
-    _fitTitleBetweenTrafficLightAndFullScreenButtons = YES;
     [super setDelegate:_delegateProxy];
     
     /** -----------------------------------------

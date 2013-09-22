@@ -65,11 +65,6 @@
 @property (nonatomic) BOOL verticalTrafficLightButtons;
 
 /**
- Whether the title is aligned to the left of the traffic light buttons and truncated at the fullscreen button
- */
-@property (nonatomic) BOOL fitTitleBetweenTrafficLightAndFullScreenButtons;
-
-/**
  Whether the title is centred vertically
  */
 @property (nonatomic) BOOL verticallyCenterTitle;
@@ -150,4 +145,5 @@
 typedef void (^INAppStoreWindowTitleBarDrawingBlock)(BOOL drawsAsMainWindow, 
                                                      CGRect drawingRect, CGPathRef clippingPath);
 @property (INAppStoreWindowCopy) INAppStoreWindowTitleBarDrawingBlock titleBarDrawingBlock;
+
 @end
