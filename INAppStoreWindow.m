@@ -967,7 +967,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
     _titleBarContainer = container;
     self.titleBarView = [[INTitlebarView alloc] initWithFrame:NSZeroRect];
     #else
-    _titleBarContainer = [container autorelease];
+    _titleBarContainer = container;
     self.titleBarView = [[[INTitlebarView alloc] initWithFrame:NSZeroRect] autorelease];
     #endif
 }
