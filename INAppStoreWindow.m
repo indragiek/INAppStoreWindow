@@ -17,6 +17,9 @@
 
 #import "INAppStoreWindow.h"
 
+#import <objc/runtime.h>
+
+
 #define IN_RUNNING_LION (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_6)
 #define IN_COMPILING_LION __MAC_OS_X_VERSION_MAX_ALLOWED >= 1070
 
@@ -165,6 +168,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 - (void)_hideTitleBarView:(BOOL)hidden;
 - (CGFloat)_defaultTrafficLightLeftMargin;
 - (CGFloat)_defaultTrafficLightSeparation;
+- (NSRect)_contentViewFrame;
 @end
 
 @implementation INTitlebarView
@@ -395,6 +399,25 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 }
 @end
 
+@interface INAppStoreWindowContentView : NSView
+@end
+
+@implementation INAppStoreWindowContentView
+
+- (void)setFrame:(NSRect)frameRect
+{
+	frameRect = [((INAppStoreWindow *)self.window) _contentViewFrame];
+	[super setFrame: frameRect];
+}
+
+- (void)setFrameSize:(NSSize)newSize
+{
+	newSize = [((INAppStoreWindow *)self.window) _contentViewFrame].size;
+	[super setFrameSize: newSize];
+}
+
+@end
+
 @implementation INAppStoreWindow{
     CGFloat _cachedTitleBarHeight;
     BOOL _setFullScreenButtonRightMargin;
@@ -489,6 +512,10 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 
 - (void)setContentView:(NSView *)aView
 {
+	// Swap in performance-optimized content view class
+	if (object_getClass(aView) == [NSView class])
+		object_setClass(aView, [INAppStoreWindowContentView class]);
+	
     [super setContentView:aView];
     [self _repositionContentView];
 }
@@ -983,18 +1010,23 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
     [_titleBarContainer setFrame:titleFrame];
 }
 
+- (NSRect)_contentViewFrame
+{
+    NSRect windowFrame = self.frame;
+    NSRect contentRect = [self contentRectForFrameRect: windowFrame];
+    
+    contentRect.size.height = NSHeight(windowFrame) - _titleBarHeight;
+    contentRect.origin = NSZeroPoint;
+    
+    return contentRect;
+}
+
 - (void)_repositionContentView
 {
     NSView *contentView = [self contentView];
-    NSRect windowFrame = [self frame];
-    NSRect currentContentFrame = [contentView frame];
-    NSRect newFrame = currentContentFrame;
-	
-    CGFloat titleHeight = NSHeight(windowFrame) - NSHeight(newFrame);
-    CGFloat extraHeight = _titleBarHeight - titleHeight;
-    newFrame.size.height -= extraHeight;
-	
-    if (!NSEqualRects(currentContentFrame, newFrame)) {
+    NSRect newFrame = [self _contentViewFrame];
+    
+    if (!NSEqualRects([contentView frame], newFrame)) {
         [contentView setFrame:newFrame];
         [contentView setNeedsDisplay:YES];
     }
