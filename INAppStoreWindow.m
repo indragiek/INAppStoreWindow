@@ -453,6 +453,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
     [_minimizeButton release];
     [_zoomButton release];
     [_fullScreenButton release];
+    [_titleBarContainer release];
     [super dealloc];
     #endif
 }
@@ -721,6 +722,12 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 	_preventWindowFrameChange = YES;
 	[super setStyleMask:styleMask];
 	_preventWindowFrameChange = NO;
+	if(_titleBarContainer && [_titleBarContainer superview] != [self themeFrameView])
+    	{
+        	NSView *firstSubview = [[[self themeFrameView] subviews] objectAtIndex:0];
+        	[self _recalculateFrameForTitleBarContainer];
+        	[[self themeFrameView] addSubview:_titleBarContainer positioned:NSWindowBelow relativeTo:firstSubview];
+    	}
 }
 
 - (void)setFrame:(NSRect)frameRect display:(BOOL)flag
@@ -963,11 +970,10 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
     NSView *firstSubview = [[[self themeFrameView] subviews] objectAtIndex:0];
     [self _recalculateFrameForTitleBarContainer];
     [[self themeFrameView] addSubview:container positioned:NSWindowBelow relativeTo:firstSubview];
-    #if __has_feature(objc_arc)
     _titleBarContainer = container;
+    #if __has_feature(objc_arc)
     self.titleBarView = [[INTitlebarView alloc] initWithFrame:NSZeroRect];
     #else
-    _titleBarContainer = container;
     self.titleBarView = [[[INTitlebarView alloc] initWithFrame:NSZeroRect] autorelease];
     #endif
 }
