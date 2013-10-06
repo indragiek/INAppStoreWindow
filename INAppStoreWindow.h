@@ -108,6 +108,7 @@
  To draw title on your own, set this property to `NO` and draw title inside titleBarDrawingBlock. */
 @property (nonatomic) BOOL showsTitle;
 @property (nonatomic) BOOL showsTitleInFullscreen;
+@property (nonatomic) BOOL showsProxyIcon;
 
 /** 
  If not nil, default window buttons are hidden and the their provided alternatives is used. 
