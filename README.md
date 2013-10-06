@@ -88,7 +88,7 @@ Please refer to `INWindowButton.h` header documentation for more details.
 
 ### Customizing window's title appearance
 
-You can enable title drawing by setting `showsTitle` property to `YES`. You can adjust appearance using `titleTextColor`, `inactiveTitleTextColor`, `titleTextShadow`, and `inactiveTitleTextShadow` properties. Also, you can enable title drawing in fullscreen by setting `showsTitleInFullscreen` property to `YES`.
+You can enable title drawing by setting `showsTitle` property to `YES`. For NSDocument based apps, you can enable drawing the document proxy icon by setting `showsDocumentProxyIcon` property to `YES`. You can adjust appearance using `titleTextColor`, `inactiveTitleTextColor`, `titleTextShadow`, and `inactiveTitleTextShadow` properties. Also, you can enable title drawing in fullscreen by setting `showsTitleInFullscreen` property to `YES`.
 
 ### Using your own drawing code
 
