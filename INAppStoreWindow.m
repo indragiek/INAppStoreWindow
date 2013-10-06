@@ -419,7 +419,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 @synthesize inactiveTitleBarStartColor = _inactiveTitleBarStartColor;
 @synthesize inactiveTitleBarEndColor = _inactiveTitleBarEndColor;
 @synthesize inactiveBaselineSeparatorColor = _inactiveBaselineSeparatorColor;
-@synthesize showsProxyIcon = _showsProxyIcon;
+@synthesize showsDocumentProxyIcon = _showsDocumentProxyIcon;
 
 #pragma mark -
 #pragma mark Initialization
@@ -443,7 +443,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 - (void)setRepresentedURL:(NSURL *)url
 {
     [super setRepresentedURL:url];
-    if (_showsProxyIcon == NO) {
+    if (_showsDocumentProxyIcon == NO) {
         [[self standardWindowButton:NSWindowDocumentIconButton] setImage:nil];
     }
 }
@@ -611,9 +611,9 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
     }
 }
 
-- (void)setShowsProxyIcon:(BOOL)showsProxyIcon {
-    if (_showsProxyIcon != showsProxyIcon) {
-        _showsProxyIcon = showsProxyIcon;
+- (void)setShowsDocumentProxyIcon:(BOOL)showsDocumentProxyIcon {
+    if (_showsDocumentProxyIcon != showsDocumentProxyIcon) {
+        _showsDocumentProxyIcon = showsDocumentProxyIcon;
         [self _displayWindowAndTitlebar];
     }
 }
