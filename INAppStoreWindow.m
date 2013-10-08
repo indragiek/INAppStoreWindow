@@ -383,7 +383,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
     NSPoint where =  [window convertBaseToScreen:[theEvent locationInWindow]];
     
     if ([window isMovableByWindowBackground] || ([window styleMask] & NSFullScreenWindowMask) == NSFullScreenWindowMask) {
-        [super mouseDragged: theEvent];
+        [super mouseDragged:theEvent];
         return;
     }
     NSPoint origin = [window frame].origin;
@@ -406,14 +406,14 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 
 - (void)setFrame:(NSRect)frameRect
 {
-	frameRect = [((INAppStoreWindow *)self.window) _contentViewFrame];
-	[super setFrame: frameRect];
+	frameRect = [(INAppStoreWindow *)self.window _contentViewFrame];
+	[super setFrame:frameRect];
 }
 
 - (void)setFrameSize:(NSSize)newSize
 {
-	newSize = [((INAppStoreWindow *)self.window) _contentViewFrame].size;
-	[super setFrameSize: newSize];
+	newSize = [(INAppStoreWindow *)self.window _contentViewFrame].size;
+	[super setFrameSize:newSize];
 }
 
 @end
@@ -1013,7 +1013,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 - (NSRect)_contentViewFrame
 {
     NSRect windowFrame = self.frame;
-    NSRect contentRect = [self contentRectForFrameRect: windowFrame];
+    NSRect contentRect = [self contentRectForFrameRect:windowFrame];
     
     contentRect.size.height = NSHeight(windowFrame) - _titleBarHeight;
     contentRect.origin = NSZeroPoint;
