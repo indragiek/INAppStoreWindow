@@ -512,10 +512,15 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 
 - (void)setContentView:(NSView *)aView
 {
+	// Remove performance-optimized content view class when changing content views
+    NSView *oldView = [self contentView];
+	if (oldView && object_getClass(oldView) == [INAppStoreWindowContentView class])
+		object_setClass(oldView, [NSView class]);
+    
     [super setContentView:aView];
     
 	// Swap in performance-optimized content view class
-	if (object_getClass(aView) == [NSView class])
+	if (aView && object_getClass(aView) == [NSView class])
 		object_setClass(aView, [INAppStoreWindowContentView class]);
 	
     [self _repositionContentView];
