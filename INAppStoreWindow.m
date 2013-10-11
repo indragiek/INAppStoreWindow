@@ -901,7 +901,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
         NSRect docButtonIconFrame = [docIconButton frame];
 
         if (self.verticallyCenterTitle) {
-            docButtonIconFrame.origin.y = floorf(NSMidY(titleBarFrame) - INMidHeight(docButtonIconFrame));
+            docButtonIconFrame.origin.y = floor(NSMidY(titleBarFrame) - INMidHeight(docButtonIconFrame));
         } else {
             docButtonIconFrame.origin.y = NSMaxY(titleBarFrame) - NSHeight(docButtonIconFrame);
         }
@@ -920,7 +920,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
             }
             fullScreenFrame.origin.x = NSWidth(titleBarFrame) - NSWidth(fullScreenFrame) - _fullScreenButtonRightMargin;
             if (self.centerFullScreenButton) {
-                fullScreenFrame.origin.y = floorf(NSMidY(titleBarFrame) - INMidHeight(fullScreenFrame));
+                fullScreenFrame.origin.y = floor(NSMidY(titleBarFrame) - INMidHeight(fullScreenFrame));
             } else {
                 fullScreenFrame.origin.y = NSMaxY(titleBarFrame) - NSHeight(fullScreenFrame) - self.fullScreenButtonTopMargin;
             }
@@ -932,7 +932,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
             NSRect versionsButtonFrame = [versionsButton frame];
 
             if (self.verticallyCenterTitle) {
-                versionsButtonFrame.origin.y = floorf(NSMidY(titleBarFrame) - INMidHeight(versionsButtonFrame));
+                versionsButtonFrame.origin.y = floor(NSMidY(titleBarFrame) - INMidHeight(versionsButtonFrame));
             } else {
                 versionsButtonFrame.origin.y = NSMaxY(titleBarFrame) - NSHeight(versionsButtonFrame);
             }
