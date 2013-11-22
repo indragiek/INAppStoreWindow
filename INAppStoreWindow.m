@@ -903,7 +903,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
         if (self.verticallyCenterTitle) {
             docButtonIconFrame.origin.y = floor(NSMidY(titleBarFrame) - INMidHeight(docButtonIconFrame));
         } else {
-            docButtonIconFrame.origin.y = NSMaxY(titleBarFrame) - NSHeight(docButtonIconFrame);
+            docButtonIconFrame.origin.y = NSMaxY(titleBarFrame) - NSHeight(docButtonIconFrame) - 3;
         }
 
         [docIconButton setFrame:docButtonIconFrame];
@@ -934,7 +934,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
             if (self.verticallyCenterTitle) {
                 versionsButtonFrame.origin.y = floor(NSMidY(titleBarFrame) - INMidHeight(versionsButtonFrame));
             } else {
-                versionsButtonFrame.origin.y = NSMaxY(titleBarFrame) - NSHeight(versionsButtonFrame);
+                versionsButtonFrame.origin.y = NSMaxY(titleBarFrame) - NSHeight(versionsButtonFrame) - 2;
             }
 
             [versionsButton setFrame:versionsButtonFrame];
@@ -953,7 +953,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
                 if (self.verticallyCenterTitle) {
                     textFieldFrame.origin.y = round(NSMidY(titleBarFrame) - INMidHeight(textFieldFrame));
                 } else {
-                    textFieldFrame.origin.y = NSMaxY(titleBarFrame) - NSHeight(textFieldFrame);
+                    textFieldFrame.origin.y = NSMaxY(titleBarFrame) - NSHeight(textFieldFrame) - 2;
                 }
 
                 [textField setFrame:textFieldFrame];
