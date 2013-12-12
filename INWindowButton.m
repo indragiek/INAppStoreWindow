@@ -190,8 +190,10 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
     if (self.window) {
         [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidBecomeKeyNotification object:self.window];
         [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidResignKeyNotification object:self.window];
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowWillEnterFullScreenNotification object:self.window];
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowWillExitFullScreenNotification object:self.window];
+        if ([NSWindow instancesRespondToSelector:@selector(toggleFullScreen:)]) {
+            [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowWillEnterFullScreenNotification object:self.window];
+            [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowWillExitFullScreenNotification object:self.window];
+        }
     }
     if (newWindow != nil) {
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -202,14 +204,16 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
                                                  selector:@selector(windowDidChangeFocus:)
                                                      name:NSWindowDidResignKeyNotification
                                                    object:newWindow];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(windowWillEnterFullScreen:)
-                                                     name:NSWindowWillEnterFullScreenNotification
-                                                   object:newWindow];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(windowWillExitFullScreen:)
-                                                     name:NSWindowWillExitFullScreenNotification
-                                                   object:newWindow];
+        if ([NSWindow instancesRespondToSelector:@selector(toggleFullScreen:)]) {
+            [[NSNotificationCenter defaultCenter] addObserver:self
+                                                     selector:@selector(windowWillEnterFullScreen:)
+                                                         name:NSWindowWillEnterFullScreenNotification
+                                                       object:newWindow];
+            [[NSNotificationCenter defaultCenter] addObserver:self
+                                                     selector:@selector(windowWillExitFullScreen:)
+                                                         name:NSWindowWillExitFullScreenNotification
+                                                       object:newWindow];
+        }
     }
 }
 
