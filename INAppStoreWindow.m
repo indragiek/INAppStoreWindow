@@ -374,26 +374,44 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 @end
 
 @interface INTitlebarContainer : NSView
+@property (nonatomic) CGFloat mouseDragDetectionThreshold;
 @end
 
 @implementation INTitlebarContainer
+- (instancetype)initWithFrame:(NSRect)frameRect {
+    self = [super initWithFrame:frameRect];
+    if (self) {
+        _mouseDragDetectionThreshold = 1;
+    }
+    return self;
+}
+
 - (void)mouseDragged:(NSEvent *)theEvent
 {
-    NSWindow *window = [self window];
-    NSPoint where =  [window convertBaseToScreen:[theEvent locationInWindow]];
-    
+	NSWindow *window = [self window];
     if ([window isMovableByWindowBackground] || ([window styleMask] & NSFullScreenWindowMask) == NSFullScreenWindowMask) {
         [super mouseDragged:theEvent];
         return;
     }
-    NSPoint origin = [window frame].origin;
+    
+	NSPoint where = [window convertBaseToScreen:[theEvent locationInWindow]];
+	NSPoint origin = [window frame].origin;
+	CGFloat deltaX = 0.0;
+	CGFloat deltaY = 0.0;
     while ((theEvent = [NSApp nextEventMatchingMask:NSLeftMouseDownMask | NSLeftMouseDraggedMask | NSLeftMouseUpMask untilDate:[NSDate distantFuture] inMode:NSEventTrackingRunLoopMode dequeue:YES]) && ([theEvent type] != NSLeftMouseUp)) {
         @autoreleasepool {
             NSPoint now = [window convertBaseToScreen:[theEvent locationInWindow]];
-            origin.x += now.x - where.x;
-            origin.y += now.y - where.y;
-            [window setFrameOrigin:origin];
-            where = now;
+			deltaX += now.x - where.x;
+			deltaY += now.y - where.y;
+			if (fabs(deltaX) >= _mouseDragDetectionThreshold || fabs(deltaY) >= _mouseDragDetectionThreshold) {
+                // This part is only called if drag occurs on container view!
+				origin.x += deltaX;
+				origin.y += deltaY;
+				[window setFrameOrigin:origin];
+				deltaX = 0.0;
+				deltaY = 0.0;
+			}
+			where = now; // this should be inside above if but doing that results in jittering while moving the window...
         }
     }
 }
@@ -693,6 +711,15 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
         [self _layoutTrafficLightsAndContent];
         [self _setupTrafficLightsTrackingArea];
     }
+}
+
+- (void)setMouseDragDetectionThreshold:(CGFloat)mouseDragDetectionThreshold
+{
+    _titleBarContainer.mouseDragDetectionThreshold = mouseDragDetectionThreshold;
+}
+
+- (CGFloat)mouseDragDetectionThreshold {
+    return _titleBarContainer.mouseDragDetectionThreshold;
 }
 
 - (void)setDelegate:(id<NSWindowDelegate>)anObject

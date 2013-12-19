@@ -104,6 +104,11 @@
  */
 @property (nonatomic) CGFloat trafficLightSeparation;
 
+/**
+ Ammount of points in any direction above which window will be allowed to reposition. Higher value means coarser movements but much reduced CPU overload. Defaults to 1.
+ */
+@property (nonatomic) CGFloat mouseDragDetectionThreshold;
+
 /** Adjust the visibility of the window's title. If `YES`, title will be shown even if titleBarDrawingBlock is set.
  To draw title on your own, set this property to `NO` and draw title inside titleBarDrawingBlock. */
 @property (nonatomic) BOOL showsTitle;
