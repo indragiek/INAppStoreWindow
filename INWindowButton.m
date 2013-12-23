@@ -274,18 +274,19 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
 }
 
 - (void)updateImage {
-    if ([self isEnabled]) {
+    if ([self.window isKeyWindow]) {
         [self updateActiveImage];
-    } else {
-        self.image = self.inactiveImage;
+    }
+    else {
+        self.image = self.activeNotKeyWindowImage;
     }
 }
 
 - (void)updateActiveImage {
-    if ([self.window isKeyWindow]) {
+    if ([self isEnabled]) {
         self.image = self.activeImage;
     } else {
-        self.image = self.activeNotKeyWindowImage;
+        self.image = self.inactiveImage;
     }
 }
 
