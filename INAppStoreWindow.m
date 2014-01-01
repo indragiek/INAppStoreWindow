@@ -51,6 +51,7 @@
 #define IN_COLOR_NOTMAIN_END_L [NSColor colorWithDeviceWhite:0.976 alpha:1.0]
 #define IN_COLOR_NOTMAIN_BOTTOM_L [NSColor colorWithDeviceWhite:0.655 alpha:1.0]
 
+/** Values chosen to match the defaults in OS X 10.9, which may change in future versions **/
 const CGFloat INWindowDocumentIconButtonOriginY = 3.f;
 const CGFloat INWindowDocumentVersionsButtonOriginY = 2.f;
 const CGFloat INWindowDocumentVersionsDividerOriginY = 2.f;
