@@ -11,7 +11,7 @@
 
 @interface SampleWindowController : NSWindowController {
 @private
-    
+
 }
 
 @end

@@ -41,62 +41,69 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
 
 @implementation INWindowButtonGroup
 
-+ (instancetype)groupWithIdentifier:(NSString *)identifier {
-    static NSMutableDictionary *groups = nil;
-    if (groups == nil) {
-        groups = [[NSMutableDictionary alloc] init];
-    }
-    
-    if (identifier == nil) {
-        identifier = kINWindowButtonGroupDefault;
-    }
-    
-    INWindowButtonGroup *group = [groups objectForKey:identifier];
-    if (group == nil) {
-        group = [[[self class] alloc] initWithIdentifier:identifier];
-        [groups setObject:group forKey:identifier];
-    }
-    return group;
++ (instancetype)groupWithIdentifier:(NSString *)identifier
+{
+	static NSMutableDictionary *groups = nil;
+	if (groups == nil) {
+		groups = [[NSMutableDictionary alloc] init];
+	}
+
+	if (identifier == nil) {
+		identifier = kINWindowButtonGroupDefault;
+	}
+
+	INWindowButtonGroup *group = [groups objectForKey:identifier];
+	if (group == nil) {
+		group = [[[self class] alloc] initWithIdentifier:identifier];
+		[groups setObject:group forKey:identifier];
+	}
+	return group;
 }
 
-- (instancetype)initWithIdentifier:(NSString *)identifier {
-    self = [super init];
-    if (self) {
-        _identifier = [identifier copy];
-    }
-    return self;
+- (instancetype)initWithIdentifier:(NSString *)identifier
+{
+	self = [super init];
+	if (self) {
+		_identifier = [identifier copy];
+	}
+	return self;
 }
 
 #if !__has_feature(objc_arc)
 - (void)dealloc
 {
-    [_identifier release];
-    [super dealloc];
+	[_identifier release];
+	[super dealloc];
 }
 #endif
 
-- (void)setNumberOfCaptures:(NSInteger)numberOfCaptures {
-    if (_numberOfCaptures != numberOfCaptures && numberOfCaptures >= 0) {
-        _numberOfCaptures = numberOfCaptures;
-        [[NSNotificationCenter defaultCenter] postNotificationName:INWindowButtonGroupDidUpdateRolloverStateNotification
-                                                            object:self];
-    }
+- (void)setNumberOfCaptures:(NSInteger)numberOfCaptures
+{
+	if (_numberOfCaptures != numberOfCaptures && numberOfCaptures >= 0) {
+		_numberOfCaptures = numberOfCaptures;
+		[[NSNotificationCenter defaultCenter] postNotificationName:INWindowButtonGroupDidUpdateRolloverStateNotification
+															object:self];
+	}
 }
 
-- (void)didCaptureMousePointer {
-    self.numberOfCaptures++;
+- (void)didCaptureMousePointer
+{
+	self.numberOfCaptures++;
 }
 
-- (void)didReleaseMousePointer {
-    self.numberOfCaptures--;
+- (void)didReleaseMousePointer
+{
+	self.numberOfCaptures--;
 }
 
-- (BOOL)shouldDisplayRollOver {
-    return (self.numberOfCaptures > 0);
+- (BOOL)shouldDisplayRollOver
+{
+	return (self.numberOfCaptures > 0);
 }
 
-- (void)resetMouseCaptures {
-    self.numberOfCaptures = 0;
+- (void)resetMouseCaptures
+{
+	self.numberOfCaptures = 0;
 }
 
 @end
@@ -112,185 +119,203 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
 
 @implementation INWindowButton
 
-+ (instancetype)windowButtonWithSize:(NSSize)size groupIdentifier:(NSString *)groupIdentifier {
-    INWindowButton *button = [[self alloc] initWithSize:size groupIdentifier:groupIdentifier];
-    return button;
++ (instancetype)windowButtonWithSize:(NSSize)size groupIdentifier:(NSString *)groupIdentifier
+{
+	INWindowButton *button = [[self alloc] initWithSize:size groupIdentifier:groupIdentifier];
+	return button;
 }
 
 #pragma mark - Init and Dealloc
 
 - (instancetype)initWithSize:(NSSize)size groupIdentifier:(NSString *)groupIdentifier
 {
-    self = [super initWithFrame:NSMakeRect(0, 0, size.width, size.height)];
-    if (self) {
-        _groupIdentifier = [groupIdentifier copy];
-        [self setButtonType:NSMomentaryChangeButton];
-        [self setBordered:NO];
-        [self setTitle:@""];
-        [self.cell setHighlightsBy:NSContentsCellMask];
-        [self.cell setImageDimsWhenDisabled:NO];
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(windowButtonGroupDidUpdateRolloverStateNotification:)
-                                                     name:INWindowButtonGroupDidUpdateRolloverStateNotification
-                                                   object:self.group];
-    }
-    return self;
+	self = [super initWithFrame:NSMakeRect(0, 0, size.width, size.height)];
+	if (self) {
+		_groupIdentifier = [groupIdentifier copy];
+		[self setButtonType:NSMomentaryChangeButton];
+		[self setBordered:NO];
+		[self setTitle:@""];
+		[self.cell setHighlightsBy:NSContentsCellMask];
+		[self.cell setImageDimsWhenDisabled:NO];
+
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(windowButtonGroupDidUpdateRolloverStateNotification:)
+													 name:INWindowButtonGroupDidUpdateRolloverStateNotification
+												   object:self.group];
+	}
+	return self;
 }
 
 - (void)dealloc
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    #if !__has_feature(objc_arc)
-    [_activeImage release];
-    [_inactiveImage release];
-    [_activeNotKeyWindowImage release];
-    [_rolloverImage release];
-    [_groupIdentifier release];
-    [super dealloc];
-    #endif
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+#if !__has_feature(objc_arc)
+	[_activeImage release];
+	[_inactiveImage release];
+	[_activeNotKeyWindowImage release];
+	[_rolloverImage release];
+	[_groupIdentifier release];
+	[super dealloc];
+	#endif
 }
 
 #pragma mark - Group
 
-- (INWindowButtonGroup *)group {
-    return [INWindowButtonGroup groupWithIdentifier:self.groupIdentifier];
+- (INWindowButtonGroup *)group
+{
+	return [INWindowButtonGroup groupWithIdentifier:self.groupIdentifier];
 }
 
-- (void)windowButtonGroupDidUpdateRolloverStateNotification:(NSNotification *)n {
-    [self updateRollOverImage];
+- (void)windowButtonGroupDidUpdateRolloverStateNotification:(NSNotification *)n
+{
+	[self updateRollOverImage];
 }
 
 #pragma mark - Tracking Area
 
-- (void)updateTrackingAreas {
-    [super updateTrackingAreas];
-    
-    if (self.mouseTrackingArea) {
-        [self removeTrackingArea:self.mouseTrackingArea];
-    }
-    
-    self.mouseTrackingArea = [[NSTrackingArea alloc] initWithRect:NSInsetRect(self.bounds, -4, -4)
-                                                          options:NSTrackingMouseEnteredAndExited | NSTrackingActiveAlways
-                                                            owner:self
-                                                         userInfo:nil];
-    
-    [self addTrackingArea:self.mouseTrackingArea];
+- (void)updateTrackingAreas
+{
+	[super updateTrackingAreas];
+
+	if (self.mouseTrackingArea) {
+		[self removeTrackingArea:self.mouseTrackingArea];
+	}
+
+	self.mouseTrackingArea = [[NSTrackingArea alloc] initWithRect:NSInsetRect(self.bounds, -4, -4)
+														  options:NSTrackingMouseEnteredAndExited | NSTrackingActiveAlways
+															owner:self
+														 userInfo:nil];
+
+	[self addTrackingArea:self.mouseTrackingArea];
 }
 
 #pragma mark - Window State Handling
 
-- (void)viewDidMoveToWindow {
-    if (self.window) {
-        [self updateImage];
-    }
+- (void)viewDidMoveToWindow
+{
+	if (self.window) {
+		[self updateImage];
+	}
 }
 
-- (void)viewWillMoveToWindow:(NSWindow *)newWindow {
-    if (self.window) {
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidBecomeKeyNotification object:self.window];
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidResignKeyNotification object:self.window];
-        if ([NSWindow instancesRespondToSelector:@selector(toggleFullScreen:)]) {
-            [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowWillEnterFullScreenNotification object:self.window];
-            [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowWillExitFullScreenNotification object:self.window];
-        }
-    }
-    if (newWindow != nil) {
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(windowDidChangeFocus:)
-                                                     name:NSWindowDidBecomeKeyNotification
-                                                   object:newWindow];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(windowDidChangeFocus:)
-                                                     name:NSWindowDidResignKeyNotification
-                                                   object:newWindow];
-        if ([NSWindow instancesRespondToSelector:@selector(toggleFullScreen:)]) {
-            [[NSNotificationCenter defaultCenter] addObserver:self
-                                                     selector:@selector(windowWillEnterFullScreen:)
-                                                         name:NSWindowWillEnterFullScreenNotification
-                                                       object:newWindow];
-            [[NSNotificationCenter defaultCenter] addObserver:self
-                                                     selector:@selector(windowWillExitFullScreen:)
-                                                         name:NSWindowWillExitFullScreenNotification
-                                                       object:newWindow];
-        }
-    }
+- (void)viewWillMoveToWindow:(NSWindow *)newWindow
+{
+	if (self.window) {
+		[[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidBecomeKeyNotification object:self.window];
+		[[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidResignKeyNotification object:self.window];
+		if ([NSWindow instancesRespondToSelector:@selector(toggleFullScreen:)]) {
+			[[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowWillEnterFullScreenNotification object:self.window];
+			[[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowWillExitFullScreenNotification object:self.window];
+		}
+	}
+	if (newWindow != nil) {
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(windowDidChangeFocus:)
+													 name:NSWindowDidBecomeKeyNotification
+												   object:newWindow];
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(windowDidChangeFocus:)
+													 name:NSWindowDidResignKeyNotification
+												   object:newWindow];
+		if ([NSWindow instancesRespondToSelector:@selector(toggleFullScreen:)]) {
+			[[NSNotificationCenter defaultCenter] addObserver:self
+													 selector:@selector(windowWillEnterFullScreen:)
+														 name:NSWindowWillEnterFullScreenNotification
+													   object:newWindow];
+			[[NSNotificationCenter defaultCenter] addObserver:self
+													 selector:@selector(windowWillExitFullScreen:)
+														 name:NSWindowWillExitFullScreenNotification
+													   object:newWindow];
+		}
+	}
 }
 
-- (void)windowDidChangeFocus:(NSNotification *)n {
-    [self updateImage];
+- (void)windowDidChangeFocus:(NSNotification *)n
+{
+	[self updateImage];
 }
 
-- (void)windowWillEnterFullScreen:(NSNotification *)n {
-    [self.group resetMouseCaptures];
-    [self setHidden:YES];
+- (void)windowWillEnterFullScreen:(NSNotification *)n
+{
+	[self.group resetMouseCaptures];
+	[self setHidden:YES];
 }
 
-- (void)windowWillExitFullScreen:(NSNotification *)n {
-    [self.group resetMouseCaptures];
-    [self setHidden:NO];
+- (void)windowWillExitFullScreen:(NSNotification *)n
+{
+	[self.group resetMouseCaptures];
+	[self setHidden:NO];
 }
 
 #pragma mark - Event Handling
 
-- (void)viewDidEndLiveResize {
-    [super viewDidEndLiveResize];
-    [self.group resetMouseCaptures];
+- (void)viewDidEndLiveResize
+{
+	[super viewDidEndLiveResize];
+	[self.group resetMouseCaptures];
 }
 
-- (void)mouseEntered:(NSEvent *)theEvent {
-    [super mouseEntered:theEvent];
-    [self.group didCaptureMousePointer];
-    [self updateRollOverImage];
+- (void)mouseEntered:(NSEvent *)theEvent
+{
+	[super mouseEntered:theEvent];
+	[self.group didCaptureMousePointer];
+	[self updateRollOverImage];
 }
 
-- (void)mouseExited:(NSEvent *)theEvent {
-    [super mouseExited:theEvent];
-    [self.group didReleaseMousePointer];
-    [self updateRollOverImage];
+- (void)mouseExited:(NSEvent *)theEvent
+{
+	[super mouseExited:theEvent];
+	[self.group didReleaseMousePointer];
+	[self updateRollOverImage];
 }
 
 #pragma mark - Button Appearance
 
-- (void)setPressedImage:(NSImage *)pressedImage {
-    self.alternateImage = pressedImage;
+- (void)setPressedImage:(NSImage *)pressedImage
+{
+	self.alternateImage = pressedImage;
 }
 
-- (NSImage *)pressedImage {
-    return self.alternateImage;
+- (NSImage *)pressedImage
+{
+	return self.alternateImage;
 }
 
-- (void)setEnabled:(BOOL)enabled {
-    [super setEnabled:enabled];
-    if (enabled) {
-        self.image = self.activeImage;
-    } else {
-        self.image = self.inactiveImage;
-    }
+- (void)setEnabled:(BOOL)enabled
+{
+	[super setEnabled:enabled];
+	if (enabled) {
+		self.image = self.activeImage;
+	} else {
+		self.image = self.inactiveImage;
+	}
 }
 
-- (void)updateRollOverImage {
-    if ([self.group shouldDisplayRollOver] && [self isEnabled]) {
-        self.image = self.rolloverImage;
-    } else {
-        [self updateImage];
-    }
+- (void)updateRollOverImage
+{
+	if ([self.group shouldDisplayRollOver] && [self isEnabled]) {
+		self.image = self.rolloverImage;
+	} else {
+		[self updateImage];
+	}
 }
 
-- (void)updateImage {
-    if ([self isEnabled]) {
-        [self updateActiveImage];
-    } else {
-        self.image = self.inactiveImage;
-    }
+- (void)updateImage
+{
+	if ([self isEnabled]) {
+		[self updateActiveImage];
+	} else {
+		self.image = self.inactiveImage;
+	}
 }
 
-- (void)updateActiveImage {
-    if ([self.window isKeyWindow]) {
-        self.image = self.activeImage;
-    } else {
-        self.image = self.activeNotKeyWindowImage;
-    }
+- (void)updateActiveImage
+{
+	if ([self.window isKeyWindow]) {
+		self.image = self.activeImage;
+	} else {
+		self.image = self.activeNotKeyWindowImage;
+	}
 }
 
 @end
