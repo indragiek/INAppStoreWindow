@@ -35,7 +35,6 @@
 	window.titleBarHeight = 40.f;
 	window.centerTrafficLightButtons = YES;
 	// Add any code here that needs to be executed once the windowController has loaded the document's window.
-    [self updateChangeCount:NSChangeDiscardable];
 }
 
 + (BOOL)autosavesInPlace
