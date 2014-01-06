@@ -35,6 +35,9 @@
 			[[NSColor colorWithCalibratedWhite:0.6f alpha:1] setFill];
 		}
 		[gradient drawInRect:drawingRect angle:90];
+#if !__has_feature(objc_arc)
+        [gradient release];
+#endif
 		NSRectFill(NSMakeRect(NSMinX(drawingRect), NSMinY(drawingRect), NSWidth(drawingRect), 1));
 	};
 
@@ -51,6 +54,9 @@
 	[segment setSelectedSegment:0];
 	[segment setSegmentStyle:NSSegmentStyleTexturedRounded];
 	[titleBarView addSubview:segment];
+#if !__has_feature(objc_arc)
+    [segment release];
+#endif
 }
 
 @end
