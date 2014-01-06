@@ -1,18 +1,22 @@
-## INAppStoreWindow: Mac App Store style NSWindow subclass
+## INAppStoreWindow
+#### Title bar and traffic light customization for NSWindow
 
-INAppStoreWindow is an NSWindow subclass that mimics the appearance of the main window in the Mac App Store application. These modifications consist of enlarging the title bar, and centering the traffic lights **(note that this subclass does not handle the creation of a toolbar)**. The end result looks like this:
+`INAppStoreWindow` is an NSWindow subclass that was originally developed to mimic the appearance of the main window in the Mac App Store application introduced in OS X 10.6.6.
 
-![INAppStoreWindow](http://i41.tinypic.com/abidd1.png)
+The MAS application has since transitioned away from this design, but `INAppStoreWindow` is still being actively developed to provide extensive additional customization options for `NSWindow` title bars.
+
+![INAppStoreWindow](https://raw.github.com/indragiek/INAppStoreWindow/master/screenshot.png)
 
 **Features of INAppStoreWindow:**
 
-* No use of private APIs, so it's App Store friendly!
-* The title bar view is entirely customizable -- you can add subviews (toolbars, buttons, etc.) as well as customize the title bar itself to give it a different appearance
-* The height of the title bar is easily adjustable
-* Default `NSWindow` traffic light buttons appearance customization
-* Window's title appearance customization
-* Compiles and runs perfectly under ARC and non-ARC setups (thanks to [@kgn](https://github.com/kgn))
-* Support's Lion's full screen mode
+* No private API usage and Mac App Store friendly.
+* Shipping in production in [many top-notch Mac apps](https://github.com/indragiek/INAppStoreWindow/wiki)
+* Fully customizable title bar view -- add subviews (toolbars, buttons, etc.) and block based drawing for custom backgrounds
+* Adjustable title bar height
+* Customization of the traffic light/fullscreen buttons for all button states.
+* Customization of the window title text.
+* Works on OS X versions 10.6-10.9
+* Compatible with full screen mode in OS X 10.7+
 
 ## Usage
 
@@ -117,7 +121,13 @@ self.window.inactiveTitleBarEndColor       = [NSColor colorWithCalibratedWhite: 
 self.window.inactiveTitleBarStartColor     = [NSColor colorWithCalibratedWhite: 0.8  alpha: 1.0];
 self.window.inactiveBaselineSeparatorColor = [NSColor colorWithCalibratedWhite: 0.4  alpha: 1.0];
 ```
+## Extensions
 
+Additional extensions for `INAppStoreWindow` are provided in the **Extensions** folder. 
+
+### NSDocument+INAppStoreWindowFixes
+
+Add this category to your project to [fix](https://github.com/indragiek/INAppStoreWindow/issues/91) title bar layout for document based apps in response to `-[NSDocument updateChangeCount:]`. This fix was separated from the main `INAppStoreWindow` codebase because it swizzles methods on `NSDocument`.
 
 ## Authors
 
