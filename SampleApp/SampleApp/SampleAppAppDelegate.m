@@ -27,6 +27,7 @@
 	self.verticalTrafficLight.state = self.window.verticalTrafficLightButtons;
 	self.verticallyCenterTitle.state = self.window.verticallyCenterTitle;
 	self.showsBaselineSeparator.state = self.window.showsBaselineSeparator;
+    self.texturedWindow.state = self.window.styleMask & NSTexturedBackgroundWindowMask;
 	self.titleBarHeight.doubleValue = self.window.titleBarHeight;
 	self.fullScreenRightMarginSlider.doubleValue = self.window.fullScreenButtonRightMargin;
 	self.trafficLightLeftMargin.doubleValue = self.window.trafficLightButtonsLeftMargin;
@@ -101,9 +102,14 @@
 		self.window.verticalTrafficLightButtons = [sender state];
 	} else if ([sender isEqual:self.verticallyCenterTitle]) {
 		self.window.verticallyCenterTitle = [sender state];
-	} else {
+    } else if ([sender isEqual:self.showsBaselineSeparator]) {
 		self.window.showsBaselineSeparator = [sender state];
-	}
+    } else if ([sender isEqual:self.texturedWindow]) {
+        if ([sender state] == NSOnState)
+            self.window.styleMask |= NSTexturedBackgroundWindowMask;
+        else
+            self.window.styleMask &= ~NSTexturedBackgroundWindowMask;
+    }
 }
 
 - (IBAction)sliderAction:(id)sender

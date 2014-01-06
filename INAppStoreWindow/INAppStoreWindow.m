@@ -226,45 +226,58 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 
     INApplyClippingPathInCurrentContext(clippingPath);
 
-	BOOL drawsAsMainWindow = ([window isMainWindow] && [[NSApplication sharedApplication] isActive]);
+    if ((window.styleMask & NSTexturedBackgroundWindowMask) == NSTexturedBackgroundWindowMask) {
+        // If this is a textured window, we can draw the real background gradient and noise pattern
+        CGFloat contentBorderThickness = window.titleBarHeight;
+        if (((window.styleMask & NSFullScreenWindowMask) != NSFullScreenWindowMask)) {
+            contentBorderThickness -= window._minimumTitlebarHeight;
+        }
 
-    NSColor *startColor = drawsAsMainWindow ? window.titleBarStartColor : window.inactiveTitleBarStartColor;
-    NSColor *endColor = drawsAsMainWindow ? window.titleBarEndColor : window.inactiveTitleBarEndColor;
+        [window setAutorecalculatesContentBorderThickness:NO forEdge:NSMaxYEdge];
+        [window setContentBorderThickness:contentBorderThickness forEdge:NSMaxYEdge];
 
-    if (IN_RUNNING_LION) {
-        startColor = startColor ?: (drawsAsMainWindow ? IN_COLOR_MAIN_START_L : IN_COLOR_NOTMAIN_START_L);
-        endColor = endColor ?: (drawsAsMainWindow ? IN_COLOR_MAIN_END_L : IN_COLOR_NOTMAIN_END_L);
+        NSDrawWindowBackground(drawingRect);
     } else {
-        startColor = startColor ?: (drawsAsMainWindow ? IN_COLOR_MAIN_START : IN_COLOR_NOTMAIN_START);
-        endColor = endColor ?: (drawsAsMainWindow ? IN_COLOR_MAIN_END : IN_COLOR_NOTMAIN_END);
-    }
+        // Not textured, we have to fake the background gradient and noise pattern
+        BOOL drawsAsMainWindow = ([window isMainWindow] && [[NSApplication sharedApplication] isActive]);
 
-    CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
-    CGGradientRef gradient = INCreateGradientWithColors(startColor, endColor);
-    CGContextDrawLinearGradient(context, gradient, CGPointMake(NSMidX(drawingRect), NSMinY(drawingRect)),
-                                CGPointMake(NSMidX(drawingRect), NSMaxY(drawingRect)), 0);
-    CGGradientRelease(gradient);
+        NSColor *startColor = drawsAsMainWindow ? window.titleBarStartColor : window.inactiveTitleBarStartColor;
+        NSColor *endColor = drawsAsMainWindow ? window.titleBarEndColor : window.inactiveTitleBarEndColor;
 
-    if (IN_RUNNING_LION && drawsAsMainWindow) {
-        CGRect noiseRect = NSRectToCGRect(NSInsetRect(drawingRect, 1.0, 1.0));
+        if (IN_RUNNING_LION) {
+            startColor = startColor ?: (drawsAsMainWindow ? IN_COLOR_MAIN_START_L : IN_COLOR_NOTMAIN_START_L);
+            endColor = endColor ?: (drawsAsMainWindow ? IN_COLOR_MAIN_END_L : IN_COLOR_NOTMAIN_END_L);
+        } else {
+            startColor = startColor ?: (drawsAsMainWindow ? IN_COLOR_MAIN_START : IN_COLOR_NOTMAIN_START);
+            endColor = endColor ?: (drawsAsMainWindow ? IN_COLOR_MAIN_END : IN_COLOR_NOTMAIN_END);
+        }
 
-        if (![window showsBaselineSeparator]) {
-            CGFloat separatorHeight = self.baselineSeparatorFrame.size.height;
-            noiseRect.origin.y -= separatorHeight;
-            noiseRect.size.height += separatorHeight;
-		}
+        CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
+        CGGradientRef gradient = INCreateGradientWithColors(startColor, endColor);
+        CGContextDrawLinearGradient(context, gradient, CGPointMake(NSMidX(drawingRect), NSMinY(drawingRect)), CGPointMake(NSMidX(drawingRect), NSMaxY(drawingRect)), 0);
+        CGGradientRelease(gradient);
 
-        CGContextSaveGState(context);
+        if (IN_RUNNING_LION && drawsAsMainWindow) {
+            CGRect noiseRect = NSRectToCGRect(NSInsetRect(drawingRect, 1.0, 1.0));
 
-        CGPathRef noiseClippingPath =
-        INCreateClippingPathWithRectAndRadius(noiseRect, INCornerClipRadius);
-        CGContextAddPath(context, noiseClippingPath);
-		CGContextClip(context);
-        CGPathRelease(noiseClippingPath);
+            if (![window showsBaselineSeparator]) {
+                CGFloat separatorHeight = self.baselineSeparatorFrame.size.height;
+                noiseRect.origin.y -= separatorHeight;
+                noiseRect.size.height += separatorHeight;
+            }
 
-        [self drawNoiseWithOpacity:0.1];
+            CGContextSaveGState(context);
 
-        CGContextRestoreGState(context);
+            CGPathRef noiseClippingPath =
+            INCreateClippingPathWithRectAndRadius(noiseRect, INCornerClipRadius);
+            CGContextAddPath(context, noiseClippingPath);
+            CGContextClip(context);
+            CGPathRelease(noiseClippingPath);
+
+            [self drawNoiseWithOpacity:0.1];
+
+            CGContextRestoreGState(context);
+        }
     }
 
     [self drawBaselineSeparator:self.baselineSeparatorFrame];
@@ -650,6 +663,9 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 		_titleBarHeight = _cachedTitleBarHeight;
 		[self _layoutTrafficLightsAndContent];
 		[self _displayWindowAndTitlebar];
+
+        if ((self.styleMask & NSTexturedBackgroundWindowMask) == NSTexturedBackgroundWindowMask)
+            [self.contentView displayIfNeeded];
 	}
 }
 
@@ -850,7 +866,19 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 - (void)setStyleMask:(NSUInteger)styleMask
 {
 	_preventWindowFrameChange = YES;
+
+    // Prevent drawing artifacts when turning off NSTexturedBackgroundWindowMask before
+    // exiting from full screen and then resizing the title bar; the problem is that internally
+    // the content border is still set to the previous value, which confuses the system
+    if (((self.styleMask & NSTexturedBackgroundWindowMask) == NSTexturedBackgroundWindowMask) &&
+        ((styleMask & NSTexturedBackgroundWindowMask) != NSTexturedBackgroundWindowMask)) {
+        [self setContentBorderThickness:0 forEdge:NSMaxYEdge];
+        [self setAutorecalculatesContentBorderThickness:YES forEdge:NSMaxYEdge];
+    }
+
 	[super setStyleMask:styleMask];
+    [self _displayWindowAndTitlebar];
+    [self.contentView display]; // force display, the view doesn't think it needs it, but it does
 	_preventWindowFrameChange = NO;
 }
 

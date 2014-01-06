@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="4504" systemVersion="12E55" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="4514" systemVersion="13B42" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment defaultVersion="1060" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="4504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="4514"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -650,11 +650,11 @@
         <window title="SampleApp" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="371" customClass="INAppStoreWindow">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowCollectionBehavior key="collectionBehavior" fullScreenPrimary="YES"/>
-            <rect key="contentRect" x="335" y="390" width="480" height="466"/>
+            <rect key="contentRect" x="335" y="390" width="480" height="486"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
-            <value key="minSize" type="size" width="400" height="427"/>
+            <value key="minSize" type="size" width="400" height="447"/>
             <view key="contentView" id="372">
-                <rect key="frame" x="0.0" y="0.0" width="480" height="466"/>
+                <rect key="frame" x="0.0" y="0.0" width="480" height="486"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <button verticalHuggingPriority="750" id="533">
@@ -680,7 +680,7 @@
                         </connections>
                     </button>
                     <button id="536">
-                        <rect key="frame" x="139" y="430" width="202" height="18"/>
+                        <rect key="frame" x="139" y="450" width="202" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="Center Full Screen Button" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="537">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -691,7 +691,7 @@
                         </connections>
                     </button>
                     <button id="540">
-                        <rect key="frame" x="139" y="390" width="202" height="18"/>
+                        <rect key="frame" x="139" y="410" width="202" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="Center Traffic Light Buttons" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="541">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -702,7 +702,7 @@
                         </connections>
                     </button>
                     <button id="556">
-                        <rect key="frame" x="139" y="410" width="202" height="18"/>
+                        <rect key="frame" x="139" y="430" width="202" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="Shows Baseline Separator" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="557">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -747,7 +747,7 @@
                         </textFieldCell>
                     </textField>
                     <button id="577">
-                        <rect key="frame" x="139" y="370" width="202" height="18"/>
+                        <rect key="frame" x="139" y="390" width="202" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="Vertical Traffic Light Buttons" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="578">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -775,7 +775,7 @@
                         </textFieldCell>
                     </textField>
                     <button id="fog-Ln-ESu">
-                        <rect key="frame" x="139" y="350" width="202" height="18"/>
+                        <rect key="frame" x="139" y="370" width="202" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="Vertically Center Title" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="9PJ-Hl-Zl3">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -802,6 +802,17 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
+                    <button id="msz-bD-Yi8">
+                        <rect key="frame" x="139" y="350" width="202" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="check" title="Textured Window" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="2gF-gB-L6R">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="checkboxAction:" target="494" id="83K-un-s9h"/>
+                        </connections>
+                    </button>
                 </subviews>
                 <connections>
                     <outlet property="menu" destination="584" id="590"/>
@@ -819,6 +830,7 @@
                 <outlet property="fullScreenRightMarginSlider" destination="546" id="561"/>
                 <outlet property="sheet" destination="563" id="576"/>
                 <outlet property="showsBaselineSeparator" destination="556" id="559"/>
+                <outlet property="texturedWindow" destination="msz-bD-Yi8" id="v3l-6k-rqs"/>
                 <outlet property="titleBarHeight" destination="dYP-gj-rp7" id="Bfw-2H-EuK"/>
                 <outlet property="trafficLightLeftMargin" destination="544" id="560"/>
                 <outlet property="trafficLightSeparation" destination="593" id="599"/>
