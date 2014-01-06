@@ -10,7 +10,20 @@
 
 
 #define IN_RUNNING_LION (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_6)
-#define IN_COMPILING_LION __MAC_OS_X_VERSION_MAX_ALLOWED >= 1070
+
+#if __MAC_OS_X_VERSION_MAX_ALLOWED < 1070
+enum { NSWindowDocumentVersionsButton = 6, NSWindowFullScreenButton = 7 };
+enum { NSFullScreenWindowMask = 1 << 14 };
+extern NSString * const NSAccessibilityFullScreenButtonSubrole;
+extern NSString * const NSWindowWillEnterFullScreenNotification;
+extern NSString * const NSWindowDidEnterFullScreenNotification;
+extern NSString * const NSWindowWillExitFullScreenNotification;
+extern NSString * const NSWindowDidExitFullScreenNotification;
+extern NSString * const NSWindowWillEnterVersionBrowserNotification;
+extern NSString * const NSWindowDidEnterVersionBrowserNotification;
+extern NSString * const NSWindowWillExitVersionBrowserNotification;
+extern NSString * const NSWindowDidExitVersionBrowserNotification;
+#endif
 
 /** -----------------------------------------
  - There are 2 sets of colors, one for an active (key) state and one for an inactivate state
@@ -223,12 +236,11 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 		}
 
 		NSRect clippingRect = drawingRect;
-#if IN_COMPILING_LION
 		if ((([window styleMask] & NSFullScreenWindowMask) == NSFullScreenWindowMask)) {
 			[[NSColor blackColor] setFill];
 			[[NSBezierPath bezierPathWithRect:self.bounds] fill];
 		}
-#endif
+
 		clippingRect.size.height -= 1;
 		CGPathRef clippingPath = INCreateClippingPathWithRectAndRadius(clippingRect, INCornerClipRadius);
 		CGContextAddPath(context, clippingPath);
@@ -841,13 +853,12 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 
 	[nc addObserver:self selector:@selector(_updateTitlebarView) name:NSApplicationDidBecomeActiveNotification object:nil];
 	[nc addObserver:self selector:@selector(_updateTitlebarView) name:NSApplicationDidResignActiveNotification object:nil];
-#if IN_COMPILING_LION
 	if (IN_RUNNING_LION) {
 		[nc addObserver:self selector:@selector(windowDidExitFullScreen:) name:NSWindowDidExitFullScreenNotification object:self];
 		[nc addObserver:self selector:@selector(windowWillEnterFullScreen:) name:NSWindowWillEnterFullScreenNotification object:self];
 		[nc addObserver:self selector:@selector(windowWillExitFullScreen:) name:NSWindowWillExitFullScreenNotification object:self];
 	}
-#endif
+
 	[self _createTitlebarView];
 	[self _layoutTrafficLightsAndContent];
 	[self _setupTrafficLightsTrackingArea];
@@ -942,7 +953,6 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 		[docIconButton setFrame:docButtonIconFrame];
 	}
 
-#if IN_COMPILING_LION
 	// Set the frame of the FullScreen button in Lion if available
 	if (IN_RUNNING_LION) {
 		NSButton *fullScreen = [self _fullScreenButtonToLayout];
@@ -998,7 +1008,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 			}
 		}
 	}
-#endif
+
 	[self _repositionContentView];
 }
 
