@@ -138,10 +138,7 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
 		[self.cell setHighlightsBy:NSContentsCellMask];
 		[self.cell setImageDimsWhenDisabled:NO];
 
-		[[NSNotificationCenter defaultCenter] addObserver:self
-												 selector:@selector(windowButtonGroupDidUpdateRolloverStateNotification:)
-													 name:INWindowButtonGroupDidUpdateRolloverStateNotification
-												   object:self.group];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowButtonGroupDidUpdateRolloverStateNotification:) name:INWindowButtonGroupDidUpdateRolloverStateNotification object:self.group];
 	}
 	return self;
 }
@@ -200,32 +197,23 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
 
 - (void)viewWillMoveToWindow:(NSWindow *)newWindow
 {
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	if (self.window) {
-		[[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidBecomeKeyNotification object:self.window];
-		[[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidResignKeyNotification object:self.window];
+		[nc removeObserver:self name:NSWindowDidBecomeKeyNotification object:self.window];
+		[nc removeObserver:self name:NSWindowDidResignKeyNotification object:self.window];
+		[nc removeObserver:self name:NSWindowDidMiniaturizeNotification object:self.window];
 		if ([NSWindow instancesRespondToSelector:@selector(toggleFullScreen:)]) {
-			[[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowWillEnterFullScreenNotification object:self.window];
-			[[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowWillExitFullScreenNotification object:self.window];
+			[nc removeObserver:self name:NSWindowWillEnterFullScreenNotification object:self.window];
+			[nc removeObserver:self name:NSWindowWillExitFullScreenNotification object:self.window];
 		}
 	}
 	if (newWindow != nil) {
-		[[NSNotificationCenter defaultCenter] addObserver:self
-												 selector:@selector(windowDidChangeFocus:)
-													 name:NSWindowDidBecomeKeyNotification
-												   object:newWindow];
-		[[NSNotificationCenter defaultCenter] addObserver:self
-												 selector:@selector(windowDidChangeFocus:)
-													 name:NSWindowDidResignKeyNotification
-												   object:newWindow];
+		[nc addObserver:self selector:@selector(windowDidChangeFocus:) name:NSWindowDidBecomeKeyNotification object:newWindow];
+		[nc addObserver:self selector:@selector(windowDidChangeFocus:) name:NSWindowDidResignKeyNotification object:newWindow];
+		[nc addObserver:self selector:@selector(windowDidMiniaturize:) name:NSWindowDidMiniaturizeNotification object:newWindow];
 		if ([NSWindow instancesRespondToSelector:@selector(toggleFullScreen:)]) {
-			[[NSNotificationCenter defaultCenter] addObserver:self
-													 selector:@selector(windowWillEnterFullScreen:)
-														 name:NSWindowWillEnterFullScreenNotification
-													   object:newWindow];
-			[[NSNotificationCenter defaultCenter] addObserver:self
-													 selector:@selector(windowWillExitFullScreen:)
-														 name:NSWindowWillExitFullScreenNotification
-													   object:newWindow];
+			[nc addObserver:self selector:@selector(windowWillEnterFullScreen:) name:NSWindowWillEnterFullScreenNotification object:newWindow];
+			[nc addObserver:self selector:@selector(windowWillExitFullScreen:) name:NSWindowWillExitFullScreenNotification object:newWindow];
 		}
 	}
 }
@@ -245,6 +233,11 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
 {
 	[self.group resetMouseCaptures];
 	[self setHidden:NO];
+}
+
+- (void)windowDidMiniaturize:(NSNotification *)notification
+{
+	[self.group resetMouseCaptures];
 }
 
 #pragma mark - Event Handling
@@ -300,20 +293,22 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
 	}
 }
 
-- (void)updateImage {
-    if ([self.window isKeyWindow]) {
-        [self updateActiveImage];
-    } else {
-        self.image = self.activeNotKeyWindowImage;
-    }
+- (void)updateImage
+{
+	if ([self.window isKeyWindow]) {
+		[self updateActiveImage];
+	} else {
+		self.image = self.activeNotKeyWindowImage;
+	}
 }
 
-- (void)updateActiveImage {
-    if ([self isEnabled]) {
-        self.image = self.activeImage;
-    } else {
-        self.image = self.inactiveImage;
-    }
+- (void)updateActiveImage
+{
+	if ([self isEnabled]) {
+		self.image = self.activeImage;
+	} else {
+		self.image = self.inactiveImage;
+	}
 }
 
 @end
