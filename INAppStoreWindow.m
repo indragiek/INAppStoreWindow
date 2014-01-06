@@ -51,6 +51,11 @@
 #define IN_COLOR_NOTMAIN_END_L [NSColor colorWithDeviceWhite:0.976 alpha:1.0]
 #define IN_COLOR_NOTMAIN_BOTTOM_L [NSColor colorWithDeviceWhite:0.655 alpha:1.0]
 
+/** Values chosen to match the defaults in OS X 10.9, which may change in future versions **/
+const CGFloat INWindowDocumentIconButtonOriginY = 3.f;
+const CGFloat INWindowDocumentVersionsButtonOriginY = 2.f;
+const CGFloat INWindowDocumentVersionsDividerOriginY = 2.f;
+
 /** Corner clipping radius **/
 const CGFloat INCornerClipRadius = 4.0;
 
@@ -930,7 +935,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
         if (self.verticallyCenterTitle) {
             docButtonIconFrame.origin.y = floor(NSMidY(titleBarFrame) - INMidHeight(docButtonIconFrame));
         } else {
-            docButtonIconFrame.origin.y = NSMaxY(titleBarFrame) - NSHeight(docButtonIconFrame);
+            docButtonIconFrame.origin.y = NSMaxY(titleBarFrame) - NSHeight(docButtonIconFrame) - INWindowDocumentIconButtonOriginY;
         }
 
         [docIconButton setFrame:docButtonIconFrame];
@@ -961,7 +966,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
             if (self.verticallyCenterTitle) {
                 versionsButtonFrame.origin.y = floor(NSMidY(titleBarFrame) - INMidHeight(versionsButtonFrame));
             } else {
-                versionsButtonFrame.origin.y = NSMaxY(titleBarFrame) - NSHeight(versionsButtonFrame);
+                versionsButtonFrame.origin.y = NSMaxY(titleBarFrame) - NSHeight(versionsButtonFrame) - INWindowDocumentVersionsButtonOriginY;
             }
 
             [versionsButton setFrame:versionsButtonFrame];
@@ -980,7 +985,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
                 if (self.verticallyCenterTitle) {
                     textFieldFrame.origin.y = round(NSMidY(titleBarFrame) - INMidHeight(textFieldFrame));
                 } else {
-                    textFieldFrame.origin.y = NSMaxY(titleBarFrame) - NSHeight(textFieldFrame);
+                    textFieldFrame.origin.y = NSMaxY(titleBarFrame) - NSHeight(textFieldFrame) - INWindowDocumentVersionsDividerOriginY;
                 }
 
                 [textField setFrame:textFieldFrame];
