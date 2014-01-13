@@ -129,6 +129,14 @@ Additional extensions for `INAppStoreWindow` are provided in the **Extensions** 
 
 Add this category to your project to [fix](https://github.com/indragiek/INAppStoreWindow/issues/91) title bar layout for document based apps in response to `-[NSDocument updateChangeCount:]`. This fix was separated from the main `INAppStoreWindow` codebase because it swizzles methods on `NSDocument`.
 
+### INTitlebarView+CoreUIRendering
+
+Add this category to your project to use CoreUI to render the system default title bar gradient, noise texture, and baseline separator. This will provide the most accurate visual results. You should **only** add this category to your project if you intend to release outside the App Store!
+
+If you use this category you **must** define the preprocessor symbol `INAPPSTOREWINDOW_NO_COREUI` with a value of 1 in the build configuration for your Mac App Store version in order to exclude this code because it **uses private APIs and will result in rejection if included in a Mac App Store submission**.
+
+When CoreUI rendering is not available, INAppStoreWindow will emulate the rendering of the system title bar as closely as possible.
+
 ## Authors
 
 INAppStoreWindow is maintained by [Indragie Karunaratne](http://indragie.com) and [David Keegan](http://inscopeapps.com). Special thanks to [everyone else](https://github.com/indragiek/INAppStoreWindow/contributors) who contributed various fixes and improvements to the code.
