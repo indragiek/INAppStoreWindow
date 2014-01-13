@@ -104,11 +104,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 	CGFloat locations[2] = {0.0f, 1.0f,};
 	CGColorRef cgStartingColor = INCreateCGColorFromNSColor(startingColor);
 	CGColorRef cgEndingColor = INCreateCGColorFromNSColor(endingColor);
-#if __has_feature(objc_arc)
-	CFArrayRef colors = (__bridge CFArrayRef) [NSArray arrayWithObjects:(__bridge id) cgStartingColor, (__bridge id) cgEndingColor, nil];
-#else
-	CFArrayRef colors = (CFArrayRef)[NSArray arrayWithObjects:(id)cgStartingColor, (id)cgEndingColor, nil];
-	#endif
+	CFArrayRef colors = (INAppStoreWindowBridge CFArrayRef)[NSArray arrayWithObjects:(INAppStoreWindowBridge id)cgStartingColor, (INAppStoreWindowBridge id)cgEndingColor, nil];
 	CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
 	CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, colors, locations);
 	CGColorSpaceRelease(colorSpace);
