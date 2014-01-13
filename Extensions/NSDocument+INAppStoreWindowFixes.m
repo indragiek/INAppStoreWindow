@@ -5,6 +5,9 @@
 //  Created by Indragie Karunaratne on 1/5/2014.
 //  Copyright (c) 2014 Indragie Karunaratne. All rights reserved.
 //
+//  Licensed under the BSD 2-clause License. See LICENSE file distributed in the source
+//  code of this project.
+//
 
 #import "NSDocument+INAppStoreWindowFixes.h"
 #import "INAppStoreWindow.h"
