@@ -8,22 +8,11 @@
 
 #import "NSDocument+INAppStoreWindowFixes.h"
 #import "INAppStoreWindow.h"
-#import <objc/runtime.h>
+#import "INAppStoreWindowSwizzling.h"
 
 @interface INAppStoreWindow (Private)
 - (void)_layoutTrafficLightsAndContent;
 @end
-
-static void INAppStoreWindowSwizzle(Class c, SEL orig, SEL new)
-{
-    Method origMethod = class_getInstanceMethod(c, orig);
-    Method newMethod = class_getInstanceMethod(c, new);
-    if (class_addMethod(c, orig, method_getImplementation(newMethod), method_getTypeEncoding(newMethod))) {
-        class_replaceMethod(c, new, method_getImplementation(origMethod), method_getTypeEncoding(origMethod));
-    } else {
-        method_exchangeImplementations(origMethod, newMethod);
-    }
-}
 
 @implementation NSDocument (INAppStoreWindowFixes)
 
