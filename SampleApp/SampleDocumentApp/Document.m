@@ -3,7 +3,7 @@
 //  SampleDocumentApp
 //
 //  Created by Indragie Karunaratne on 2012-08-29.
-//  Copyright (c) 2012-2014 Indragie Karunaratne. All rights reserved.
+//  Copyright (c) 2012 Indragie Karunaratne. All rights reserved.
 //
 
 #import "Document.h"
