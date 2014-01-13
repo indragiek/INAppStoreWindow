@@ -10,9 +10,11 @@
 #if __has_feature(objc_arc)
 #define INAppStoreWindowCopy nonatomic, strong
 #define INAppStoreWindowRetain nonatomic, strong
+#define INAppStoreWindowBridge __bridge
 #else
 #define INAppStoreWindowCopy nonatomic, copy
 #define INAppStoreWindowRetain nonatomic, retain
+#define INAppStoreWindowBridge
 #endif
 
 @class INWindowButton;
