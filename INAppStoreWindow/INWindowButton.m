@@ -171,12 +171,12 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
 		[self removeTrackingArea:self.mouseTrackingArea];
 	}
 
-    NSTrackingArea *mouseTrackingArea = [[NSTrackingArea alloc] initWithRect:NSInsetRect(self.bounds, -4, -4)
-                                                                     options:NSTrackingMouseEnteredAndExited | NSTrackingActiveAlways
-                                                                       owner:self
-                                                                    userInfo:nil];
+	NSTrackingArea *mouseTrackingArea = [[NSTrackingArea alloc] initWithRect:NSInsetRect(self.bounds, -4, -4)
+																	 options:NSTrackingMouseEnteredAndExited | NSTrackingActiveAlways
+																	   owner:self
+																	userInfo:nil];
 
-    [self addTrackingArea:self.mouseTrackingArea = mouseTrackingArea];
+	[self addTrackingArea:self.mouseTrackingArea = mouseTrackingArea];
 #if !__has_feature(objc_arc)
     [mouseTrackingArea release];
 #endif

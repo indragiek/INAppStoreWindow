@@ -79,12 +79,12 @@ NS_INLINE CGPathRef INCreateClippingPathWithRectAndRadius(NSRect rect, CGFloat r
 }
 
 NS_INLINE void INApplyClippingPath(CGPathRef path, CGContextRef ctx) {
-    CGContextAddPath(ctx, path);
-    CGContextClip(ctx);
+	CGContextAddPath(ctx, path);
+	CGContextClip(ctx);
 }
 
 NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
-    INApplyClippingPath(path, [[NSGraphicsContext currentContext] graphicsPort]);
+	INApplyClippingPath(path, [[NSGraphicsContext currentContext] graphicsPort]);
 }
 
 CF_RETURNS_RETAINED
@@ -104,7 +104,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 	CGFloat locations[2] = {0.0f, 1.0f,};
 	CGColorRef cgStartingColor = INCreateCGColorFromNSColor(startingColor);
 	CGColorRef cgEndingColor = INCreateCGColorFromNSColor(endingColor);
-	CFArrayRef colors = (INAppStoreWindowBridge CFArrayRef)[NSArray arrayWithObjects:(INAppStoreWindowBridge id)cgStartingColor, (INAppStoreWindowBridge id)cgEndingColor, nil];
+	CFArrayRef colors = (INAppStoreWindowBridge CFArrayRef) [NSArray arrayWithObjects:(INAppStoreWindowBridge id) cgStartingColor, (INAppStoreWindowBridge id) cgEndingColor, nil];
 	CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
 	CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, colors, locations);
 	CGColorSpaceRelease(colorSpace);
@@ -218,120 +218,120 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 
 - (void)drawWindowBackgroundGradient:(NSRect)drawingRect showsBaselineSeparator:(BOOL)showsBaselineSeparator clippingPath:(CGPathRef)clippingPath
 {
-    INAppStoreWindow *window = (INAppStoreWindow *)[self window];
+	INAppStoreWindow *window = (INAppStoreWindow *) [self window];
 
-    INApplyClippingPathInCurrentContext(clippingPath);
+	INApplyClippingPathInCurrentContext(clippingPath);
 
-    if ((window.styleMask & NSTexturedBackgroundWindowMask) == NSTexturedBackgroundWindowMask) {
-        // If this is a textured window, we can draw the real background gradient and noise pattern
-        CGFloat contentBorderThickness = window.titleBarHeight;
-        if (((window.styleMask & NSFullScreenWindowMask) != NSFullScreenWindowMask)) {
-            contentBorderThickness -= window._minimumTitlebarHeight;
-        }
+	if ((window.styleMask & NSTexturedBackgroundWindowMask) == NSTexturedBackgroundWindowMask) {
+		// If this is a textured window, we can draw the real background gradient and noise pattern
+		CGFloat contentBorderThickness = window.titleBarHeight;
+		if (((window.styleMask & NSFullScreenWindowMask) != NSFullScreenWindowMask)) {
+			contentBorderThickness -= window._minimumTitlebarHeight;
+		}
 
-        [window setAutorecalculatesContentBorderThickness:NO forEdge:NSMaxYEdge];
-        [window setContentBorderThickness:contentBorderThickness forEdge:NSMaxYEdge];
+		[window setAutorecalculatesContentBorderThickness:NO forEdge:NSMaxYEdge];
+		[window setContentBorderThickness:contentBorderThickness forEdge:NSMaxYEdge];
 
-        NSDrawWindowBackground(drawingRect);
-    } else {
-        // Not textured, we have to fake the background gradient and noise pattern
-        BOOL drawsAsMainWindow = ([window isMainWindow] && [[NSApplication sharedApplication] isActive]);
+		NSDrawWindowBackground(drawingRect);
+	} else {
+		// Not textured, we have to fake the background gradient and noise pattern
+		BOOL drawsAsMainWindow = ([window isMainWindow] && [[NSApplication sharedApplication] isActive]);
 
-        NSColor *startColor = drawsAsMainWindow ? window.titleBarStartColor : window.inactiveTitleBarStartColor;
-        NSColor *endColor = drawsAsMainWindow ? window.titleBarEndColor : window.inactiveTitleBarEndColor;
+		NSColor *startColor = drawsAsMainWindow ? window.titleBarStartColor : window.inactiveTitleBarStartColor;
+		NSColor *endColor = drawsAsMainWindow ? window.titleBarEndColor : window.inactiveTitleBarEndColor;
 
-        if (IN_RUNNING_LION) {
-            startColor = startColor ?: (drawsAsMainWindow ? IN_COLOR_MAIN_START_L : IN_COLOR_NOTMAIN_START_L);
-            endColor = endColor ?: (drawsAsMainWindow ? IN_COLOR_MAIN_END_L : IN_COLOR_NOTMAIN_END_L);
-        } else {
-            startColor = startColor ?: (drawsAsMainWindow ? IN_COLOR_MAIN_START : IN_COLOR_NOTMAIN_START);
-            endColor = endColor ?: (drawsAsMainWindow ? IN_COLOR_MAIN_END : IN_COLOR_NOTMAIN_END);
-        }
+		if (IN_RUNNING_LION) {
+			startColor = startColor ?: (drawsAsMainWindow ? IN_COLOR_MAIN_START_L : IN_COLOR_NOTMAIN_START_L);
+			endColor = endColor ?: (drawsAsMainWindow ? IN_COLOR_MAIN_END_L : IN_COLOR_NOTMAIN_END_L);
+		} else {
+			startColor = startColor ?: (drawsAsMainWindow ? IN_COLOR_MAIN_START : IN_COLOR_NOTMAIN_START);
+			endColor = endColor ?: (drawsAsMainWindow ? IN_COLOR_MAIN_END : IN_COLOR_NOTMAIN_END);
+		}
 
-        CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
-        CGGradientRef gradient = INCreateGradientWithColors(startColor, endColor);
-        CGContextDrawLinearGradient(context, gradient, CGPointMake(NSMidX(drawingRect), NSMinY(drawingRect)), CGPointMake(NSMidX(drawingRect), NSMaxY(drawingRect)), 0);
-        CGGradientRelease(gradient);
+		CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
+		CGGradientRef gradient = INCreateGradientWithColors(startColor, endColor);
+		CGContextDrawLinearGradient(context, gradient, CGPointMake(NSMidX(drawingRect), NSMinY(drawingRect)), CGPointMake(NSMidX(drawingRect), NSMaxY(drawingRect)), 0);
+		CGGradientRelease(gradient);
 
-        if (IN_RUNNING_LION && drawsAsMainWindow) {
-            CGRect noiseRect = NSRectToCGRect(NSInsetRect(drawingRect, 1.0, 1.0));
+		if (IN_RUNNING_LION && drawsAsMainWindow) {
+			CGRect noiseRect = NSRectToCGRect(NSInsetRect(drawingRect, 1.0, 1.0));
 
-            if (![window showsBaselineSeparator]) {
-                CGFloat separatorHeight = self.baselineSeparatorFrame.size.height;
-                noiseRect.origin.y -= separatorHeight;
-                noiseRect.size.height += separatorHeight;
-            }
+			if (![window showsBaselineSeparator]) {
+				CGFloat separatorHeight = self.baselineSeparatorFrame.size.height;
+				noiseRect.origin.y -= separatorHeight;
+				noiseRect.size.height += separatorHeight;
+			}
 
-            CGContextSaveGState(context);
+			CGContextSaveGState(context);
 
-            CGPathRef noiseClippingPath =
-            INCreateClippingPathWithRectAndRadius(noiseRect, INCornerClipRadius);
-            CGContextAddPath(context, noiseClippingPath);
-            CGContextClip(context);
-            CGPathRelease(noiseClippingPath);
+			CGPathRef noiseClippingPath =
+					INCreateClippingPathWithRectAndRadius(noiseRect, INCornerClipRadius);
+			CGContextAddPath(context, noiseClippingPath);
+			CGContextClip(context);
+			CGPathRelease(noiseClippingPath);
 
-            [self drawNoiseWithOpacity:0.1];
+			[self drawNoiseWithOpacity:0.1];
 
-            CGContextRestoreGState(context);
-        }
-    }
+			CGContextRestoreGState(context);
+		}
+	}
 
-    [self drawBaselineSeparator:self.baselineSeparatorFrame];
+	[self drawBaselineSeparator:self.baselineSeparatorFrame];
 }
 
 - (void)drawBaselineSeparator:(NSRect)separatorFrame
 {
-    INAppStoreWindow *window = (INAppStoreWindow *) [self window];
-    BOOL drawsAsMainWindow = ([window isMainWindow] && [[NSApplication sharedApplication] isActive]);
+	INAppStoreWindow *window = (INAppStoreWindow *) [self window];
+	BOOL drawsAsMainWindow = ([window isMainWindow] && [[NSApplication sharedApplication] isActive]);
 
-    NSColor *bottomColor = drawsAsMainWindow ? window.baselineSeparatorColor : window.inactiveBaselineSeparatorColor;
+	NSColor *bottomColor = drawsAsMainWindow ? window.baselineSeparatorColor : window.inactiveBaselineSeparatorColor;
 
-    if (IN_RUNNING_LION) {
-        bottomColor = bottomColor ? bottomColor : drawsAsMainWindow ? IN_COLOR_MAIN_BOTTOM_L : IN_COLOR_NOTMAIN_BOTTOM_L;
-    } else {
-        bottomColor = bottomColor ? bottomColor : drawsAsMainWindow ? IN_COLOR_MAIN_BOTTOM : IN_COLOR_NOTMAIN_BOTTOM;
-    }
+	if (IN_RUNNING_LION) {
+		bottomColor = bottomColor ? bottomColor : drawsAsMainWindow ? IN_COLOR_MAIN_BOTTOM_L : IN_COLOR_NOTMAIN_BOTTOM_L;
+	} else {
+		bottomColor = bottomColor ? bottomColor : drawsAsMainWindow ? IN_COLOR_MAIN_BOTTOM : IN_COLOR_NOTMAIN_BOTTOM;
+	}
 
-    [bottomColor set];
-    NSRectFill(separatorFrame);
+	[bottomColor set];
+	NSRectFill(separatorFrame);
 
-    if (IN_RUNNING_LION) {
-        separatorFrame.origin.y += separatorFrame.size.height;
-        separatorFrame.size.height = 1.0;
-        [[NSColor colorWithDeviceWhite:1.0 alpha:0.12] setFill];
-        [[NSBezierPath bezierPathWithRect:separatorFrame] fill];
-    }
+	if (IN_RUNNING_LION) {
+		separatorFrame.origin.y += separatorFrame.size.height;
+		separatorFrame.size.height = 1.0;
+		[[NSColor colorWithDeviceWhite:1.0 alpha:0.12] setFill];
+		[[NSBezierPath bezierPathWithRect:separatorFrame] fill];
+	}
 }
 
 - (void)drawRect:(NSRect)dirtyRect
 {
-    INAppStoreWindow *window = (INAppStoreWindow *) [self window];
-    BOOL drawsAsMainWindow = ([window isMainWindow] && [[NSApplication sharedApplication] isActive]);
+	INAppStoreWindow *window = (INAppStoreWindow *) [self window];
+	BOOL drawsAsMainWindow = ([window isMainWindow] && [[NSApplication sharedApplication] isActive]);
 
-    // Start by filling the title bar area with black in fullscreen mode to match native apps
-    // Custom title bar drawing blocks can simply override this by not applying the clipping path
-    if ((([window styleMask] & NSFullScreenWindowMask) == NSFullScreenWindowMask)) {
-        [[NSColor blackColor] setFill];
-        [[NSBezierPath bezierPathWithRect:self.bounds] fill];
+	// Start by filling the title bar area with black in fullscreen mode to match native apps
+	// Custom title bar drawing blocks can simply override this by not applying the clipping path
+	if ((([window styleMask] & NSFullScreenWindowMask) == NSFullScreenWindowMask)) {
+		[[NSColor blackColor] setFill];
+		[[NSBezierPath bezierPathWithRect:self.bounds] fill];
 	}
 
-    CGPathRef clippingPath = NULL;
-    NSRect drawingRect = [self bounds];
+	CGPathRef clippingPath = NULL;
+	NSRect drawingRect = [self bounds];
 
-    if (window.titleBarDrawingBlock) {
-        clippingPath = INCreateClippingPathWithRectAndRadius(drawingRect, INCornerClipRadius);
-        window.titleBarDrawingBlock(drawsAsMainWindow, NSRectToCGRect(drawingRect), clippingPath);
-    } else {
-        // There's a thin whitish line between the darker gray window border line
-        // and the gray noise textured gradient; preserve that when drawing a native title bar
-        NSRect clippingRect = drawingRect;
-        clippingRect.size.height -= 1;
-        clippingPath = INCreateClippingPathWithRectAndRadius(clippingRect, INCornerClipRadius);
+	if (window.titleBarDrawingBlock) {
+		clippingPath = INCreateClippingPathWithRectAndRadius(drawingRect, INCornerClipRadius);
+		window.titleBarDrawingBlock(drawsAsMainWindow, NSRectToCGRect(drawingRect), clippingPath);
+	} else {
+		// There's a thin whitish line between the darker gray window border line
+		// and the gray noise textured gradient; preserve that when drawing a native title bar
+		NSRect clippingRect = drawingRect;
+		clippingRect.size.height -= 1;
+		clippingPath = INCreateClippingPathWithRectAndRadius(clippingRect, INCornerClipRadius);
 
-        [self drawWindowBackgroundGradient:drawingRect showsBaselineSeparator:window.showsBaselineSeparator clippingPath:clippingPath];
-    }
+		[self drawWindowBackgroundGradient:drawingRect showsBaselineSeparator:window.showsBaselineSeparator clippingPath:clippingPath];
+	}
 
-    CGPathRelease(clippingPath);
+	CGPathRelease(clippingPath);
 
 	if ([window showsTitle] && (([window styleMask] & NSFullScreenWindowMask) == 0 || window.showsTitleInFullscreen)) {
 		NSRect titleTextRect;
@@ -348,8 +348,8 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 
 - (NSRect)baselineSeparatorFrame
 {
-    const NSRect windowBounds = self.bounds;
-    return NSMakeRect(0, NSMinY(windowBounds), NSWidth(windowBounds), 1);
+	const NSRect windowBounds = self.bounds;
+	return NSMakeRect(0, NSMinY(windowBounds), NSWidth(windowBounds), 1);
 }
 
 - (void)getTitleFrame:(out NSRect *)frame textAttributes:(out NSDictionary **)attributes forWindow:(in INAppStoreWindow *)window
@@ -414,7 +414,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 - (void)mouseUp:(NSEvent *)theEvent
 {
 	if ([theEvent clickCount] == 2) {
-        // Get settings from "System Preferences" >	 "Appearance" > "Double-click on windows title bar to minimize"
+		// Get settings from "System Preferences" >	 "Appearance" > "Double-click on windows title bar to minimize"
 		NSString *const MDAppleMiniaturizeOnDoubleClickKey = @"AppleMiniaturizeOnDoubleClick";
 		NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 		BOOL shouldMiniaturize = [[userDefaults objectForKey:MDAppleMiniaturizeOnDoubleClickKey] boolValue];
@@ -660,8 +660,8 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 		[self _layoutTrafficLightsAndContent];
 		[self _displayWindowAndTitlebar];
 
-        if ((self.styleMask & NSTexturedBackgroundWindowMask) == NSTexturedBackgroundWindowMask)
-            [self.contentView displayIfNeeded];
+		if ((self.styleMask & NSTexturedBackgroundWindowMask) == NSTexturedBackgroundWindowMask)
+			[self.contentView displayIfNeeded];
 	}
 }
 
@@ -863,18 +863,18 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 {
 	_preventWindowFrameChange = YES;
 
-    // Prevent drawing artifacts when turning off NSTexturedBackgroundWindowMask before
-    // exiting from full screen and then resizing the title bar; the problem is that internally
-    // the content border is still set to the previous value, which confuses the system
-    if (((self.styleMask & NSTexturedBackgroundWindowMask) == NSTexturedBackgroundWindowMask) &&
-        ((styleMask & NSTexturedBackgroundWindowMask) != NSTexturedBackgroundWindowMask)) {
-        [self setContentBorderThickness:0 forEdge:NSMaxYEdge];
-        [self setAutorecalculatesContentBorderThickness:YES forEdge:NSMaxYEdge];
-    }
+	// Prevent drawing artifacts when turning off NSTexturedBackgroundWindowMask before
+	// exiting from full screen and then resizing the title bar; the problem is that internally
+	// the content border is still set to the previous value, which confuses the system
+	if (((self.styleMask & NSTexturedBackgroundWindowMask) == NSTexturedBackgroundWindowMask) &&
+			((styleMask & NSTexturedBackgroundWindowMask) != NSTexturedBackgroundWindowMask)) {
+		[self setContentBorderThickness:0 forEdge:NSMaxYEdge];
+		[self setAutorecalculatesContentBorderThickness:YES forEdge:NSMaxYEdge];
+	}
 
 	[super setStyleMask:styleMask];
-    [self _displayWindowAndTitlebar];
-    [self.contentView display]; // force display, the view doesn't think it needs it, but it does
+	[self _displayWindowAndTitlebar];
+	[self.contentView display]; // force display, the view doesn't think it needs it, but it does
 	_preventWindowFrameChange = NO;
 }
 
