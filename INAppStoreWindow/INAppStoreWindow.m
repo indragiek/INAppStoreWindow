@@ -1,5 +1,5 @@
 //
-//  INAppStoreWindow.m
+//	INAppStoreWindow.m
 //
 //  Copyright (c) 2011-2014 Indragie Karunaratne. All rights reserved.
 //
@@ -76,6 +76,15 @@ NS_INLINE CGPathRef INCreateClippingPathWithRectAndRadius(NSRect rect, CGFloat r
 	CGPathAddLineToPoint(path, NULL, NSMaxX(rect), NSMinY(rect));
 	CGPathCloseSubpath(path);
 	return path;
+}
+
+NS_INLINE void INApplyClippingPath(CGPathRef path, CGContextRef ctx) {
+    CGContextAddPath(ctx, path);
+    CGContextClip(ctx);
+}
+
+NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
+    INApplyClippingPath(path, [[NSGraphicsContext currentContext] graphicsPort]);
 }
 
 CF_RETURNS_RETAINED
@@ -211,84 +220,109 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 	CGContextRestoreGState(context);
 }
 
-- (void)drawRect:(NSRect)dirtyRect
+- (void)drawWindowBackgroundGradient:(NSRect)drawingRect showsBaselineSeparator:(BOOL)showsBaselineSeparator clippingPath:(CGPathRef)clippingPath
 {
-	INAppStoreWindow *window = (INAppStoreWindow *) [self window];
+    INAppStoreWindow *window = (INAppStoreWindow *)[self window];
+
+    INApplyClippingPathInCurrentContext(clippingPath);
+
 	BOOL drawsAsMainWindow = ([window isMainWindow] && [[NSApplication sharedApplication] isActive]);
 
-	NSRect drawingRect = [self bounds];
-	if (window.titleBarDrawingBlock) {
-		CGPathRef clippingPath = INCreateClippingPathWithRectAndRadius(drawingRect, INCornerClipRadius);
-		window.titleBarDrawingBlock(drawsAsMainWindow, NSRectToCGRect(drawingRect), clippingPath);
-		CGPathRelease(clippingPath);
-	} else {
-		CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
+    NSColor *startColor = drawsAsMainWindow ? window.titleBarStartColor : window.inactiveTitleBarStartColor;
+    NSColor *endColor = drawsAsMainWindow ? window.titleBarEndColor : window.inactiveTitleBarEndColor;
 
-		NSColor *startColor = drawsAsMainWindow ? window.titleBarStartColor : window.inactiveTitleBarStartColor;
-		NSColor *endColor = drawsAsMainWindow ? window.titleBarEndColor : window.inactiveTitleBarEndColor;
+    if (IN_RUNNING_LION) {
+        startColor = startColor ?: (drawsAsMainWindow ? IN_COLOR_MAIN_START_L : IN_COLOR_NOTMAIN_START_L);
+        endColor = endColor ?: (drawsAsMainWindow ? IN_COLOR_MAIN_END_L : IN_COLOR_NOTMAIN_END_L);
+    } else {
+        startColor = startColor ?: (drawsAsMainWindow ? IN_COLOR_MAIN_START : IN_COLOR_NOTMAIN_START);
+        endColor = endColor ?: (drawsAsMainWindow ? IN_COLOR_MAIN_END : IN_COLOR_NOTMAIN_END);
+    }
 
-		if (IN_RUNNING_LION) {
-			startColor = startColor ?: (drawsAsMainWindow ? IN_COLOR_MAIN_START_L : IN_COLOR_NOTMAIN_START_L);
-			endColor = endColor ?: (drawsAsMainWindow ? IN_COLOR_MAIN_END_L : IN_COLOR_NOTMAIN_END_L);
-		} else {
-			startColor = startColor ?: (drawsAsMainWindow ? IN_COLOR_MAIN_START : IN_COLOR_NOTMAIN_START);
-			endColor = endColor ?: (drawsAsMainWindow ? IN_COLOR_MAIN_END : IN_COLOR_NOTMAIN_END);
+    CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
+    CGGradientRef gradient = INCreateGradientWithColors(startColor, endColor);
+    CGContextDrawLinearGradient(context, gradient, CGPointMake(NSMidX(drawingRect), NSMinY(drawingRect)),
+                                CGPointMake(NSMidX(drawingRect), NSMaxY(drawingRect)), 0);
+    CGGradientRelease(gradient);
+
+    if (IN_RUNNING_LION && drawsAsMainWindow) {
+        CGRect noiseRect = NSRectToCGRect(NSInsetRect(drawingRect, 1.0, 1.0));
+
+        if (![window showsBaselineSeparator]) {
+            CGFloat separatorHeight = self.baselineSeparatorFrame.size.height;
+            noiseRect.origin.y -= separatorHeight;
+            noiseRect.size.height += separatorHeight;
 		}
 
-		NSRect clippingRect = drawingRect;
-		if ((([window styleMask] & NSFullScreenWindowMask) == NSFullScreenWindowMask)) {
-			[[NSColor blackColor] setFill];
-			[[NSBezierPath bezierPathWithRect:self.bounds] fill];
-		}
+        CGContextSaveGState(context);
 
-		clippingRect.size.height -= 1;
-		CGPathRef clippingPath = INCreateClippingPathWithRectAndRadius(clippingRect, INCornerClipRadius);
-		CGContextAddPath(context, clippingPath);
+        CGPathRef noiseClippingPath =
+        INCreateClippingPathWithRectAndRadius(noiseRect, INCornerClipRadius);
+        CGContextAddPath(context, noiseClippingPath);
 		CGContextClip(context);
-		CGPathRelease(clippingPath);
+        CGPathRelease(noiseClippingPath);
 
-		CGGradientRef gradient = INCreateGradientWithColors(startColor, endColor);
-		CGContextDrawLinearGradient(context, gradient, CGPointMake(NSMidX(drawingRect), NSMinY(drawingRect)),
-				CGPointMake(NSMidX(drawingRect), NSMaxY(drawingRect)), 0);
-		CGGradientRelease(gradient);
+        [self drawNoiseWithOpacity:0.1];
 
-		if ([window showsBaselineSeparator]) {
-			NSColor *bottomColor = drawsAsMainWindow ? window.baselineSeparatorColor : window.inactiveBaselineSeparatorColor;
+        CGContextRestoreGState(context);
+    }
 
-			if (IN_RUNNING_LION) {
-				bottomColor = bottomColor ? bottomColor : drawsAsMainWindow ? IN_COLOR_MAIN_BOTTOM_L : IN_COLOR_NOTMAIN_BOTTOM_L;
-			} else {
-				bottomColor = bottomColor ? bottomColor : drawsAsMainWindow ? IN_COLOR_MAIN_BOTTOM : IN_COLOR_NOTMAIN_BOTTOM;
-			}
+    [self drawBaselineSeparator:self.baselineSeparatorFrame];
+}
 
-			NSRect bottomRect = NSMakeRect(0.0, NSMinY(drawingRect), NSWidth(drawingRect), 1.0);
-			[bottomColor set];
-			NSRectFill(bottomRect);
+- (void)drawBaselineSeparator:(NSRect)separatorFrame
+{
+    INAppStoreWindow *window = (INAppStoreWindow *) [self window];
+    BOOL drawsAsMainWindow = ([window isMainWindow] && [[NSApplication sharedApplication] isActive]);
 
-			if (IN_RUNNING_LION) {
-				bottomRect.origin.y += 1.0;
-				[[NSColor colorWithDeviceWhite:1.0 alpha:0.12] setFill];
-				[[NSBezierPath bezierPathWithRect:bottomRect] fill];
-			}
-		}
+    NSColor *bottomColor = drawsAsMainWindow ? window.baselineSeparatorColor : window.inactiveBaselineSeparatorColor;
 
-		if (IN_RUNNING_LION && drawsAsMainWindow) {
-			CGRect noiseRect = NSInsetRect(drawingRect, 1.0, 1.0);
+    if (IN_RUNNING_LION) {
+        bottomColor = bottomColor ? bottomColor : drawsAsMainWindow ? IN_COLOR_MAIN_BOTTOM_L : IN_COLOR_NOTMAIN_BOTTOM_L;
+    } else {
+        bottomColor = bottomColor ? bottomColor : drawsAsMainWindow ? IN_COLOR_MAIN_BOTTOM : IN_COLOR_NOTMAIN_BOTTOM;
+    }
 
-			if (![window showsBaselineSeparator]) {
-				noiseRect.origin.y -= 1.0;
-				noiseRect.size.height += 1.0;
-			}
+    [bottomColor set];
+    NSRectFill(separatorFrame);
 
-			CGPathRef noiseClippingPath =
-					INCreateClippingPathWithRectAndRadius(noiseRect, INCornerClipRadius);
-			CGContextAddPath(context, noiseClippingPath);
-			CGContextClip(context);
-			CGPathRelease(noiseClippingPath);
+    if (IN_RUNNING_LION) {
+        separatorFrame.origin.y += separatorFrame.size.height;
+        separatorFrame.size.height = 1.0;
+        [[NSColor colorWithDeviceWhite:1.0 alpha:0.12] setFill];
+        [[NSBezierPath bezierPathWithRect:separatorFrame] fill];
+    }
+}
 
-			[self drawNoiseWithOpacity:0.1];
-		}
+- (void)drawRect:(NSRect)dirtyRect
+{
+    INAppStoreWindow *window = (INAppStoreWindow *) [self window];
+    BOOL drawsAsMainWindow = ([window isMainWindow] && [[NSApplication sharedApplication] isActive]);
+
+    // Start by filling the title bar area with black in fullscreen mode to match native apps
+    // Custom title bar drawing blocks can simply override this by not applying the clipping path
+    if ((([window styleMask] & NSFullScreenWindowMask) == NSFullScreenWindowMask)) {
+        [[NSColor blackColor] setFill];
+        [[NSBezierPath bezierPathWithRect:self.bounds] fill];
 	}
+
+    CGPathRef clippingPath = NULL;
+    NSRect drawingRect = [self bounds];
+
+    if (window.titleBarDrawingBlock) {
+        clippingPath = INCreateClippingPathWithRectAndRadius(drawingRect, INCornerClipRadius);
+        window.titleBarDrawingBlock(drawsAsMainWindow, NSRectToCGRect(drawingRect), clippingPath);
+    } else {
+        // There's a thin whitish line between the darker gray window border line
+        // and the gray noise textured gradient; preserve that when drawing a native title bar
+        NSRect clippingRect = drawingRect;
+        clippingRect.size.height -= 1;
+        clippingPath = INCreateClippingPathWithRectAndRadius(clippingRect, INCornerClipRadius);
+
+        [self drawWindowBackgroundGradient:drawingRect showsBaselineSeparator:window.showsBaselineSeparator clippingPath:clippingPath];
+    }
+
+    CGPathRelease(clippingPath);
 
 	if ([window showsTitle] && (([window styleMask] & NSFullScreenWindowMask) == 0 || window.showsTitleInFullscreen)) {
 		NSRect titleTextRect;
@@ -301,6 +335,12 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 
 		[window.title drawInRect:titleTextRect withAttributes:titleTextStyles];
 	}
+}
+
+- (NSRect)baselineSeparatorFrame
+{
+    const NSRect windowBounds = self.bounds;
+    return NSMakeRect(0, NSMinY(windowBounds), NSWidth(windowBounds), 1);
 }
 
 - (void)getTitleFrame:(out NSRect *)frame textAttributes:(out NSDictionary **)attributes forWindow:(in INAppStoreWindow *)window
@@ -365,7 +405,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 - (void)mouseUp:(NSEvent *)theEvent
 {
 	if ([theEvent clickCount] == 2) {
-		// Get settings from "System Preferences" >  "Appearance" > "Double-click on windows title bar to minimize"
+        // Get settings from "System Preferences" >	 "Appearance" > "Double-click on windows title bar to minimize"
 		NSString *const MDAppleMiniaturizeOnDoubleClickKey = @"AppleMiniaturizeOnDoubleClick";
 		NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 		BOOL shouldMiniaturize = [[userDefaults objectForKey:MDAppleMiniaturizeOnDoubleClickKey] boolValue];
@@ -500,9 +540,9 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 - (void)dealloc
 {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-//    [self setDelegate:nil];
+//	  [self setDelegate:nil];
 #if !__has_feature(objc_arc)
-//    [_delegateProxy release];
+//	  [_delegateProxy release];
 	[_titleBarView release];
 	[_closeButton release];
 	[_minimizeButton release];
