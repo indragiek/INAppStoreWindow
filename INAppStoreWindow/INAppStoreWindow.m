@@ -331,14 +331,13 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 
 	NSShadow *titleTextShadow = drawsAsMainWindow ? window.titleTextShadow : window.inactiveTitleTextShadow;
 	if (titleTextShadow == nil) {
-#if __has_feature(objc_arc)
 		titleTextShadow = [[NSShadow alloc] init];
-#else
-		titleTextShadow = [[[NSShadow alloc] init] autorelease];
-		#endif
 		titleTextShadow.shadowBlurRadius = 0.0;
 		titleTextShadow.shadowOffset = NSMakeSize(0, -1);
 		titleTextShadow.shadowColor = [NSColor colorWithDeviceWhite:1.0 alpha:0.5];
+#if !__has_feature(objc_arc)
+		[titleTextShadow autorelease];
+#endif
 	}
 
 	NSColor *titleTextColor = drawsAsMainWindow ? window.titleTextColor : window.inactiveTitleTextColor;
