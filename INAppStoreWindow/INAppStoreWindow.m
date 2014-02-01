@@ -28,13 +28,6 @@ extern NSString * const NSWindowDidExitVersionBrowserNotification;
 
 #define IN_RUNNING_LION (floor(NSAppKitVersionNumber) >= NSAppKitVersionNumber10_7)
 
-/** -----------------------------------------
- - There are 2 sets of colors, one for an active (key) state and one for an inactivate state
- - Each set contains 3 colors. 2 colors for the start and end of the title gradient, and another color to draw the separator line on the bottom
- - These colors are meant to mimic the color of the default titlebar (taken from OS X 10.6), but are subject
- to change at any time
- ----------------------------------------- **/
-
 /** Values chosen to match the defaults in OS X 10.9, which may change in future versions **/
 const CGFloat INWindowDocumentIconButtonOriginY = 3.f;
 const CGFloat INWindowDocumentVersionsButtonOriginY = 2.f;

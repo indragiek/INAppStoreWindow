@@ -16,7 +16,7 @@
 @interface INWindowButton : NSButton
 
 /**
- A group identifier the receiver was initialized with.
+ The group identifier the receiver was initialized with.
  */
 @property (nonatomic, copy, readonly) NSString *groupIdentifier;
 
@@ -47,19 +47,22 @@
 
 /**
  @param size Designated size of the button. System size is 14x16 and you are considered to use it.
- @param groupIdentifier ID of the group which will apply rollover effect to it's members. You may pass `nil`.
+ @param groupIdentifier ID of the group which will apply rollover effect to its members.
+ You may pass \c nil.
  @see initWithSize:groupIdentifier:
  */
 + (instancetype)windowButtonWithSize:(NSSize)size groupIdentifier:(NSString *)groupIdentifier;
 
 /**
  @abstract Designated initializer.
- @discussion Initializes receiver with the given size and includes it to the group with the given identifier.
+ @discussion Initializes the receiver with the given size and includes it in the group with the
+ given identifier.
  Groups are used to apply rollover effect to all buttons that are inside the same group.
- E.g. close, minimize and zoom buttons should be inside the same group since they all get rollover effect
- when mouse pointer points to one of these buttons.
+ For example, close, minimize and zoom buttons should be inside the same group since they all get a
+ rollover effect when the mouse pointer hovers over one of these buttons.
  @param size Designated size of the button. System size is 14x16 and you are considered to use it.
- @param groupIdentifier ID of the group which will apply rollover effect to it's members. You may pass `nil`.
+ @param groupIdentifier ID of the group which will apply rollover effect to its members.
+ You may pass \c nil.
  */
 - (instancetype)initWithSize:(NSSize)size groupIdentifier:(NSString *)groupIdentifier;
 
