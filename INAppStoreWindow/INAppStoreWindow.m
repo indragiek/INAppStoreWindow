@@ -8,6 +8,7 @@
 //
 
 #import "INAppStoreWindow.h"
+#import "INWindowButton.h"
 
 #import <objc/runtime.h>
 

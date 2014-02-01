@@ -8,7 +8,6 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "INWindowButton.h"
 
 #if __has_feature(objc_arc)
 #define INAppStoreWindowCopy nonatomic, strong
