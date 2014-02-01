@@ -11,9 +11,6 @@
 
 #import <objc/runtime.h>
 
-
-#define IN_RUNNING_LION (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_6)
-
 #if __MAC_OS_X_VERSION_MAX_ALLOWED < 1070
 enum { NSWindowDocumentVersionsButton = 6, NSWindowFullScreenButton = 7 };
 enum { NSFullScreenWindowMask = 1 << 14 };
@@ -26,7 +23,10 @@ extern NSString * const NSWindowWillEnterVersionBrowserNotification;
 extern NSString * const NSWindowDidEnterVersionBrowserNotification;
 extern NSString * const NSWindowWillExitVersionBrowserNotification;
 extern NSString * const NSWindowDidExitVersionBrowserNotification;
+#define NSAppKitVersionNumber10_7 1138
 #endif
+
+#define IN_RUNNING_LION (floor(NSAppKitVersionNumber) >= NSAppKitVersionNumber10_7)
 
 /** -----------------------------------------
  - There are 2 sets of colors, one for an active (key) state and one for an inactivate state
@@ -34,27 +34,6 @@ extern NSString * const NSWindowDidExitVersionBrowserNotification;
  - These colors are meant to mimic the color of the default titlebar (taken from OS X 10.6), but are subject
  to change at any time
  ----------------------------------------- **/
-
-#define IN_COLOR_MAIN_START [NSColor colorWithDeviceWhite:0.659 alpha:1.0]
-#define IN_COLOR_MAIN_END [NSColor colorWithDeviceWhite:0.812 alpha:1.0]
-#define IN_COLOR_MAIN_BOTTOM [NSColor colorWithDeviceWhite:0.318 alpha:1.0]
-
-#define IN_COLOR_NOTMAIN_START [NSColor colorWithDeviceWhite:0.851 alpha:1.0]
-#define IN_COLOR_NOTMAIN_END [NSColor colorWithDeviceWhite:0.929 alpha:1.0]
-#define IN_COLOR_NOTMAIN_BOTTOM [NSColor colorWithDeviceWhite:0.600 alpha:1.0]
-
-#define IN_COLOR_MAIN_TITLE_TEXT [NSColor colorWithDeviceWhite:56.0/255.0 alpha:1.0]
-#define IN_COLOR_NOTMAIN_TITLE_TEXT [NSColor colorWithDeviceWhite:56.0/255.0 alpha:0.5]
-
-/** Lion */
-
-#define IN_COLOR_MAIN_START_L [NSColor colorWithDeviceWhite:0.66 alpha:1.0]
-#define IN_COLOR_MAIN_END_L [NSColor colorWithDeviceWhite:0.9 alpha:1.0]
-#define IN_COLOR_MAIN_BOTTOM_L [NSColor colorWithDeviceWhite:0.408 alpha:1.0]
-
-#define IN_COLOR_NOTMAIN_START_L [NSColor colorWithDeviceWhite:0.878 alpha:1.0]
-#define IN_COLOR_NOTMAIN_END_L [NSColor colorWithDeviceWhite:0.976 alpha:1.0]
-#define IN_COLOR_NOTMAIN_BOTTOM_L [NSColor colorWithDeviceWhite:0.655 alpha:1.0]
 
 /** Values chosen to match the defaults in OS X 10.9, which may change in future versions **/
 const CGFloat INWindowDocumentIconButtonOriginY = 3.f;
@@ -243,13 +222,8 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 		NSColor *startColor = drawsAsMainWindow ? window.titleBarStartColor : window.inactiveTitleBarStartColor;
 		NSColor *endColor = drawsAsMainWindow ? window.titleBarEndColor : window.inactiveTitleBarEndColor;
 
-		if (IN_RUNNING_LION) {
-			startColor = startColor ?: (drawsAsMainWindow ? IN_COLOR_MAIN_START_L : IN_COLOR_NOTMAIN_START_L);
-			endColor = endColor ?: (drawsAsMainWindow ? IN_COLOR_MAIN_END_L : IN_COLOR_NOTMAIN_END_L);
-		} else {
-			startColor = startColor ?: (drawsAsMainWindow ? IN_COLOR_MAIN_START : IN_COLOR_NOTMAIN_START);
-			endColor = endColor ?: (drawsAsMainWindow ? IN_COLOR_MAIN_END : IN_COLOR_NOTMAIN_END);
-		}
+		startColor = startColor ? startColor : [INAppStoreWindow defaultTitleBarStartColor:drawsAsMainWindow];
+		endColor = endColor ? endColor : [INAppStoreWindow defaultTitleBarEndColor:drawsAsMainWindow];
 
 		CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
 		CGGradientRef gradient = INCreateGradientWithColors(startColor, endColor);
@@ -289,11 +263,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 
 	NSColor *bottomColor = drawsAsMainWindow ? window.baselineSeparatorColor : window.inactiveBaselineSeparatorColor;
 
-	if (IN_RUNNING_LION) {
-		bottomColor = bottomColor ? bottomColor : drawsAsMainWindow ? IN_COLOR_MAIN_BOTTOM_L : IN_COLOR_NOTMAIN_BOTTOM_L;
-	} else {
-		bottomColor = bottomColor ? bottomColor : drawsAsMainWindow ? IN_COLOR_MAIN_BOTTOM : IN_COLOR_NOTMAIN_BOTTOM;
-	}
+	bottomColor = bottomColor ? bottomColor : [INAppStoreWindow defaultBaselineSeparatorColor:drawsAsMainWindow];
 
 	[bottomColor set];
 	NSRectFill(separatorFrame);
@@ -372,7 +342,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 	}
 
 	NSColor *titleTextColor = drawsAsMainWindow ? window.titleTextColor : window.inactiveTitleTextColor;
-	titleTextColor = titleTextColor ? titleTextColor : drawsAsMainWindow ? IN_COLOR_MAIN_TITLE_TEXT : IN_COLOR_NOTMAIN_TITLE_TEXT;
+	titleTextColor = titleTextColor ? titleTextColor : [INAppStoreWindow defaultTitleTextColor:drawsAsMainWindow];
 
 	NSFont *titleFont = window.titleFont ?: [NSFont titleBarFontOfSize:[NSFont systemFontSizeForControlSize:NSRegularControlSize]];
 
@@ -1232,6 +1202,35 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 			[(NSControl *) childView setEnabled:isMainWindowAndActive];
 		}
 	}
+}
+
++ (NSColor *)defaultTitleBarStartColor:(BOOL)drawsAsMainWindow
+{
+	if (IN_RUNNING_LION)
+		return drawsAsMainWindow ? [NSColor colorWithDeviceWhite:0.66 alpha:1.0] : [NSColor colorWithDeviceWhite:0.878 alpha:1.0];
+	else
+		return drawsAsMainWindow ? [NSColor colorWithDeviceWhite:0.659 alpha:1.0] : [NSColor colorWithDeviceWhite:0.851 alpha:1.0];
+}
+
++ (NSColor *)defaultTitleBarEndColor:(BOOL)drawsAsMainWindow
+{
+	if (IN_RUNNING_LION)
+		return drawsAsMainWindow ? [NSColor colorWithDeviceWhite:0.9 alpha:1.0] : [NSColor colorWithDeviceWhite:0.976 alpha:1.0];
+	else
+		return drawsAsMainWindow ? [NSColor colorWithDeviceWhite:0.812 alpha:1.0] : [NSColor colorWithDeviceWhite:0.929 alpha:1.0];
+}
+
++ (NSColor *)defaultBaselineSeparatorColor:(BOOL)drawsAsMainWindow
+{
+	if (IN_RUNNING_LION)
+		return drawsAsMainWindow ? [NSColor colorWithDeviceWhite:0.408 alpha:1.0] : [NSColor colorWithDeviceWhite:0.655 alpha:1.0];
+	else
+		return drawsAsMainWindow ? [NSColor colorWithDeviceWhite:0.318 alpha:1.0] : [NSColor colorWithDeviceWhite:0.600 alpha:1.0];
+}
+
++ (NSColor *)defaultTitleTextColor:(BOOL)drawsAsMainWindow
+{
+	return drawsAsMainWindow ? [NSColor colorWithDeviceWhite:56.0/255.0 alpha:1.0] : [NSColor colorWithDeviceWhite:56.0/255.0 alpha:0.5];
 }
 
 @end

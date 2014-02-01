@@ -147,4 +147,25 @@
 typedef void (^INAppStoreWindowTitleBarDrawingBlock)(BOOL drawsAsMainWindow,
 		CGRect drawingRect, CGPathRef clippingPath);
 @property (INAppStoreWindowCopy) INAppStoreWindowTitleBarDrawingBlock titleBarDrawingBlock;
+
+/*!
+ * Default system color of the starting (top) color of a window's title bar gradient.
+ */
++ (NSColor *)defaultTitleBarStartColor:(BOOL)drawsAsMainWindow;
+
+/*!
+ * Default system color of the ending (bottom) color of a window's title bar gradient.
+ */
++ (NSColor *)defaultTitleBarEndColor:(BOOL)drawsAsMainWindow;
+
+/*!
+ * Default system color of the separator line between a window's title bar and content area.
+ */
++ (NSColor *)defaultBaselineSeparatorColor:(BOOL)drawsAsMainWindow;
+
+/*!
+ * Default system color of a window's title text.
+ */
++ (NSColor *)defaultTitleTextColor:(BOOL)drawsAsMainWindow;
+
 @end
