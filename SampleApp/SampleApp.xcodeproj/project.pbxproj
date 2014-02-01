@@ -196,7 +196,7 @@
 				03970EF61315CE4400F15C7E /* Products */,
 			);
 			sourceTree = "<group>";
-			usesTabs = 0;
+			usesTabs = 1;
 		};
 		03970EF61315CE4400F15C7E /* Products */ = {
 			isa = PBXGroup;
