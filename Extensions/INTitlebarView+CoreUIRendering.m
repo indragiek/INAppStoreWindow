@@ -23,6 +23,12 @@ static _CUIDraw CUIDraw = 0;
 
 @end
 
+@interface INTitlebarView ()
+
+- (void)drawWindowBackgroundGradient:(NSRect)drawingRect showsBaselineSeparator:(BOOL)showsBaselineSeparator clippingPath:(CGPathRef)clippingPath;
+
+@end
+
 #endif // !defined(INAPPSTOREWINDOW_NO_COREUI) || !INAPPSTOREWINDOW_NO_COREUI
 
 @implementation INTitlebarView (CoreUIRendering)
