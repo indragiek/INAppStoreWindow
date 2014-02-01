@@ -107,8 +107,8 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
 
 @interface INWindowButton ()
 @property (nonatomic, copy) NSString *groupIdentifier;
-@property (nonatomic, strong, readonly) INWindowButtonGroup *group;
-@property (nonatomic, strong) NSTrackingArea *mouseTrackingArea;
+@property (nonatomic, INAppStoreWindowStrong, readonly) INWindowButtonGroup *group;
+@property (nonatomic, INAppStoreWindowStrong) NSTrackingArea *mouseTrackingArea;
 
 @end
 
@@ -148,7 +148,7 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
 	[_rolloverImage release];
 	[_groupIdentifier release];
 	[super dealloc];
-	#endif
+#endif
 }
 
 #pragma mark - Group
