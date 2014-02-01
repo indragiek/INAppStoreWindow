@@ -26,8 +26,6 @@ extern NSString * const NSWindowDidExitVersionBrowserNotification;
 #define NSAppKitVersionNumber10_7 1138
 #endif
 
-#define IN_RUNNING_LION (floor(NSAppKitVersionNumber) >= NSAppKitVersionNumber10_7)
-
 /** Values chosen to match the defaults in OS X 10.9, which may change in future versions **/
 const CGFloat INWindowDocumentIconButtonOriginY = 3.f;
 const CGFloat INWindowDocumentVersionsButtonOriginY = 2.f;
@@ -35,6 +33,10 @@ const CGFloat INWindowDocumentVersionsDividerOriginY = 2.f;
 
 /** Corner clipping radius **/
 const CGFloat INCornerClipRadius = 4.0;
+
+NS_INLINE bool INRunningLion() {
+	return floor(NSAppKitVersionNumber) >= NSAppKitVersionNumber10_7;
+}
 
 NS_INLINE CGFloat INMidHeight(NSRect aRect) {
 	return (aRect.size.height * (CGFloat) 0.5);
@@ -223,7 +225,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 		CGContextDrawLinearGradient(context, gradient, CGPointMake(NSMidX(drawingRect), NSMinY(drawingRect)), CGPointMake(NSMidX(drawingRect), NSMaxY(drawingRect)), 0);
 		CGGradientRelease(gradient);
 
-		if (IN_RUNNING_LION && drawsAsMainWindow) {
+		if (INRunningLion() && drawsAsMainWindow) {
 			CGRect noiseRect = NSRectToCGRect(NSInsetRect(drawingRect, 1.0, 1.0));
 
 			if (![window showsBaselineSeparator]) {
@@ -261,7 +263,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 	[bottomColor set];
 	NSRectFill(separatorFrame);
 
-	if (IN_RUNNING_LION) {
+	if (INRunningLion()) {
 		separatorFrame.origin.y += separatorFrame.size.height;
 		separatorFrame.size.height = 1.0;
 		[[NSColor colorWithDeviceWhite:1.0 alpha:0.12] setFill];
@@ -889,7 +891,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 
 	[nc addObserver:self selector:@selector(_updateTitlebarView) name:NSApplicationDidBecomeActiveNotification object:nil];
 	[nc addObserver:self selector:@selector(_updateTitlebarView) name:NSApplicationDidResignActiveNotification object:nil];
-	if (IN_RUNNING_LION) {
+	if (INRunningLion()) {
 		[nc addObserver:self selector:@selector(windowDidExitFullScreen:) name:NSWindowDidExitFullScreenNotification object:self];
 		[nc addObserver:self selector:@selector(windowWillEnterFullScreen:) name:NSWindowWillEnterFullScreenNotification object:self];
 		[nc addObserver:self selector:@selector(windowWillExitFullScreen:) name:NSWindowWillExitFullScreenNotification object:self];
@@ -990,7 +992,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 	}
 
 	// Set the frame of the FullScreen button in Lion if available
-	if (IN_RUNNING_LION) {
+	if (INRunningLion()) {
 		NSButton *fullScreen = [self _fullScreenButtonToLayout];
 		if (fullScreen) {
 			NSRect fullScreenFrame = [fullScreen frame];
@@ -1198,7 +1200,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 
 + (NSColor *)defaultTitleBarStartColor:(BOOL)drawsAsMainWindow
 {
-	if (IN_RUNNING_LION)
+	if (INRunningLion())
 		return drawsAsMainWindow ? [NSColor colorWithDeviceWhite:0.66 alpha:1.0] : [NSColor colorWithDeviceWhite:0.878 alpha:1.0];
 	else
 		return drawsAsMainWindow ? [NSColor colorWithDeviceWhite:0.659 alpha:1.0] : [NSColor colorWithDeviceWhite:0.851 alpha:1.0];
@@ -1206,7 +1208,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 
 + (NSColor *)defaultTitleBarEndColor:(BOOL)drawsAsMainWindow
 {
-	if (IN_RUNNING_LION)
+	if (INRunningLion())
 		return drawsAsMainWindow ? [NSColor colorWithDeviceWhite:0.9 alpha:1.0] : [NSColor colorWithDeviceWhite:0.976 alpha:1.0];
 	else
 		return drawsAsMainWindow ? [NSColor colorWithDeviceWhite:0.812 alpha:1.0] : [NSColor colorWithDeviceWhite:0.929 alpha:1.0];
@@ -1214,7 +1216,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 
 + (NSColor *)defaultBaselineSeparatorColor:(BOOL)drawsAsMainWindow
 {
-	if (IN_RUNNING_LION)
+	if (INRunningLion())
 		return drawsAsMainWindow ? [NSColor colorWithDeviceWhite:0.408 alpha:1.0] : [NSColor colorWithDeviceWhite:0.655 alpha:1.0];
 	else
 		return drawsAsMainWindow ? [NSColor colorWithDeviceWhite:0.318 alpha:1.0] : [NSColor colorWithDeviceWhite:0.600 alpha:1.0];
