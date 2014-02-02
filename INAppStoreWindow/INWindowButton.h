@@ -10,11 +10,9 @@
 #import <Cocoa/Cocoa.h>
 
 #if __has_feature(objc_arc)
-#define INAppStoreWindowStrongOrCopy strong
 #define INAppStoreWindowStrong strong
 #define INAppStoreWindowBridge __bridge
 #else
-#define INAppStoreWindowStrongOrCopy copy
 #define INAppStoreWindowStrong retain
 #define INAppStoreWindowBridge
 #endif

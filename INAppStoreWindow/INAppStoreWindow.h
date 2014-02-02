@@ -10,11 +10,9 @@
 #import <Cocoa/Cocoa.h>
 
 #if __has_feature(objc_arc)
-#define INAppStoreWindowStrongOrCopy strong
 #define INAppStoreWindowStrong strong
 #define INAppStoreWindowBridge __bridge
 #else
-#define INAppStoreWindowStrongOrCopy copy
 #define INAppStoreWindowStrong retain
 #define INAppStoreWindowBridge
 #endif
@@ -239,7 +237,7 @@ typedef void (^INAppStoreWindowTitleBarDrawingBlock)(BOOL drawsAsMainWindow,
 /**
  Block to override the drawing of the window title bar with a custom implementation.
  */
-@property (nonatomic, INAppStoreWindowStrongOrCopy) INAppStoreWindowTitleBarDrawingBlock titleBarDrawingBlock;
+@property (nonatomic, copy) INAppStoreWindowTitleBarDrawingBlock titleBarDrawingBlock;
 
 /*!
  Default system color of the starting (top) color of a window's title bar gradient.
