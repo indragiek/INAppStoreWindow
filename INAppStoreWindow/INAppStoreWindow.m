@@ -622,10 +622,18 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 
 - (void)setTitleBarHeight:(CGFloat)newTitleBarHeight
 {
+	[self setTitleBarHeight:newTitleBarHeight adjustWindowFrame:YES];
+}
+
+- (void)setTitleBarHeight:(CGFloat)newTitleBarHeight adjustWindowFrame:(BOOL)adjustWindowFrame
+{
 	if (_titleBarHeight != newTitleBarHeight) {
 		NSRect windowFrame = self.frame;
-		windowFrame.origin.y -= newTitleBarHeight - _titleBarHeight;
-		windowFrame.size.height += newTitleBarHeight - _titleBarHeight;
+		if (adjustWindowFrame)
+		{
+			windowFrame.origin.y -= newTitleBarHeight - _titleBarHeight;
+			windowFrame.size.height += newTitleBarHeight - _titleBarHeight;
+		}
 
 		_cachedTitleBarHeight = newTitleBarHeight;
 		_titleBarHeight = _cachedTitleBarHeight;

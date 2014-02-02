@@ -275,4 +275,13 @@ typedef void (^INAppStoreWindowTitleBarDrawingBlock)(BOOL drawsAsMainWindow,
  */
 + (NSColor *)defaultTitleTextColor:(BOOL)drawsAsMainWindow;
 
+/**
+ Sets the height of the title bar. By default, this is set to the standard title bar height.
+
+ @param adjustWindowFrame Whether to adjust the window frame in response to the change in
+ the title bar height. By default, the window frame is adjusted when the title bar height
+ is changed.
+ */
+- (void)setTitleBarHeight:(CGFloat)titleBarHeight adjustWindowFrame:(BOOL)adjustWindowFrame;
+
 @end
