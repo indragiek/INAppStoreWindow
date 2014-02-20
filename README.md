@@ -10,7 +10,6 @@ The MAS application has since transitioned away from this design, but `INAppStor
 **Features of INAppStoreWindow:**
 
 * No private API usage and Mac App Store friendly.
-* Shipping in production in [many top-notch Mac apps](https://github.com/indragiek/INAppStoreWindow/wiki)
 * Fully customizable title bar view -- add subviews (toolbars, buttons, etc.) and block based drawing for custom backgrounds
 * Adjustable title bar height
 * Customization of the traffic light/fullscreen buttons for all button states.
