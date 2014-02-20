@@ -18,6 +18,10 @@ The MAS application has since transitioned away from this design, but `INAppStor
 * Works on OS X versions 10.6-10.9
 * Compatible with full screen mode in OS X 10.7+
 
+
+#### [All of these great apps are using INAppStoreWindow in production!](https://github.com/indragiek/INAppStoreWindow/wiki)
+
+
 ## Usage
 
 ### Basic Configuration
