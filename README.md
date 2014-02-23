@@ -5,7 +5,7 @@
 
 The MAS application has since transitioned away from this design, but `INAppStoreWindow` is still being actively developed to provide extensive additional customization options for `NSWindow` title bars.
 
-![INAppStoreWindow](https://raw.github.com/indragiek/INAppStoreWindow/master/screenshot.png)
+![INAppStoreWindow](https://raw.github.com/indragiek/INAppStoreWindow/master/images/screenshot.png)
 
 **Features of INAppStoreWindow:**
 
@@ -101,7 +101,7 @@ You can enable title drawing by setting `showsTitle` property to `YES`. For NSDo
 
 A lot of time and effort has gone into making the custom titlebar in INAppStoreWindow function just right, it would be a shame to have to re-implement all this work just to draw your own custom title bar. So INAppStoreWindow has a `titleBarDrawingBlock` property that can be set to a block containing your own drawing code!
 
-[![](http://dribbble.s3.amazonaws.com/users/7253/screenshots/541256/notepad.png)](http://dribbble.com/shots/541256-Notepad-App-Mockup)
+[![Custom Window](https://raw.github.com/indragiek/INAppStoreWindow/master/images/custom-window.png)](http://dribbble.com/shots/541256-Notepad-App-Mockup)
 
 ```obj-c
 [self.window setTitleBarDrawingBlock:^(BOOL drawsAsMainWindow, CGRect drawingRect, CGPathRef clippingPath){
@@ -142,7 +142,7 @@ When CoreUI rendering is not available, INAppStoreWindow will emulate the render
 
 ## Authors
 
-INAppStoreWindow is maintained by [Indragie Karunaratne](http://indragie.com) and [David Keegan](http://inscopeapps.com). Special thanks to [everyone else](https://github.com/indragiek/INAppStoreWindow/contributors) who contributed various fixes and improvements to the code.
+INAppStoreWindow is maintained by [Indragie Karunaratne](http://indragie.com), who could not have done it without [**many awesome contributors**](https://github.com/indragiek/INAppStoreWindow/contributors).
 
 ## Licensing
 
