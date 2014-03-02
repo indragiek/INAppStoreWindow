@@ -82,7 +82,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 	CGFloat locations[2] = {0.0f, 1.0f,};
 	CGColorRef cgStartingColor = INCreateCGColorFromNSColor(startingColor);
 	CGColorRef cgEndingColor = INCreateCGColorFromNSColor(endingColor);
-	CFArrayRef colors = (INAppStoreWindowBridge CFArrayRef) [NSArray arrayWithObjects:(INAppStoreWindowBridge id) cgStartingColor, (INAppStoreWindowBridge id) cgEndingColor, nil];
+	CFArrayRef colors = (__bridge CFArrayRef) [NSArray arrayWithObjects:(__bridge id) cgStartingColor, (__bridge id) cgEndingColor, nil];
 	CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
 	CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, colors, locations);
 	CGColorSpaceRelease(colorSpace);
@@ -331,9 +331,6 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 		titleTextShadow.shadowBlurRadius = 0.0;
 		titleTextShadow.shadowOffset = NSMakeSize(0, -1);
 		titleTextShadow.shadowColor = [NSColor colorWithDeviceWhite:1.0 alpha:0.5];
-#if !__has_feature(objc_arc)
-		[titleTextShadow autorelease];
-#endif
 	}
 
 	NSColor *titleTextColor = drawsAsMainWindow ? window.titleTextColor : window.inactiveTitleTextColor;
@@ -517,16 +514,6 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 - (void)dealloc
 {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-//	  [self setDelegate:nil];
-#if !__has_feature(objc_arc)
-//	  [_delegateProxy release];
-	[_titleBarView release];
-	[_closeButton release];
-	[_minimizeButton release];
-	[_zoomButton release];
-	[_fullScreenButton release];
-	[super dealloc];
-	#endif
 }
 
 #pragma mark -
@@ -603,12 +590,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 {
 	if ((_titleBarView != newTitleBarView) && newTitleBarView) {
 		[_titleBarView removeFromSuperview];
-#if __has_feature(objc_arc)
 		_titleBarView = newTitleBarView;
-#else
-		[_titleBarView release];
-		_titleBarView = [newTitleBarView retain];
-		#endif
 		[_titleBarView setFrame:[_titleBarContainer bounds]];
 		[_titleBarView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
 		[_titleBarContainer addSubview:_titleBarView];
@@ -1106,13 +1088,8 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 	NSView *firstSubview = [[[self themeFrameView] subviews] objectAtIndex:0];
 	[self _recalculateFrameForTitleBarContainer];
 	[[self themeFrameView] addSubview:container positioned:NSWindowBelow relativeTo:firstSubview];
-#if __has_feature(objc_arc)
 	_titleBarContainer = container;
 	self.titleBarView = [[INTitlebarView alloc] initWithFrame:NSZeroRect];
-#else
-	_titleBarContainer = [container autorelease];
-	self.titleBarView = [[[INTitlebarView alloc] initWithFrame:NSZeroRect] autorelease];
-	#endif
 }
 
 - (void)_hideTitleBarView:(BOOL)hidden
