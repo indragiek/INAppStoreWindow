@@ -35,6 +35,18 @@ const CGFloat INWindowDocumentVersionsDividerOriginY = 2.f;
 /** Corner clipping radius **/
 const CGFloat INCornerClipRadius = 4.0;
 
+/** Padding used between traffic light/fullscreen buttons and title **/
+const NSSize INTitleMargins = {8.0, 2.0};
+
+/** Title offsets used when the document button is showing */
+const NSSize INTitleDocumentButtonOffset = {4.0, 1.0};
+
+/** X offset used when the document status label is showing */
+const CGFloat INTitleDocumentStatusXOffset = -20.0;
+
+/** X offset used when the versions button is showing */
+const CGFloat INTitleVersionsButtonXOffset = -1.0;
+
 NS_INLINE bool INRunningLion() {
 	return floor(NSAppKitVersionNumber) >= NSAppKitVersionNumber10_7;
 }
@@ -156,6 +168,10 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 - (CGFloat)_defaultTrafficLightLeftMargin;
 - (CGFloat)_defaultTrafficLightSeparation;
 - (NSRect)_contentViewFrame;
+- (NSButton *)_closeButtonToLayout;
+- (NSButton *)_minimizeButtonToLayout;
+- (NSButton *)_zoomButtonToLayout;
+- (NSButton *)_fullScreenButtonToLayout;
 @end
 
 @implementation INTitlebarView
@@ -324,7 +340,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 - (void)getTitleFrame:(out NSRect *)frame textAttributes:(out NSDictionary **)attributes forWindow:(in INAppStoreWindow *)window
 {
 	BOOL drawsAsMainWindow = ([window isMainWindow] && [[NSApplication sharedApplication] isActive]);
-
+	
 	NSShadow *titleTextShadow = drawsAsMainWindow ? window.titleTextShadow : window.inactiveTitleTextShadow;
 	if (titleTextShadow == nil) {
 		titleTextShadow = [[NSShadow alloc] init];
@@ -332,42 +348,63 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 		titleTextShadow.shadowOffset = NSMakeSize(0, -1);
 		titleTextShadow.shadowColor = [NSColor colorWithDeviceWhite:1.0 alpha:0.5];
 	}
-
+	
 	NSColor *titleTextColor = drawsAsMainWindow ? window.titleTextColor : window.inactiveTitleTextColor;
 	titleTextColor = titleTextColor ? titleTextColor : [INAppStoreWindow defaultTitleTextColor:drawsAsMainWindow];
-
+	
 	NSFont *titleFont = window.titleFont ?: [NSFont titleBarFontOfSize:[NSFont systemFontSizeForControlSize:NSRegularControlSize]];
-
-	NSDictionary *titleTextStyles = [NSDictionary dictionaryWithObjectsAndKeys:
-			titleFont, NSFontAttributeName,
-			titleTextColor, NSForegroundColorAttributeName,
-			titleTextShadow, NSShadowAttributeName,
-			nil];
+	
+	NSMutableParagraphStyle *titleParagraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+	[titleParagraphStyle setLineBreakMode:NSLineBreakByTruncatingTail];
+	NSDictionary *titleTextStyles = @{NSFontAttributeName : titleFont,
+									  NSForegroundColorAttributeName : titleTextColor,
+									  NSShadowAttributeName : titleTextShadow,
+									  NSParagraphStyleAttributeName : titleParagraphStyle};
 	NSSize titleSize = [window.title sizeWithAttributes:titleTextStyles];
 	NSRect titleTextRect;
 	titleTextRect.size = titleSize;
-
+	
 	NSButton *docIconButton = [window standardWindowButton:NSWindowDocumentIconButton];
 	NSButton *versionsButton = [window standardWindowButton:NSWindowDocumentVersionsButton];
+	NSButton *closeButton = [window _closeButtonToLayout];
+	NSButton *minimizeButton = [window _minimizeButtonToLayout];
+	NSButton *zoomButton = [window _zoomButtonToLayout];
 	if (docIconButton) {
 		NSRect docIconButtonFrame = [self convertRect:docIconButton.frame fromView:docIconButton.superview];
-		titleTextRect.origin.x = NSMaxX(docIconButtonFrame) + 4.0;
-		titleTextRect.origin.y = NSMidY(docIconButtonFrame) - titleSize.height / 2 + 1;
-	}
-	else if (versionsButton) {
+		titleTextRect.origin.x = NSMaxX(docIconButtonFrame) + INTitleDocumentButtonOffset.width;
+		titleTextRect.origin.y = NSMidY(docIconButtonFrame) - titleSize.height / 2 + INTitleDocumentButtonOffset.height;
+	} else if (versionsButton) {
 		NSRect versionsButtonFrame = [self convertRect:versionsButton.frame fromView:versionsButton.superview];
-		titleTextRect.origin.x = NSMinX(versionsButtonFrame) - titleSize.width - 1;
-
+		titleTextRect.origin.x = NSMinX(versionsButtonFrame) - titleSize.width + INTitleVersionsButtonXOffset;
+		
 		NSDocument *document = (NSDocument *) [(NSWindowController *) self.window.windowController document];
 		if ([document hasUnautosavedChanges] || [document isDocumentEdited]) {
-			titleTextRect.origin.x -= 20;
+			titleTextRect.origin.x += INTitleDocumentStatusXOffset;
 		}
-	}
-	else {
+	} else if (closeButton || minimizeButton || zoomButton) {
+		CGFloat closeMaxX = NSMaxX(closeButton.frame);
+		CGFloat minimizeMaxX = NSMaxX(minimizeButton.frame);
+		CGFloat zoomMaxX = NSMaxX(zoomButton.frame);
+		
+		CGFloat adjustedX = MAX(MAX(closeMaxX, minimizeMaxX), zoomMaxX) + INTitleMargins.width;
+		CGFloat proposedX = NSMidX(self.bounds) - titleSize.width / 2;
+		
+		titleTextRect.origin.x = (proposedX < adjustedX) ? adjustedX : proposedX;
+	} else {
 		titleTextRect.origin.x = NSMidX(self.bounds) - titleSize.width / 2;
 	}
-	titleTextRect.origin.y = NSMaxY(self.bounds) - titleSize.height - 2.0;
-
+	
+	NSButton *fullScreenButton = [window _fullScreenButtonToLayout];
+	if (fullScreenButton) {
+		CGFloat fullScreenX = fullScreenButton.frame.origin.x;
+		CGFloat maxTitleX = NSMaxX(titleTextRect);
+		if ((fullScreenX - INTitleMargins.width) < NSMaxX(titleTextRect)) {
+			titleTextRect.size.width = titleTextRect.size.width - (maxTitleX - fullScreenX) - INTitleMargins.width;
+		}
+	}
+	
+	titleTextRect.origin.y = NSMaxY(self.bounds) - titleSize.height - INTitleMargins.height;
+	
 	if (frame) {
 		*frame = titleTextRect;
 	}
