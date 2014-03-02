@@ -23,6 +23,10 @@ The MAS application has since transitioned away from this design, but `INAppStor
 
 ## Usage
 
+### ARC
+
+`INAppStoreWindow` now requires ARC to compile. If your project does not use ARC, compile `INAppStoreWindow.m` with the `-fobjc-arc` linker flag.
+
 ### Basic Configuration
 
 Using `INAppStoreWindow` is as easy as changing the class of the `NSWindow` in Interface Builder, or simply by creating an instance of `INAppStoreWindow` in code (if you're doing it programmatically). I've included a sample project demonstrating how to use `INAppStoreWindow`.
