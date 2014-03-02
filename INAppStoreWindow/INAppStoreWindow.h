@@ -9,14 +9,6 @@
 
 #import <Cocoa/Cocoa.h>
 
-#if __has_feature(objc_arc)
-#define INAppStoreWindowStrong strong
-#define INAppStoreWindowBridge __bridge
-#else
-#define INAppStoreWindowStrong retain
-#define INAppStoreWindowBridge
-#endif
-
 @class INWindowButton;
 
 /**
@@ -53,7 +45,7 @@ typedef void (^INAppStoreWindowTitleBarDrawingBlock)(BOOL drawsAsMainWindow,
  This view can also be set if you want to use a different style title bar from the default one
  (textured, etc.).
  */
-@property (nonatomic, INAppStoreWindowStrong) NSView *titleBarView;
+@property (nonatomic, strong) NSView *titleBarView;
 
 /**
  Whether the fullscreen button is vertically centered.
@@ -137,44 +129,44 @@ typedef void (^INAppStoreWindowTitleBarDrawingBlock)(BOOL drawsAsMainWindow,
  The button to use as the window's close button.
  If this property is nil, the default button will be used.
  */
-@property (nonatomic, INAppStoreWindowStrong) INWindowButton *closeButton;
+@property (nonatomic, strong) INWindowButton *closeButton;
 
 /**
  The button to use as the window's minimize button.
  If this property is nil, the default button will be used.
  */
-@property (nonatomic, INAppStoreWindowStrong) INWindowButton *minimizeButton;
+@property (nonatomic, strong) INWindowButton *minimizeButton;
 
 /**
  The button to use as the window's zoom button.
  If this property is nil, the default button will be used.
  */
-@property (nonatomic, INAppStoreWindowStrong) INWindowButton *zoomButton;
+@property (nonatomic, strong) INWindowButton *zoomButton;
 
 /**
  The button to use as the window's fullscreen button.
  If this property is nil, the default button will be used.
  */
-@property (nonatomic, INAppStoreWindowStrong) INWindowButton *fullScreenButton;
+@property (nonatomic, strong) INWindowButton *fullScreenButton;
 
 /**
  The font used to draw the window's title text.
  */
-@property (nonatomic, INAppStoreWindowStrong) NSFont *titleFont;
+@property (nonatomic, strong) NSFont *titleFont;
 
 /**
  Starting (top) color of the window's title bar gradient, when the window is main.
 
  If this property is \c nil, the default color will be used.
  */
-@property (nonatomic, INAppStoreWindowStrong) NSColor *titleBarStartColor;
+@property (nonatomic, strong) NSColor *titleBarStartColor;
 
 /**
  Ending (bottom) color of the window's title bar gradient, when the window is main.
 
  If this property is \c nil, the default color will be used.
  */
-@property (nonatomic, INAppStoreWindowStrong) NSColor *titleBarEndColor;
+@property (nonatomic, strong) NSColor *titleBarEndColor;
 
 /**
  Color of the separator line between a window's title bar and content area,
@@ -182,35 +174,35 @@ typedef void (^INAppStoreWindowTitleBarDrawingBlock)(BOOL drawsAsMainWindow,
 
  If this property is \c nil, the default color will be used.
  */
-@property (nonatomic, INAppStoreWindowStrong) NSColor *baselineSeparatorColor;
+@property (nonatomic, strong) NSColor *baselineSeparatorColor;
 
 /**
  Color of the window's title text, when the window is main.
 
  If this property is \c nil, the default color will be used.
  */
-@property (nonatomic, INAppStoreWindowStrong) NSColor *titleTextColor;
+@property (nonatomic, strong) NSColor *titleTextColor;
 
 /**
  Drop shadow under the window's title text, when the window is main.
 
  If this property is \c nil, the default shadow will be used.
  */
-@property (nonatomic, INAppStoreWindowStrong) NSShadow *titleTextShadow;
+@property (nonatomic, strong) NSShadow *titleTextShadow;
 
 /**
  Starting (top) color of the window's title bar gradient, when the window is not main.
 
  If this property is \c nil, the default color will be used.
  */
-@property (nonatomic, INAppStoreWindowStrong) NSColor *inactiveTitleBarStartColor;
+@property (nonatomic, strong) NSColor *inactiveTitleBarStartColor;
 
 /**
  Ending (bottom) color of the window's title bar gradient, when the window is not main.
 
  If this property is \c nil, the default color will be used.
  */
-@property (nonatomic, INAppStoreWindowStrong) NSColor *inactiveTitleBarEndColor;
+@property (nonatomic, strong) NSColor *inactiveTitleBarEndColor;
 
 /**
  Color of the separator line between a window's title bar and content area,
@@ -218,21 +210,21 @@ typedef void (^INAppStoreWindowTitleBarDrawingBlock)(BOOL drawsAsMainWindow,
 
  If this property is \c nil, the default color will be used.
  */
-@property (nonatomic, INAppStoreWindowStrong) NSColor *inactiveBaselineSeparatorColor;
+@property (nonatomic, strong) NSColor *inactiveBaselineSeparatorColor;
 
 /**
  Color of the window's title text, when the window is not main.
 
  If this property is \c nil, the default color will be used.
  */
-@property (nonatomic, INAppStoreWindowStrong) NSColor *inactiveTitleTextColor;
+@property (nonatomic, strong) NSColor *inactiveTitleTextColor;
 
 /**
  Drop shadow under the window's title text, when the window is not main.
 
  If this property is \c nil, the default shadow will be used.
  */
-@property (nonatomic, INAppStoreWindowStrong) NSShadow *inactiveTitleTextShadow;
+@property (nonatomic, strong) NSShadow *inactiveTitleTextShadow;
 
 /**
  Block to override the drawing of the window title bar with a custom implementation.
