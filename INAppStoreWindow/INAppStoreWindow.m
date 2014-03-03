@@ -265,8 +265,9 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 		}
 	}
 
-    if(window.showsBaselineSeparator)
+    if(window.showsBaselineSeparator){
         [self drawBaselineSeparator:self.baselineSeparatorFrame];
+    }
 }
 
 - (void)drawBaselineSeparator:(NSRect)separatorFrame
