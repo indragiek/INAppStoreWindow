@@ -144,6 +144,10 @@ If you use this category you **must** define the preprocessor symbol `INAPPSTORE
 
 When CoreUI rendering is not available, INAppStoreWindow will emulate the rendering of the system title bar as closely as possible.
 
+## MonoMac/Xamarin
+
+You can now use `INAppStoreWindow` in your MonoMac/Xamarin apps thanks to [`AppStoreWindow`](https://github.com/ashokgelal/AppStoreWindow), a C# port of `INAppStoreWindow` by [@ashokgelal](https://github.com/ashokgelal). 
+
 ## Authors
 
 INAppStoreWindow is maintained by [Indragie Karunaratne](http://indragie.com), who could not have done it without [**many awesome contributors**](https://github.com/indragiek/INAppStoreWindow/contributors).
