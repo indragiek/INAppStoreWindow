@@ -265,7 +265,9 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 		}
 	}
 
-	[self drawBaselineSeparator:self.baselineSeparatorFrame];
+    if (window.showsBaselineSeparator) {
+        [self drawBaselineSeparator:self.baselineSeparatorFrame];
+    }
 }
 
 - (void)drawBaselineSeparator:(NSRect)separatorFrame
@@ -464,6 +466,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 				origin.x += deltaX;
 				origin.y += deltaY;
 				[window setFrameOrigin:origin];
+                NSLog(@"%f - %f", origin.x, origin.y);
 				deltaX = 0.0;
 				deltaY = 0.0;
 			}
