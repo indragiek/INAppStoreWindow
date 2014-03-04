@@ -245,7 +245,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 		if (INRunningLion() && drawsAsMainWindow) {
 			CGRect noiseRect = NSRectToCGRect(NSInsetRect(drawingRect, 1.0, 1.0));
 
-			if (![window showsBaselineSeparator]) {
+			if (!showsBaselineSeparator) {
 				CGFloat separatorHeight = self.baselineSeparatorFrame.size.height;
 				noiseRect.origin.y -= separatorHeight;
 				noiseRect.size.height += separatorHeight;
@@ -265,7 +265,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 		}
 	}
 	
-	if (window.showsBaselineSeparator) {
+	if (showsBaselineSeparator) {
 		[self drawBaselineSeparator:self.baselineSeparatorFrame];
 	}
 }
