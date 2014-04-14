@@ -141,7 +141,8 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 	if ([self.secondaryDelegate respondsToSelector:_cmd]) {
 		return [self.secondaryDelegate window:window willPositionSheet:sheet usingRect:rect];
 	}
-	rect.origin.y = NSHeight(window.frame) - window.titleBarHeight;
+    CGFloat toolbarHeight = [[window toolbar] isVisible] ? 40.0 : 0.0;
+	rect.origin.y = NSHeight(window.frame) - window.titleBarHeight - toolbarHeight;
 	return rect;
 }
 
@@ -375,14 +376,6 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 		NSRect docIconButtonFrame = [self convertRect:docIconButton.frame fromView:docIconButton.superview];
 		titleTextRect.origin.x = NSMaxX(docIconButtonFrame) + INTitleDocumentButtonOffset.width;
 		titleTextRect.origin.y = NSMidY(docIconButtonFrame) - titleSize.height / 2 + INTitleDocumentButtonOffset.height;
-	} else if (versionsButton) {
-		NSRect versionsButtonFrame = [self convertRect:versionsButton.frame fromView:versionsButton.superview];
-		titleTextRect.origin.x = NSMinX(versionsButtonFrame) - titleSize.width + INTitleVersionsButtonXOffset;
-		
-		NSDocument *document = (NSDocument *) [(NSWindowController *) self.window.windowController document];
-		if ([document hasUnautosavedChanges] || [document isDocumentEdited]) {
-			titleTextRect.origin.x += INTitleDocumentStatusXOffset;
-		}
 	} else if (closeButton || minimizeButton || zoomButton) {
 		CGFloat closeMaxX = NSMaxX(closeButton.frame);
 		CGFloat minimizeMaxX = NSMaxX(minimizeButton.frame);
@@ -396,6 +389,23 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 		titleTextRect.origin.x = NSMidX(self.bounds) - titleSize.width / 2;
 	}
 	
+    if (versionsButton) {
+        NSRect versionsButtonFrame = [self convertRect:versionsButton.frame fromView:versionsButton.superview];
+        NSView *themeFrame = [window.contentView superview];
+        for (NSView *tmp in [themeFrame subviews]) {
+            if ([tmp isKindOfClass:[NSTextField class]]) {
+                if ([[(NSTextField *)tmp stringValue] isEqualToString:@"—"]) {
+                    NSTextField *txt = ((NSTextField *)tmp);
+                    versionsButtonFrame = [self convertRect:[txt frame] fromView:[txt superview]];
+                    break;
+                }
+            }
+        }
+        if (NSMaxX(titleTextRect) > NSMinX(versionsButtonFrame)) {
+            titleTextRect.size.width = NSMinX(versionsButtonFrame) - NSMinX(titleTextRect) - INTitleMargins.width;
+        }
+    }
+    
 	NSButton *fullScreenButton = [window _fullScreenButtonToLayout];
 	if (fullScreenButton) {
 		CGFloat fullScreenX = fullScreenButton.frame.origin.x;
