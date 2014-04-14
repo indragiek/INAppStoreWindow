@@ -1199,7 +1199,11 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 	NSRect windowFrame = self.frame;
 	NSRect contentRect = [self contentRectForFrameRect:windowFrame];
 
-	contentRect.size.height = NSHeight(windowFrame) - _titleBarHeight - [self toolbarHeight];
+    if (([self styleMask] & NSFullScreenWindowMask) == NSFullScreenWindowMask) {
+        contentRect.size.height = NSHeight(windowFrame);
+    } else {
+        contentRect.size.height = NSHeight(windowFrame) - [self titleBarHeight] - [self toolbarHeight];
+    }
 	contentRect.origin = NSZeroPoint;
 
 	return contentRect;
