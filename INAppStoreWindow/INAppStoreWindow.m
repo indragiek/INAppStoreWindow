@@ -631,6 +631,11 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 	[self _layoutTrafficLightsAndContent];
 }
 
+- (IBAction) toggleToolbarShown:(id)sender {
+	[super toggleToolbarShown:sender];
+	[self _repositionContentView];
+}
+
 #pragma mark -
 #pragma mark Accessors
 
