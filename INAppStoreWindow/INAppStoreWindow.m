@@ -141,38 +141,8 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 	if ([self.secondaryDelegate respondsToSelector:_cmd]) {
 		return [self.secondaryDelegate window:window willPositionSheet:sheet usingRect:rect];
 	}
-	rect.origin.y = NSHeight(window.frame) - window.titleBarHeight - [self toolbarHeightForWindow:window];
+	rect.origin.y = NSHeight(window.frame) - window.titleBarHeight - [window toolbarHeight];
 	return rect;
-}
-
-- (CGFloat) toolbarHeightForWindow:(INAppStoreWindow *)window {
-    CGFloat toolbarHeight = 0.0;
-    NSToolbar *toolbar = [window toolbar];
-    if ([toolbar isVisible]) {
-        if ([toolbar displayMode] == NSToolbarDisplayModeIconOnly) {
-            if ([toolbar sizeMode] == NSToolbarSizeModeSmall) {
-                toolbarHeight = 31.0;
-            } else {
-                toolbarHeight = 39.0;
-            }
-        } else if ([toolbar displayMode] == NSToolbarDisplayModeLabelOnly) {
-            if ([toolbar sizeMode] == NSToolbarSizeModeSmall) {
-                toolbarHeight = 19.0;
-            } else {
-                toolbarHeight = 20.0;
-            }
-        } else {
-            if ([toolbar sizeMode] == NSToolbarSizeModeSmall) {
-                toolbarHeight = 46.0;
-            } else {
-                toolbarHeight = 55.0;
-            }
-        }
-        if ([toolbar showsBaselineSeparator]) {
-            toolbarHeight += 1.0;
-        }
-    }
-    return  toolbarHeight;
 }
 
 - (BOOL)isKindOfClass:(Class)aClass
@@ -933,6 +903,36 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 		[super setFrame:frameRect display:displayFlag animate:animateFlag];
 }
 
+- (CGFloat) toolbarHeight {
+    CGFloat toolbarHeight = 0.0;
+    NSToolbar *toolbar = [self toolbar];
+    if ([toolbar isVisible]) {
+        if ([toolbar displayMode] == NSToolbarDisplayModeIconOnly) {
+            if ([toolbar sizeMode] == NSToolbarSizeModeSmall) {
+                toolbarHeight = 31.0;
+            } else {
+                toolbarHeight = 39.0;
+            }
+        } else if ([toolbar displayMode] == NSToolbarDisplayModeLabelOnly) {
+            if ([toolbar sizeMode] == NSToolbarSizeModeSmall) {
+                toolbarHeight = 19.0;
+            } else {
+                toolbarHeight = 20.0;
+            }
+        } else {
+            if ([toolbar sizeMode] == NSToolbarSizeModeSmall) {
+                toolbarHeight = 46.0;
+            } else {
+                toolbarHeight = 55.0;
+            }
+        }
+        if ([toolbar showsBaselineSeparator]) {
+            toolbarHeight += 1.0;
+        }
+    }
+    return  toolbarHeight;
+}
+
 #pragma mark -
 #pragma mark Private
 
@@ -1194,7 +1194,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 	NSRect windowFrame = self.frame;
 	NSRect contentRect = [self contentRectForFrameRect:windowFrame];
 
-	contentRect.size.height = NSHeight(windowFrame) - _titleBarHeight;
+	contentRect.size.height = NSHeight(windowFrame) - _titleBarHeight - [self toolbarHeight];
 	contentRect.origin = NSZeroPoint;
 
 	return contentRect;
