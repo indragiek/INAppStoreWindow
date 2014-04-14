@@ -141,9 +141,38 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 	if ([self.secondaryDelegate respondsToSelector:_cmd]) {
 		return [self.secondaryDelegate window:window willPositionSheet:sheet usingRect:rect];
 	}
-    CGFloat toolbarHeight = [[window toolbar] isVisible] ? 40.0 : 0.0;
-	rect.origin.y = NSHeight(window.frame) - window.titleBarHeight - toolbarHeight;
+	rect.origin.y = NSHeight(window.frame) - window.titleBarHeight - [self toolbarHeightForWindow:window];
 	return rect;
+}
+
+- (CGFloat) toolbarHeightForWindow:(INAppStoreWindow *)window {
+    CGFloat toolbarHeight = 0.0;
+    NSToolbar *toolbar = [window toolbar];
+    if ([toolbar isVisible]) {
+        if ([toolbar displayMode] == NSToolbarDisplayModeIconOnly) {
+            if ([toolbar sizeMode] == NSToolbarSizeModeSmall) {
+                toolbarHeight = 31.0;
+            } else {
+                toolbarHeight = 39.0;
+            }
+        } else if ([toolbar displayMode] == NSToolbarDisplayModeLabelOnly) {
+            if ([toolbar sizeMode] == NSToolbarSizeModeSmall) {
+                toolbarHeight = 19.0;
+            } else {
+                toolbarHeight = 20.0;
+            }
+        } else {
+            if ([toolbar sizeMode] == NSToolbarSizeModeSmall) {
+                toolbarHeight = 46.0;
+            } else {
+                toolbarHeight = 55.0;
+            }
+        }
+        if ([toolbar showsBaselineSeparator]) {
+            toolbarHeight += 1.0;
+        }
+    }
+    return  toolbarHeight;
 }
 
 - (BOOL)isKindOfClass:(Class)aClass
