@@ -919,11 +919,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
                 toolbarHeight = 39.0;
             }
         } else if ([toolbar displayMode] == NSToolbarDisplayModeLabelOnly) {
-            if ([toolbar sizeMode] == NSToolbarSizeModeSmall) {
-                toolbarHeight = 19.0;
-            } else {
-                toolbarHeight = 20.0;
-            }
+            toolbarHeight = 19.0;
         } else {
             if ([toolbar sizeMode] == NSToolbarSizeModeSmall) {
                 toolbarHeight = 46.0;
