@@ -77,32 +77,6 @@ NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
 	INApplyClippingPath(path, [[NSGraphicsContext currentContext] graphicsPort]);
 }
 
-CF_RETURNS_RETAINED
-NS_INLINE CGColorRef INCreateCGColorFromNSColor(NSColor *color) {
-	NSColor *rgbColor = [color colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
-	CGFloat components[4];
-	[rgbColor getComponents:components];
-
-	CGColorSpaceRef theColorSpace = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGB);
-	CGColorRef theColor = CGColorCreate(theColorSpace, components);
-	CGColorSpaceRelease(theColorSpace);
-	return theColor;
-}
-
-CF_RETURNS_RETAINED
-NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSColor *endingColor) {
-	CGFloat locations[2] = {0.0f, 1.0f,};
-	CGColorRef cgStartingColor = INCreateCGColorFromNSColor(startingColor);
-	CGColorRef cgEndingColor = INCreateCGColorFromNSColor(endingColor);
-	CFArrayRef colors = (__bridge CFArrayRef) [NSArray arrayWithObjects:(__bridge id) cgStartingColor, (__bridge id) cgEndingColor, nil];
-	CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-	CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, colors, locations);
-	CGColorSpaceRelease(colorSpace);
-	CGColorRelease(cgStartingColor);
-	CGColorRelease(cgEndingColor);
-	return gradient;
-}
-
 @interface INAppStoreWindowDelegateProxy : NSProxy <NSWindowDelegate>
 @property (nonatomic, assign) id <NSWindowDelegate> secondaryDelegate;
 @end
@@ -231,16 +205,10 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 		// Not textured, we have to fake the background gradient and noise pattern
 		BOOL drawsAsMainWindow = ([window isMainWindow] && [[NSApplication sharedApplication] isActive]);
 
-		NSColor *startColor = drawsAsMainWindow ? window.titleBarStartColor : window.inactiveTitleBarStartColor;
-		NSColor *endColor = drawsAsMainWindow ? window.titleBarEndColor : window.inactiveTitleBarEndColor;
+		NSGradient *gradient = drawsAsMainWindow ? window.titleBarGradient : window.inactiveTitleBarGradient;
+		gradient = gradient ? gradient : [INAppStoreWindow defaultTitleBarGradient:drawsAsMainWindow];
 
-		startColor = startColor ? startColor : [INAppStoreWindow defaultTitleBarStartColor:drawsAsMainWindow];
-		endColor = endColor ? endColor : [INAppStoreWindow defaultTitleBarEndColor:drawsAsMainWindow];
-
-		CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
-		CGGradientRef gradient = INCreateGradientWithColors(startColor, endColor);
-		CGContextDrawLinearGradient(context, gradient, CGPointMake(NSMidX(drawingRect), NSMinY(drawingRect)), CGPointMake(NSMidX(drawingRect), NSMaxY(drawingRect)), 0);
-		CGGradientRelease(gradient);
+		[gradient drawInRect:drawingRect angle:self.isFlipped ? -90 : 90];
 
 		if (INRunningLion() && drawsAsMainWindow) {
 			CGRect noiseRect = NSRectToCGRect(NSInsetRect(drawingRect, 1.0, 1.0));
@@ -251,6 +219,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 				noiseRect.size.height += separatorHeight;
 			}
 
+            CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
 			CGContextSaveGState(context);
 
 			CGPathRef noiseClippingPath =
@@ -512,11 +481,9 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 @synthesize showsBaselineSeparator = _showsBaselineSeparator;
 @synthesize fullScreenButtonRightMargin = _fullScreenButtonRightMargin;
 @synthesize trafficLightButtonsLeftMargin = _trafficLightButtonsLeftMargin;
-@synthesize titleBarStartColor = _titleBarStartColor;
-@synthesize titleBarEndColor = _titleBarEndColor;
+@synthesize titleBarGradient = _titleBarGradient;
 @synthesize baselineSeparatorColor = _baselineSeparatorColor;
-@synthesize inactiveTitleBarStartColor = _inactiveTitleBarStartColor;
-@synthesize inactiveTitleBarEndColor = _inactiveTitleBarEndColor;
+@synthesize inactiveTitleBarGradient = _inactiveTitleBarGradient;
 @synthesize inactiveBaselineSeparatorColor = _inactiveBaselineSeparatorColor;
 @synthesize showsDocumentProxyIcon = _showsDocumentProxyIcon;
 
@@ -1223,20 +1190,33 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 	}
 }
 
-+ (NSColor *)defaultTitleBarStartColor:(BOOL)drawsAsMainWindow
++ (NSGradient *)defaultTitleBarGradient:(BOOL)drawsAsMainWindow
 {
-	if (INRunningLion())
-		return drawsAsMainWindow ? [NSColor colorWithDeviceWhite:0.66 alpha:1.0] : [NSColor colorWithDeviceWhite:0.878 alpha:1.0];
-	else
-		return drawsAsMainWindow ? [NSColor colorWithDeviceWhite:0.659 alpha:1.0] : [NSColor colorWithDeviceWhite:0.851 alpha:1.0];
-}
-
-+ (NSColor *)defaultTitleBarEndColor:(BOOL)drawsAsMainWindow
-{
-	if (INRunningLion())
-		return drawsAsMainWindow ? [NSColor colorWithDeviceWhite:0.9 alpha:1.0] : [NSColor colorWithDeviceWhite:0.976 alpha:1.0];
-	else
-		return drawsAsMainWindow ? [NSColor colorWithDeviceWhite:0.812 alpha:1.0] : [NSColor colorWithDeviceWhite:0.929 alpha:1.0];
+	if (INRunningLion()) {
+		// Lion, Mountain Lion, Mavericks: real, 100% accurate system colors
+		return drawsAsMainWindow
+			? [[NSGradient alloc] initWithColors:@[[NSColor colorWithDeviceWhite:180. / 0xff alpha:1],
+												   [NSColor colorWithDeviceWhite:195. / 0xff alpha:1],
+												   [NSColor colorWithDeviceWhite:210. / 0xff alpha:1],
+												   [NSColor colorWithDeviceWhite:235. / 0xff alpha:1]]
+									 atLocations:(const CGFloat[]){0.0, 0.25, 0.5, 1.0}
+									  colorSpace:[NSColorSpace deviceRGBColorSpace]]
+			: [[NSGradient alloc] initWithColors:@[[NSColor colorWithDeviceWhite:225. / 0xff alpha:1],
+												   [NSColor colorWithDeviceWhite:250. / 0xff alpha:1]]
+									 atLocations:(const CGFloat[]){0.0, 1.0}
+									  colorSpace:[NSColorSpace deviceRGBColorSpace]];
+	} else {
+		// Leopard, Snow Leopard: approximations
+		return drawsAsMainWindow
+			? [[NSGradient alloc] initWithColors:@[[NSColor colorWithDeviceWhite:0.659 alpha:1],
+												   [NSColor colorWithDeviceWhite:0.812 alpha:1]]
+									 atLocations:(const CGFloat[]){0.0, 1.0}
+									  colorSpace:[NSColorSpace deviceRGBColorSpace]]
+			: [[NSGradient alloc] initWithColors:@[[NSColor colorWithDeviceWhite:0.851 alpha:1],
+												   [NSColor colorWithDeviceWhite:0.929 alpha:1]]
+									 atLocations:(const CGFloat[]){0.0, 1.0}
+									  colorSpace:[NSColorSpace deviceRGBColorSpace]];
+	}
 }
 
 + (NSColor *)defaultBaselineSeparatorColor:(BOOL)drawsAsMainWindow
@@ -1250,6 +1230,84 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 + (NSColor *)defaultTitleTextColor:(BOOL)drawsAsMainWindow
 {
 	return drawsAsMainWindow ? [NSColor colorWithDeviceWhite:56.0/255.0 alpha:1.0] : [NSColor colorWithDeviceWhite:56.0/255.0 alpha:0.5];
+}
+
+#pragma mark Deprecated Methods
+
+- (NSColor *)titleBarStartColor
+{
+	NSColor *color = nil;
+	[self.titleBarGradient getColor:&color location:NULL atIndex:0];
+	return color;
+}
+
+- (NSColor *)titleBarEndColor
+{
+	NSColor *color = nil;
+	[self.titleBarGradient getColor:&color location:NULL atIndex:self.titleBarGradient.numberOfColorStops - 1];
+	return color;
+}
+
+- (NSColor *)inactiveTitleBarStartColor
+{
+	NSColor *color = nil;
+	[self.inactiveTitleBarGradient getColor:&color location:NULL atIndex:0];
+	return color;
+}
+
+- (NSColor *)inactiveTitleBarEndColor
+{
+	NSColor *color = nil;
+	[self.inactiveTitleBarGradient getColor:&color location:NULL atIndex:self.inactiveTitleBarGradient.numberOfColorStops - 1];
+	return color;
+}
+
+- (void)setTitleBarStartColor:(NSColor *)titleBarStartColor
+{
+	self.titleBarGradient = [[NSGradient alloc] initWithColorsAndLocations:
+							 titleBarStartColor, 0.0,
+							 self.titleBarEndColor ?: [INAppStoreWindow defaultTitleBarEndColor:YES], 1.0,
+							 nil];
+}
+
+- (void)setTitleBarEndColor:(NSColor *)titleBarEndColor
+{
+	self.titleBarGradient = [[NSGradient alloc] initWithColorsAndLocations:
+							 self.titleBarStartColor ?: [INAppStoreWindow defaultTitleBarStartColor:YES], 0.0,
+							 titleBarEndColor, 1.0,
+							 nil];
+}
+
+- (void)setInactiveTitleBarStartColor:(NSColor *)inactiveTitleBarStartColor
+{
+	self.inactiveTitleBarGradient = [[NSGradient alloc] initWithColorsAndLocations:
+									 inactiveTitleBarStartColor, 0.0,
+									 self.inactiveTitleBarEndColor ?: [INAppStoreWindow defaultTitleBarEndColor:NO], 1.0,
+									 nil];
+}
+
+- (void)setInactiveTitleBarEndColor:(NSColor *)inactiveTitleBarEndColor
+{
+	self.inactiveTitleBarGradient = [[NSGradient alloc] initWithColorsAndLocations:
+									 self.inactiveTitleBarStartColor ?: [INAppStoreWindow defaultTitleBarStartColor:NO], 0.0,
+									 inactiveTitleBarEndColor, 1.0,
+									 nil];
+}
+
++ (NSColor *)defaultTitleBarStartColor:(BOOL)drawsAsMainWindow
+{
+	NSGradient *gradient = [INAppStoreWindow defaultTitleBarGradient:drawsAsMainWindow];
+	NSColor *color = nil;
+	[gradient getColor:&color location:NULL atIndex:0];
+	return color;
+}
+
++ (NSColor *)defaultTitleBarEndColor:(BOOL)drawsAsMainWindow
+{
+	NSGradient *gradient = [INAppStoreWindow defaultTitleBarGradient:drawsAsMainWindow];
+	NSColor *color = nil;
+	[gradient getColor:&color location:NULL atIndex:gradient.numberOfColorStops - 1];
+	return color;
 }
 
 @end
