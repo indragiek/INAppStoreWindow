@@ -155,18 +155,11 @@ typedef void (^INAppStoreWindowTitleBarDrawingBlock)(BOOL drawsAsMainWindow,
 @property (nonatomic, strong) NSFont *titleFont;
 
 /**
- Starting (top) color of the window's title bar gradient, when the window is main.
-
- If this property is \c nil, the default color will be used.
+ Gradient used to draw the window's title bar, when the window is main.
+ 
+ If this property is \c nil, the system gradient will be used.
  */
-@property (nonatomic, strong) NSColor *titleBarStartColor;
-
-/**
- Ending (bottom) color of the window's title bar gradient, when the window is main.
-
- If this property is \c nil, the default color will be used.
- */
-@property (nonatomic, strong) NSColor *titleBarEndColor;
+@property (nonatomic, strong) NSGradient *titleBarGradient;
 
 /**
  Color of the separator line between a window's title bar and content area,
@@ -191,18 +184,11 @@ typedef void (^INAppStoreWindowTitleBarDrawingBlock)(BOOL drawsAsMainWindow,
 @property (nonatomic, strong) NSShadow *titleTextShadow;
 
 /**
- Starting (top) color of the window's title bar gradient, when the window is not main.
-
- If this property is \c nil, the default color will be used.
+ Gradient used to draw the window's title bar, when the window is not main.
+ 
+ If this property is \c nil, the system gradient will be used.
  */
-@property (nonatomic, strong) NSColor *inactiveTitleBarStartColor;
-
-/**
- Ending (bottom) color of the window's title bar gradient, when the window is not main.
-
- If this property is \c nil, the default color will be used.
- */
-@property (nonatomic, strong) NSColor *inactiveTitleBarEndColor;
+@property (nonatomic, strong) NSGradient *inactiveTitleBarGradient;
 
 /**
  Color of the separator line between a window's title bar and content area,
@@ -232,22 +218,14 @@ typedef void (^INAppStoreWindowTitleBarDrawingBlock)(BOOL drawsAsMainWindow,
 @property (nonatomic, copy) INAppStoreWindowTitleBarDrawingBlock titleBarDrawingBlock;
 
 /*!
- Default system color of the starting (top) color of a window's title bar gradient.
- @param drawsAsMainWindow \c YES to return the color used when the window is drawn in its main
+ Default system gradient used to draw a window's title bar.
+ @param drawsAsMainWindow \c YES to return the gradient used when the window is drawn in its main
  state, \c NO to return the color used when the window is inactive.
  
- @note This color may be an approximation and is subject to change at any time.
+ @note This gradient is identical to the one used by AppKit in OS X versions 10.7 through 10.9.
+ For OS X 10.6 it is currently an approximation.
  */
-+ (NSColor *)defaultTitleBarStartColor:(BOOL)drawsAsMainWindow;
-
-/*!
- Default system color of the ending (bottom) color of a window's title bar gradient.
- @param drawsAsMainWindow \c YES to return the color used when the window is drawn in its main
- state, \c NO to return the color used when the window is inactive.
- 
- @note This color may be an approximation and is subject to change at any time.
- */
-+ (NSColor *)defaultTitleBarEndColor:(BOOL)drawsAsMainWindow;
++ (NSGradient *)defaultTitleBarGradient:(BOOL)drawsAsMainWindow;
 
 /*!
  Default system color of the separator line between a window's title bar and content area.
