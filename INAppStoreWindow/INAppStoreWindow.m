@@ -264,7 +264,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 			CGContextRestoreGState(context);
 		}
 	}
-	
+
 	if (showsBaselineSeparator) {
 		[self drawBaselineSeparator:self.baselineSeparatorFrame];
 	}
@@ -342,7 +342,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 - (void)getTitleFrame:(out NSRect *)frame textAttributes:(out NSDictionary **)attributes forWindow:(in INAppStoreWindow *)window
 {
 	BOOL drawsAsMainWindow = ([window isMainWindow] && [[NSApplication sharedApplication] isActive]);
-	
+
 	NSShadow *titleTextShadow = drawsAsMainWindow ? window.titleTextShadow : window.inactiveTitleTextShadow;
 	if (titleTextShadow == nil) {
 		titleTextShadow = [[NSShadow alloc] init];
@@ -350,12 +350,12 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 		titleTextShadow.shadowOffset = NSMakeSize(0, -1);
 		titleTextShadow.shadowColor = [NSColor colorWithDeviceWhite:1.0 alpha:0.5];
 	}
-	
+
 	NSColor *titleTextColor = drawsAsMainWindow ? window.titleTextColor : window.inactiveTitleTextColor;
 	titleTextColor = titleTextColor ? titleTextColor : [INAppStoreWindow defaultTitleTextColor:drawsAsMainWindow];
-	
+
 	NSFont *titleFont = window.titleFont ?: [NSFont titleBarFontOfSize:[NSFont systemFontSizeForControlSize:NSRegularControlSize]];
-	
+
 	NSMutableParagraphStyle *titleParagraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
 	[titleParagraphStyle setLineBreakMode:NSLineBreakByTruncatingTail];
 	NSDictionary *titleTextStyles = @{NSFontAttributeName : titleFont,
@@ -365,7 +365,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 	NSSize titleSize = [window.title sizeWithAttributes:titleTextStyles];
 	NSRect titleTextRect;
 	titleTextRect.size = titleSize;
-	
+
 	NSButton *docIconButton = [window standardWindowButton:NSWindowDocumentIconButton];
 	NSButton *versionsButton = [window standardWindowButton:NSWindowDocumentVersionsButton];
 	NSButton *closeButton = [window _closeButtonToLayout];
@@ -378,7 +378,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 	} else if (versionsButton) {
 		NSRect versionsButtonFrame = [self convertRect:versionsButton.frame fromView:versionsButton.superview];
 		titleTextRect.origin.x = NSMinX(versionsButtonFrame) - titleSize.width + INTitleVersionsButtonXOffset;
-		
+
 		NSDocument *document = (NSDocument *) [(NSWindowController *) self.window.windowController document];
 		if ([document hasUnautosavedChanges] || [document isDocumentEdited]) {
 			titleTextRect.origin.x += INTitleDocumentStatusXOffset;
@@ -387,15 +387,15 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 		CGFloat closeMaxX = NSMaxX(closeButton.frame);
 		CGFloat minimizeMaxX = NSMaxX(minimizeButton.frame);
 		CGFloat zoomMaxX = NSMaxX(zoomButton.frame);
-		
+
 		CGFloat adjustedX = MAX(MAX(closeMaxX, minimizeMaxX), zoomMaxX) + INTitleMargins.width;
 		CGFloat proposedX = NSMidX(self.bounds) - titleSize.width / 2;
-		
+
 		titleTextRect.origin.x = (proposedX < adjustedX) ? adjustedX : proposedX;
 	} else {
 		titleTextRect.origin.x = NSMidX(self.bounds) - titleSize.width / 2;
 	}
-	
+
 	NSButton *fullScreenButton = [window _fullScreenButtonToLayout];
 	if (fullScreenButton) {
 		CGFloat fullScreenX = fullScreenButton.frame.origin.x;
@@ -404,9 +404,9 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 			titleTextRect.size.width = titleTextRect.size.width - (maxTitleX - fullScreenX) - INTitleMargins.width;
 		}
 	}
-	
+
 	titleTextRect.origin.y = NSMaxY(self.bounds) - titleSize.height - INTitleMargins.height;
-	
+
 	if (frame) {
 		*frame = titleTextRect;
 	}
