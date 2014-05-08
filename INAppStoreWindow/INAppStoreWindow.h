@@ -279,6 +279,6 @@ typedef void (^INAppStoreWindowTitleBarDrawingBlock)(BOOL drawsAsMainWindow,
 /**
  Returns the height of the window's NSToolbar. If the window has no NSToolbar, or if it's not visible, returns 0.
  */
-- (CGFloat) toolbarHeight;
+- (CGFloat)toolbarHeight;
 
 @end

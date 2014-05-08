@@ -631,7 +631,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 	[self _layoutTrafficLightsAndContent];
 }
 
-- (IBAction) toggleToolbarShown:(id)sender {
+- (IBAction)toggleToolbarShown:(id)sender {
 	[super toggleToolbarShown:sender];
 	[self _repositionContentView];
 }
@@ -908,7 +908,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 		[super setFrame:frameRect display:displayFlag animate:animateFlag];
 }
 
-- (CGFloat) toolbarHeight {
+- (CGFloat)toolbarHeight {
     CGFloat toolbarHeight = 0.0;
     NSToolbar *toolbar = [self toolbar];
     if ([toolbar isVisible]) {
