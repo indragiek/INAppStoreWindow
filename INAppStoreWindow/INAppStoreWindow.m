@@ -393,7 +393,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
         NSView *themeFrame = [window.contentView superview];
         for (NSView *tmp in [themeFrame subviews]) {
             if ([tmp isKindOfClass:[NSTextField class]]) {
-                if ([[(NSTextField *)tmp stringValue] isEqualToString:@"—"]) {
+                if ([[(NSTextField *)tmp stringValue] isEqualToString:@"\u2014"]) {
                     NSTextField *txt = ((NSTextField *)tmp);
                     versionsButtonFrame = [self convertRect:[txt frame] fromView:[txt superview]];
                     break;
