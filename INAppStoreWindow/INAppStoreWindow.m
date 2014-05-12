@@ -141,7 +141,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 	if ([self.secondaryDelegate respondsToSelector:_cmd]) {
 		return [self.secondaryDelegate window:window willPositionSheet:sheet usingRect:rect];
 	}
-	rect.origin.y = NSHeight(window.frame) - window.titleBarHeight;
+	rect.origin.y = NSHeight(window.frame) - window.titleBarHeight - [window toolbarHeight];
 	return rect;
 }
 
@@ -375,14 +375,6 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 		NSRect docIconButtonFrame = [self convertRect:docIconButton.frame fromView:docIconButton.superview];
 		titleTextRect.origin.x = NSMaxX(docIconButtonFrame) + INTitleDocumentButtonOffset.width;
 		titleTextRect.origin.y = NSMidY(docIconButtonFrame) - titleSize.height / 2 + INTitleDocumentButtonOffset.height;
-	} else if (versionsButton) {
-		NSRect versionsButtonFrame = [self convertRect:versionsButton.frame fromView:versionsButton.superview];
-		titleTextRect.origin.x = NSMinX(versionsButtonFrame) - titleSize.width + INTitleVersionsButtonXOffset;
-		
-		NSDocument *document = (NSDocument *) [(NSWindowController *) self.window.windowController document];
-		if ([document hasUnautosavedChanges] || [document isDocumentEdited]) {
-			titleTextRect.origin.x += INTitleDocumentStatusXOffset;
-		}
 	} else if (closeButton || minimizeButton || zoomButton) {
 		CGFloat closeMaxX = NSMaxX(closeButton.frame);
 		CGFloat minimizeMaxX = NSMaxX(minimizeButton.frame);
@@ -396,6 +388,23 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 		titleTextRect.origin.x = NSMidX(self.bounds) - titleSize.width / 2;
 	}
 	
+    if (versionsButton) {
+        NSRect versionsButtonFrame = [self convertRect:versionsButton.frame fromView:versionsButton.superview];
+        NSView *themeFrame = [window.contentView superview];
+        for (NSView *tmp in [themeFrame subviews]) {
+            if ([tmp isKindOfClass:[NSTextField class]]) {
+                if ([[(NSTextField *)tmp stringValue] isEqualToString:@"\u2014"]) {
+                    NSTextField *txt = ((NSTextField *)tmp);
+                    versionsButtonFrame = [self convertRect:[txt frame] fromView:[txt superview]];
+                    break;
+                }
+            }
+        }
+        if (NSMaxX(titleTextRect) > NSMinX(versionsButtonFrame)) {
+            titleTextRect.size.width = NSMinX(versionsButtonFrame) - NSMinX(titleTextRect) - INTitleMargins.width;
+        }
+    }
+    
 	NSButton *fullScreenButton = [window _fullScreenButtonToLayout];
 	if (fullScreenButton) {
 		CGFloat fullScreenX = fullScreenButton.frame.origin.x;
@@ -620,6 +629,11 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 {
 	[super setMinSize:size];
 	[self _layoutTrafficLightsAndContent];
+}
+
+- (IBAction)toggleToolbarShown:(id)sender {
+	[super toggleToolbarShown:sender];
+	[self _repositionContentView];
 }
 
 #pragma mark -
@@ -894,6 +908,32 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 		[super setFrame:frameRect display:displayFlag animate:animateFlag];
 }
 
+- (CGFloat)toolbarHeight {
+    CGFloat toolbarHeight = 0.0;
+    NSToolbar *toolbar = [self toolbar];
+    if ([toolbar isVisible]) {
+        if ([toolbar displayMode] == NSToolbarDisplayModeIconOnly) {
+            if ([toolbar sizeMode] == NSToolbarSizeModeSmall) {
+                toolbarHeight = 31.0;
+            } else {
+                toolbarHeight = 39.0;
+            }
+        } else if ([toolbar displayMode] == NSToolbarDisplayModeLabelOnly) {
+            toolbarHeight = 19.0;
+        } else {
+            if ([toolbar sizeMode] == NSToolbarSizeModeSmall) {
+                toolbarHeight = 46.0;
+            } else {
+                toolbarHeight = 55.0;
+            }
+        }
+        if ([toolbar showsBaselineSeparator]) {
+            toolbarHeight += 1.0;
+        }
+    }
+    return  toolbarHeight;
+}
+
 #pragma mark -
 #pragma mark Private
 
@@ -1155,7 +1195,11 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 	NSRect windowFrame = self.frame;
 	NSRect contentRect = [self contentRectForFrameRect:windowFrame];
 
-	contentRect.size.height = NSHeight(windowFrame) - _titleBarHeight;
+    if (([self styleMask] & NSFullScreenWindowMask) == NSFullScreenWindowMask) {
+        contentRect.size.height = NSHeight(windowFrame);
+    } else {
+        contentRect.size.height = NSHeight(windowFrame) - [self titleBarHeight] - [self toolbarHeight];
+    }
 	contentRect.origin = NSZeroPoint;
 
 	return contentRect;
