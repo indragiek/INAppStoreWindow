@@ -31,7 +31,7 @@
  @param clippingPath Path to clip drawing according to window's rounded corners.
  */
 typedef void (^INAppStoreWindowTitleBarDrawingBlock)(BOOL drawsAsMainWindow,
-													 CGRect drawingRect, CGPathRef clippingPath);
+                                                     CGRect drawingRect, CGPathRef clippingPath);
 
 /**
  The height of the title bar. By default, this is set to the standard title bar height.
@@ -156,7 +156,7 @@ typedef void (^INAppStoreWindowTitleBarDrawingBlock)(BOOL drawsAsMainWindow,
 
 /**
  Gradient used to draw the window's title bar, when the window is main.
- 
+
  If this property is \c nil, the system gradient will be used.
  */
 @property (nonatomic, strong) NSGradient *titleBarGradient;
@@ -185,7 +185,7 @@ typedef void (^INAppStoreWindowTitleBarDrawingBlock)(BOOL drawsAsMainWindow,
 
 /**
  Gradient used to draw the window's title bar, when the window is not main.
- 
+
  If this property is \c nil, the system gradient will be used.
  */
 @property (nonatomic, strong) NSGradient *inactiveTitleBarGradient;
@@ -221,7 +221,7 @@ typedef void (^INAppStoreWindowTitleBarDrawingBlock)(BOOL drawsAsMainWindow,
  Default system gradient used to draw a window's title bar.
  @param drawsAsMainWindow \c YES to return the gradient used when the window is drawn in its main
  state, \c NO to return the color used when the window is inactive.
- 
+
  @note This gradient is identical to the one used by AppKit in OS X versions 10.7 through 10.9.
  For OS X 10.6 it is currently an approximation.
  */
@@ -231,7 +231,7 @@ typedef void (^INAppStoreWindowTitleBarDrawingBlock)(BOOL drawsAsMainWindow,
  Default system color of the separator line between a window's title bar and content area.
  @param drawsAsMainWindow \c YES to return the color used when the window is drawn in its main
  state, \c NO to return the color used when the window is inactive.
- 
+
  @note This color may be an approximation and is subject to change at any time.
  */
 + (NSColor *)defaultBaselineSeparatorColor:(BOOL)drawsAsMainWindow;
@@ -240,7 +240,7 @@ typedef void (^INAppStoreWindowTitleBarDrawingBlock)(BOOL drawsAsMainWindow,
  Default system color of a window's title text.
  @param drawsAsMainWindow \c YES to return the color used when the window is drawn in its main
  state, \c NO to return the color used when the window is inactive.
- 
+
  @note This color may be an approximation and is subject to change at any time.
  */
 + (NSColor *)defaultTitleTextColor:(BOOL)drawsAsMainWindow;
