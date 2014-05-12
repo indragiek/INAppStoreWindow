@@ -372,21 +372,21 @@ NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
 		titleTextRect.origin.x = NSMidX(self.bounds) - titleSize.width / 2;
 	}
 	
-    if (versionsButton) {
-        NSRect versionsButtonFrame = [self convertRect:versionsButton.frame fromView:versionsButton.superview];
-        NSView *themeFrame = [window.contentView superview];
-        for (NSView *tmp in [themeFrame subviews]) {
-            if ([tmp isKindOfClass:[NSTextField class]]) {
-                if ([[(NSTextField *)tmp stringValue] isEqualToString:@"\u2014"]) {
-                    NSTextField *txt = ((NSTextField *)tmp);
-                    versionsButtonFrame = [self convertRect:[txt frame] fromView:[txt superview]];
-                    break;
-                }
-            }
-        }
-        if (NSMaxX(titleTextRect) > NSMinX(versionsButtonFrame)) {
-            titleTextRect.size.width = NSMinX(versionsButtonFrame) - NSMinX(titleTextRect) - INTitleMargins.width;
-        }
+	if (versionsButton) {
+    	NSRect versionsButtonFrame = [self convertRect:versionsButton.frame fromView:versionsButton.superview];
+    	NSView *themeFrame = [window.contentView superview];
+    	for (NSView *tmp in [themeFrame subviews]) {
+    		if ([tmp isKindOfClass:[NSTextField class]]) {
+    			if ([[(NSTextField *)tmp stringValue] isEqualToString:@"\u2014"]) {
+    				NSTextField *txt = ((NSTextField *)tmp);
+    				versionsButtonFrame = [self convertRect:[txt frame] fromView:[txt superview]];
+    				break;
+    			}
+    		}
+    	}
+    	if (NSMaxX(titleTextRect) > NSMinX(versionsButtonFrame)) {
+    		titleTextRect.size.width = NSMinX(versionsButtonFrame) - NSMinX(titleTextRect) - INTitleMargins.width;
+    	}
     }
     
 	NSButton *fullScreenButton = [window _fullScreenButtonToLayout];
@@ -613,7 +613,8 @@ NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
 	[self _layoutTrafficLightsAndContent];
 }
 
-- (IBAction)toggleToolbarShown:(id)sender {
+- (IBAction)toggleToolbarShown:(id)sender
+{
 	[super toggleToolbarShown:sender];
 	[self _repositionContentView];
 }
@@ -890,30 +891,31 @@ NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
 		[super setFrame:frameRect display:displayFlag animate:animateFlag];
 }
 
-- (CGFloat)toolbarHeight {
-    CGFloat toolbarHeight = 0.0;
-    NSToolbar *toolbar = [self toolbar];
-    if ([toolbar isVisible]) {
-        if ([toolbar displayMode] == NSToolbarDisplayModeIconOnly) {
-            if ([toolbar sizeMode] == NSToolbarSizeModeSmall) {
-                toolbarHeight = 31.0;
-            } else {
-                toolbarHeight = 39.0;
-            }
-        } else if ([toolbar displayMode] == NSToolbarDisplayModeLabelOnly) {
-            toolbarHeight = 19.0;
-        } else {
-            if ([toolbar sizeMode] == NSToolbarSizeModeSmall) {
-                toolbarHeight = 46.0;
-            } else {
-                toolbarHeight = 55.0;
-            }
-        }
-        if ([toolbar showsBaselineSeparator]) {
-            toolbarHeight += 1.0;
-        }
-    }
-    return  toolbarHeight;
+- (CGFloat)toolbarHeight
+{
+	CGFloat toolbarHeight = 0.0;
+	NSToolbar *toolbar = [self toolbar];
+	if ([toolbar isVisible]) {
+		if ([toolbar displayMode] == NSToolbarDisplayModeIconOnly) {
+			if ([toolbar sizeMode] == NSToolbarSizeModeSmall) {
+				toolbarHeight = 31.0;
+			} else {
+				toolbarHeight = 39.0;
+			}
+		} else if ([toolbar displayMode] == NSToolbarDisplayModeLabelOnly) {
+			toolbarHeight = 19.0;
+		} else {
+			if ([toolbar sizeMode] == NSToolbarSizeModeSmall) {
+				toolbarHeight = 46.0;
+			} else {
+				toolbarHeight = 55.0;
+			}
+		}
+		if ([toolbar showsBaselineSeparator]) {
+			toolbarHeight += 1.0;
+		}
+	}
+	return  toolbarHeight;
 }
 
 #pragma mark -
@@ -1176,12 +1178,12 @@ NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
 {
 	NSRect windowFrame = self.frame;
 	NSRect contentRect = [self contentRectForFrameRect:windowFrame];
-
-    if (([self styleMask] & NSFullScreenWindowMask) == NSFullScreenWindowMask) {
-        contentRect.size.height = NSHeight(windowFrame);
-    } else {
-        contentRect.size.height = NSHeight(windowFrame) - [self titleBarHeight] - [self toolbarHeight];
-    }
+	
+	if (([self styleMask] & NSFullScreenWindowMask) == NSFullScreenWindowMask) {
+		contentRect.size.height = NSHeight(windowFrame);
+	} else {
+		contentRect.size.height = NSHeight(windowFrame) - [self titleBarHeight] - [self toolbarHeight];
+	}
 	contentRect.origin = NSZeroPoint;
 
 	return contentRect;
