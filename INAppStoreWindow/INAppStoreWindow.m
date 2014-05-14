@@ -224,7 +224,7 @@ NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
 
 		// Technically the noise should be drawn over the separator but we can't do that here
 		if (showsBaselineSeparator) {
-			[self drawBaselineSeparator:self.baselineSeparatorFrame];
+			[self drawBaselineSeparator:[self baselineSeparatorFrameForRect:drawingRect]];
 		}
 	} else {
 		// Not textured, we have to fake the background gradient and noise pattern
@@ -235,10 +235,10 @@ NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
 
 		[gradient drawInRect:drawingRect angle:self.isFlipped ? -90 : 90];
 
-		[self drawWindowBorderAccentLineInRect:self.accentLineFrame];
+		[self drawWindowBorderAccentLineInRect:[self accentLineFrameForRect:drawingRect]];
 
-		if (showsBaselineSeparator) {
-			[self drawBaselineSeparator:self.baselineSeparatorFrame];
+		if (window.toolbar ? window.toolbar.showsBaselineSeparator : window.showsBaselineSeparator) {
+			[self drawBaselineSeparator:[self baselineSeparatorFrameForRect:drawingRect]];
 		}
 
 		if (INRunningLion()) {
@@ -280,6 +280,9 @@ NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
 	}
 
 	NSRect drawingRect = [self bounds];
+	drawingRect.origin.y -= window.toolbarHeight;
+	drawingRect.size.height += window.toolbarHeight;
+
 	CGPathRef clippingPath = INCreateClippingPathWithRectAndRadius(drawingRect, INCornerClipRadius);
 
 	if (window.titleBarDrawingBlock) {
@@ -303,16 +306,14 @@ NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
 	}
 }
 
-- (NSRect)accentLineFrame
+- (NSRect)accentLineFrameForRect:(NSRect)rect
 {
-	const NSRect windowBounds = self.bounds;
-	return NSMakeRect(0, NSMaxY(windowBounds) - 1, NSWidth(windowBounds), 1);
+	return NSMakeRect(0, NSMaxY(rect) - 1, NSWidth(rect), 1);
 }
 
-- (NSRect)baselineSeparatorFrame
+- (NSRect)baselineSeparatorFrameForRect:(NSRect)rect
 {
-	const NSRect windowBounds = self.bounds;
-	return NSMakeRect(0, NSMinY(windowBounds), NSWidth(windowBounds), 1);
+	return NSMakeRect(0, NSMinY(rect), NSWidth(rect), 1);
 }
 
 - (void)getTitleFrame:(out NSRect *)frame textAttributes:(out NSDictionary **)attributes forWindow:(in INAppStoreWindow *)window
@@ -613,6 +614,12 @@ NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
 	[self _layoutTrafficLightsAndContent];
 }
 
+- (void)setToolbar:(NSToolbar *)toolbar
+{
+	[self setTitleBarHeight:[self _minimumTitlebarHeight]];
+	[super setToolbar:toolbar];
+}
+
 - (IBAction)toggleToolbarShown:(id)sender
 {
 	[super toggleToolbarShown:sender];
@@ -646,6 +653,10 @@ NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
 - (void)setTitleBarHeight:(CGFloat)newTitleBarHeight adjustWindowFrame:(BOOL)adjustWindowFrame
 {
 	if (_titleBarHeight != newTitleBarHeight) {
+		if (self.toolbar) {
+			newTitleBarHeight = [self _minimumTitlebarHeight];
+		}
+
 		NSRect windowFrame = self.frame;
 		if (adjustWindowFrame)
 		{
@@ -896,24 +907,10 @@ NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
 	CGFloat toolbarHeight = 0.0;
 	NSToolbar *toolbar = [self toolbar];
 	if ([toolbar isVisible]) {
-		if ([toolbar displayMode] == NSToolbarDisplayModeIconOnly) {
-			if ([toolbar sizeMode] == NSToolbarSizeModeSmall) {
-				toolbarHeight = 31.0;
-			} else {
-				toolbarHeight = 39.0;
-			}
-		} else if ([toolbar displayMode] == NSToolbarDisplayModeLabelOnly) {
-			toolbarHeight = 19.0;
-		} else {
-			if ([toolbar sizeMode] == NSToolbarSizeModeSmall) {
-				toolbarHeight = 46.0;
-			} else {
-				toolbarHeight = 55.0;
-			}
-		}
-		if ([toolbar showsBaselineSeparator]) {
-			toolbarHeight += 1.0;
-		}
+		NSRect expectedContentFrame = [NSWindow contentRectForFrameRect:self.frame
+                                                              styleMask:self.styleMask];
+		toolbarHeight = NSHeight(expectedContentFrame) -
+						NSHeight([self contentRectForFrameRect:self.frame]);
 	}
 	return  toolbarHeight;
 }

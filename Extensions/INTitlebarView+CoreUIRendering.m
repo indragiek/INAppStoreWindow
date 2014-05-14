@@ -54,8 +54,8 @@ static _CUIDraw CUIDraw = 0;
     NSDictionary *options = @{@"widget": @"kCUIWidgetWindowFrame",
                               @"state": (window.isMainWindow ? @"normal" : @"inactive"),
                               @"windowtype": @"regularwin",
-                              @"kCUIWindowFrameUnifiedTitleBarHeightKey": @(window.titleBarHeight),
-                              @"kCUIWindowFrameDrawTitleSeparatorKey": @(window.showsBaselineSeparator),
+                              @"kCUIWindowFrameUnifiedTitleBarHeightKey": @(window.titleBarHeight + window.toolbarHeight),
+                              @"kCUIWindowFrameDrawTitleSeparatorKey": @(window.toolbar ? window.toolbar.showsBaselineSeparator : window.showsBaselineSeparator),
                               @"is.flipped": @(self.isFlipped)};
     CUIDraw([NSWindow coreUIRenderer], drawingRect, [[NSGraphicsContext currentContext] graphicsPort], (__bridge CFDictionaryRef) options, nil);
 }
