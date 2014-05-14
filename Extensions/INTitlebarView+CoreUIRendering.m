@@ -1,5 +1,5 @@
 //
-//	INTitlebarView+CoreUIRendering.m
+//  INTitlebarView+CoreUIRendering.m
 //
 //  Copyright (c) 2014 Petroules Corporation. All rights reserved.
 //
