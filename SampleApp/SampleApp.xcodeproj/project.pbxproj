@@ -74,12 +74,12 @@
 		030C7A7315EE8D730050DFB5 /* Document.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Document.m; sourceTree = "<group>"; };
 		030C7A7615EE8D730050DFB5 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/Document.xib; sourceTree = "<group>"; };
 		030C7A7915EE8D730050DFB5 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		03657F30187A4D1500C969BA /* INAppStoreWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = INAppStoreWindow.h; path = ../../INAppStoreWindow/INAppStoreWindow.h; sourceTree = "<group>"; };
-		03657F31187A4D1500C969BA /* INAppStoreWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = INAppStoreWindow.m; path = ../../INAppStoreWindow/INAppStoreWindow.m; sourceTree = "<group>"; };
-		03657F32187A4D1500C969BA /* INWindowButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = INWindowButton.h; path = ../../INAppStoreWindow/INWindowButton.h; sourceTree = "<group>"; };
-		03657F33187A4D1500C969BA /* INWindowButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = INWindowButton.m; path = ../../INAppStoreWindow/INWindowButton.m; sourceTree = "<group>"; };
-		03657F39187A4D6B00C969BA /* NSDocument+INAppStoreWindowFixes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDocument+INAppStoreWindowFixes.h"; path = "../../Extensions/NSDocument+INAppStoreWindowFixes.h"; sourceTree = "<group>"; };
-		03657F3A187A4D6B00C969BA /* NSDocument+INAppStoreWindowFixes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDocument+INAppStoreWindowFixes.m"; path = "../../Extensions/NSDocument+INAppStoreWindowFixes.m"; sourceTree = "<group>"; };
+		03657F30187A4D1500C969BA /* INAppStoreWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INAppStoreWindow.h; sourceTree = "<group>"; };
+		03657F31187A4D1500C969BA /* INAppStoreWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INAppStoreWindow.m; sourceTree = "<group>"; };
+		03657F32187A4D1500C969BA /* INWindowButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INWindowButton.h; sourceTree = "<group>"; };
+		03657F33187A4D1500C969BA /* INWindowButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INWindowButton.m; sourceTree = "<group>"; };
+		03657F39187A4D6B00C969BA /* NSDocument+INAppStoreWindowFixes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDocument+INAppStoreWindowFixes.h"; sourceTree = "<group>"; };
+		03657F3A187A4D6B00C969BA /* NSDocument+INAppStoreWindowFixes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDocument+INAppStoreWindowFixes.m"; sourceTree = "<group>"; };
 		03970EF51315CE4400F15C7E /* SampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SampleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		03970EF91315CE4400F15C7E /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		03970F011315CE4400F15C7E /* SampleApp-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SampleApp-Info.plist"; sourceTree = "<group>"; };
@@ -93,10 +93,10 @@
 		03970F1A1315CECF00F15C7E /* SampleWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SampleWindowController.h; sourceTree = "<group>"; };
 		03970F1B1315CECF00F15C7E /* SampleWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SampleWindowController.m; sourceTree = "<group>"; };
 		03970F1D1315D2CB00F15C7E /* SampleWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SampleWindow.xib; sourceTree = "<group>"; };
-		14F93E5B1884433200FAF7C8 /* INTitlebarView+CoreUIRendering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "INTitlebarView+CoreUIRendering.h"; path = "../../Extensions/INTitlebarView+CoreUIRendering.h"; sourceTree = "<group>"; };
-		14F93E5C1884433200FAF7C8 /* INTitlebarView+CoreUIRendering.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "INTitlebarView+CoreUIRendering.m"; path = "../../Extensions/INTitlebarView+CoreUIRendering.m"; sourceTree = "<group>"; };
-		14F93E5F1884477000FAF7C8 /* INAppStoreWindowSwizzling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = INAppStoreWindowSwizzling.h; path = ../../Extensions/INAppStoreWindowSwizzling.h; sourceTree = "<group>"; };
-		14F93E601884477000FAF7C8 /* INAppStoreWindowSwizzling.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = INAppStoreWindowSwizzling.c; path = ../../Extensions/INAppStoreWindowSwizzling.c; sourceTree = "<group>"; };
+		14F93E5B1884433200FAF7C8 /* INTitlebarView+CoreUIRendering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "INTitlebarView+CoreUIRendering.h"; sourceTree = "<group>"; };
+		14F93E5C1884433200FAF7C8 /* INTitlebarView+CoreUIRendering.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "INTitlebarView+CoreUIRendering.m"; sourceTree = "<group>"; };
+		14F93E5F1884477000FAF7C8 /* INAppStoreWindowSwizzling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INAppStoreWindowSwizzling.h; sourceTree = "<group>"; };
+		14F93E601884477000FAF7C8 /* INAppStoreWindowSwizzling.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = INAppStoreWindowSwizzling.c; sourceTree = "<group>"; };
 		E924073D16A2F4F200989DF3 /* close-active-color.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "close-active-color.tiff"; sourceTree = "<group>"; };
 		E924073E16A2F4F200989DF3 /* close-activenokey-color.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "close-activenokey-color.tiff"; sourceTree = "<group>"; };
 		E924073F16A2F4F200989DF3 /* close-inactive-disabled-color.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "close-inactive-disabled-color.tiff"; sourceTree = "<group>"; };
@@ -168,8 +168,7 @@
 				03657F39187A4D6B00C969BA /* NSDocument+INAppStoreWindowFixes.h */,
 				03657F3A187A4D6B00C969BA /* NSDocument+INAppStoreWindowFixes.m */,
 			);
-			name = Extensions;
-			path = ../SampleDocumentApp;
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		03970EEA1315CE4400F15C7E = {
@@ -238,7 +237,7 @@
 				03657F33187A4D1500C969BA /* INWindowButton.m */,
 			);
 			name = INAppStoreWindow;
-			path = SampleApp;
+			path = ../INAppStoreWindow;
 			sourceTree = "<group>";
 		};
 		E924073C16A2F4EB00989DF3 /* Resources */ = {
