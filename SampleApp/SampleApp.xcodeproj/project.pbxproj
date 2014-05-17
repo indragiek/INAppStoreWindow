@@ -65,9 +65,6 @@
 
 /* Begin PBXFileReference section */
 		030C7A5F15EE8D730050DFB5 /* SampleDocumentApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SampleDocumentApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		030C7A6315EE8D730050DFB5 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
-		030C7A6415EE8D730050DFB5 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		030C7A6515EE8D730050DFB5 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		030C7A6815EE8D730050DFB5 /* SampleDocumentApp-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SampleDocumentApp-Info.plist"; sourceTree = "<group>"; };
 		030C7A6A15EE8D730050DFB5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		030C7A6C15EE8D730050DFB5 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -85,8 +82,6 @@
 		03657F3A187A4D6B00C969BA /* NSDocument+INAppStoreWindowFixes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDocument+INAppStoreWindowFixes.m"; path = "../../Extensions/NSDocument+INAppStoreWindowFixes.m"; sourceTree = "<group>"; };
 		03970EF51315CE4400F15C7E /* SampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SampleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		03970EF91315CE4400F15C7E /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
-		03970EFC1315CE4400F15C7E /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
-		03970EFE1315CE4400F15C7E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		03970F011315CE4400F15C7E /* SampleApp-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SampleApp-Info.plist"; sourceTree = "<group>"; };
 		03970F031315CE4400F15C7E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		03970F051315CE4400F15C7E /* SampleApp-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SampleApp-Prefix.pch"; sourceTree = "<group>"; };
@@ -139,20 +134,9 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		030C7A6215EE8D730050DFB5 /* Other Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				030C7A6315EE8D730050DFB5 /* AppKit.framework */,
-				030C7A6415EE8D730050DFB5 /* CoreData.framework */,
-				030C7A6515EE8D730050DFB5 /* Foundation.framework */,
-			);
-			name = "Other Frameworks";
-			sourceTree = "<group>";
-		};
 		030C7A6615EE8D730050DFB5 /* SampleDocumentApp */ = {
 			isa = PBXGroup;
 			children = (
-				03657F38187A4D1F00C969BA /* Extensions */,
 				030C7A7215EE8D730050DFB5 /* Document.h */,
 				030C7A7315EE8D730050DFB5 /* Document.m */,
 				030C7A7515EE8D730050DFB5 /* Document.xib */,
@@ -165,11 +149,11 @@
 		030C7A6715EE8D730050DFB5 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				030C7A6815EE8D730050DFB5 /* SampleDocumentApp-Info.plist */,
-				030C7A6915EE8D730050DFB5 /* InfoPlist.strings */,
-				030C7A6C15EE8D730050DFB5 /* main.m */,
-				030C7A6E15EE8D730050DFB5 /* SampleDocumentApp-Prefix.pch */,
 				030C7A6F15EE8D730050DFB5 /* Credits.rtf */,
+				030C7A6915EE8D730050DFB5 /* InfoPlist.strings */,
+				030C7A6815EE8D730050DFB5 /* SampleDocumentApp-Info.plist */,
+				030C7A6E15EE8D730050DFB5 /* SampleDocumentApp-Prefix.pch */,
+				030C7A6C15EE8D730050DFB5 /* main.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -185,11 +169,13 @@
 				03657F3A187A4D6B00C969BA /* NSDocument+INAppStoreWindowFixes.m */,
 			);
 			name = Extensions;
+			path = ../SampleDocumentApp;
 			sourceTree = "<group>";
 		};
 		03970EEA1315CE4400F15C7E = {
 			isa = PBXGroup;
 			children = (
+				03970F161315CE8300F15C7E /* INAppStoreWindow */,
 				03970EFF1315CE4400F15C7E /* SampleApp */,
 				030C7A6615EE8D730050DFB5 /* SampleDocumentApp */,
 				03970EF81315CE4400F15C7E /* Frameworks */,
@@ -210,10 +196,7 @@
 		03970EF81315CE4400F15C7E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				03970EFC1315CE4400F15C7E /* AppKit.framework */,
-				03970EFE1315CE4400F15C7E /* Foundation.framework */,
 				03970EF91315CE4400F15C7E /* Cocoa.framework */,
-				030C7A6215EE8D730050DFB5 /* Other Frameworks */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -221,15 +204,14 @@
 		03970EFF1315CE4400F15C7E /* SampleApp */ = {
 			isa = PBXGroup;
 			children = (
-				03970F161315CE8300F15C7E /* INAppStoreWindow */,
 				03970F0B1315CE4400F15C7E /* SampleAppAppDelegate.h */,
 				03970F0C1315CE4400F15C7E /* SampleAppAppDelegate.m */,
 				03970F1A1315CECF00F15C7E /* SampleWindowController.h */,
 				03970F1B1315CECF00F15C7E /* SampleWindowController.m */,
-				E924073C16A2F4EB00989DF3 /* Resources */,
-				03970F001315CE4400F15C7E /* Supporting Files */,
 				03970F0E1315CE4400F15C7E /* MainMenu.xib */,
 				03970F1D1315D2CB00F15C7E /* SampleWindow.xib */,
+				E924073C16A2F4EB00989DF3 /* Resources */,
+				03970F001315CE4400F15C7E /* Supporting Files */,
 			);
 			path = SampleApp;
 			sourceTree = "<group>";
@@ -237,11 +219,11 @@
 		03970F001315CE4400F15C7E /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				03970F011315CE4400F15C7E /* SampleApp-Info.plist */,
+				03970F081315CE4400F15C7E /* Credits.rtf */,
 				03970F021315CE4400F15C7E /* InfoPlist.strings */,
+				03970F011315CE4400F15C7E /* SampleApp-Info.plist */,
 				03970F051315CE4400F15C7E /* SampleApp-Prefix.pch */,
 				03970F061315CE4400F15C7E /* main.m */,
-				03970F081315CE4400F15C7E /* Credits.rtf */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -249,12 +231,14 @@
 		03970F161315CE8300F15C7E /* INAppStoreWindow */ = {
 			isa = PBXGroup;
 			children = (
+				03657F38187A4D1F00C969BA /* Extensions */,
 				03657F30187A4D1500C969BA /* INAppStoreWindow.h */,
 				03657F31187A4D1500C969BA /* INAppStoreWindow.m */,
 				03657F32187A4D1500C969BA /* INWindowButton.h */,
 				03657F33187A4D1500C969BA /* INWindowButton.m */,
 			);
 			name = INAppStoreWindow;
+			path = SampleApp;
 			sourceTree = "<group>";
 		};
 		E924073C16A2F4EB00989DF3 /* Resources */ = {
