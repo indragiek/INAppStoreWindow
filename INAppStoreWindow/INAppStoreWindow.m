@@ -27,6 +27,12 @@ extern NSString * const NSWindowDidExitVersionBrowserNotification;
 #define NSAppKitVersionNumber10_7 1138
 #endif
 
+#if __MAC_OS_X_VERSION_MAX_ALLOWED < 1090
+@interface NSData (INBase64BackwardCompatibility)
+- (id)initWithBase64Encoding:(NSString *)base64String;
+@end
+#endif
+
 static NSString * const INWindowBackgroundPatternOverlayLayer;
 static NSString * const INWindowBackgroundPatternOverlayLayer2x;
 
