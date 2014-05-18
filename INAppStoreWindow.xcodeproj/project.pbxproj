@@ -143,7 +143,8 @@
 				030C7A7815EE8D730050DFB5 /* MainMenu.xib */,
 				030C7A6715EE8D730050DFB5 /* Supporting Files */,
 			);
-			path = SampleDocumentApp;
+			name = SampleDocumentApp;
+			path = Examples/SampleDocumentApp;
 			sourceTree = "<group>";
 		};
 		030C7A6715EE8D730050DFB5 /* Supporting Files */ = {
@@ -212,7 +213,8 @@
 				E924073C16A2F4EB00989DF3 /* Resources */,
 				03970F001315CE4400F15C7E /* Supporting Files */,
 			);
-			path = SampleApp;
+			name = SampleApp;
+			path = Examples/SampleApp;
 			sourceTree = "<group>";
 		};
 		03970F001315CE4400F15C7E /* Supporting Files */ = {
@@ -236,8 +238,7 @@
 				03657F32187A4D1500C969BA /* INWindowButton.h */,
 				03657F33187A4D1500C969BA /* INWindowButton.m */,
 			);
-			name = INAppStoreWindow;
-			path = ../INAppStoreWindow;
+			path = INAppStoreWindow;
 			sourceTree = "<group>";
 		};
 		E924073C16A2F4EB00989DF3 /* Resources */ = {
@@ -308,7 +309,7 @@
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Indragie Karunaratne";
 			};
-			buildConfigurationList = 03970EEF1315CE4400F15C7E /* Build configuration list for PBXProject "SampleApp" */;
+			buildConfigurationList = 03970EEF1315CE4400F15C7E /* Build configuration list for PBXProject "INAppStoreWindow" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -485,14 +486,14 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "SampleDocumentApp/SampleDocumentApp-Prefix.pch";
+				GCC_PREFIX_HEADER = "Examples/SampleDocumentApp/SampleDocumentApp-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				INFOPLIST_FILE = "SampleDocumentApp/SampleDocumentApp-Info.plist";
+				INFOPLIST_FILE = "Examples/SampleDocumentApp/SampleDocumentApp-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -512,9 +513,9 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "SampleDocumentApp/SampleDocumentApp-Prefix.pch";
+				GCC_PREFIX_HEADER = "Examples/SampleDocumentApp/SampleDocumentApp-Prefix.pch";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				INFOPLIST_FILE = "SampleDocumentApp/SampleDocumentApp-Info.plist";
+				INFOPLIST_FILE = "Examples/SampleDocumentApp/SampleDocumentApp-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -580,8 +581,8 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "SampleApp/SampleApp-Prefix.pch";
-				INFOPLIST_FILE = "SampleApp/SampleApp-Info.plist";
+				GCC_PREFIX_HEADER = "Examples/SampleApp/SampleApp-Prefix.pch";
+				INFOPLIST_FILE = "Examples/SampleApp/SampleApp-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -597,8 +598,8 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "SampleApp/SampleApp-Prefix.pch";
-				INFOPLIST_FILE = "SampleApp/SampleApp-Info.plist";
+				GCC_PREFIX_HEADER = "Examples/SampleApp/SampleApp-Prefix.pch";
+				INFOPLIST_FILE = "Examples/SampleApp/SampleApp-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -616,7 +617,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		03970EEF1315CE4400F15C7E /* Build configuration list for PBXProject "SampleApp" */ = {
+		03970EEF1315CE4400F15C7E /* Build configuration list for PBXProject "INAppStoreWindow" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				03970F111315CE4400F15C7E /* Debug */,
