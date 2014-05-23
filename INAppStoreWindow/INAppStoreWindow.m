@@ -620,6 +620,11 @@ NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
 	[self _layoutTrafficLightsAndContent];
 }
 
+-(void)setDocumentEdited:(BOOL)flag {
+  [super setDocumentEdited:flag];
+  [[NSNotificationCenter defaultCenter] postNotificationName:@"windowDidSetDocumentEdited" object:self];
+}
+
 - (void)setToolbar:(NSToolbar *)toolbar
 {
 	[self setTitleBarHeight:[self _minimumTitlebarHeight]];

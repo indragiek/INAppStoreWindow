@@ -31,6 +31,7 @@
 	self.verticallyCenterTitle.state = self.window.verticallyCenterTitle;
 	self.showsBaselineSeparator.state = self.window.showsBaselineSeparator;
 	self.texturedWindow.state = self.window.styleMask & NSTexturedBackgroundWindowMask;
+	self.edited.state = self.window.isDocumentEdited;
 	self.titleBarHeight.doubleValue = self.window.titleBarHeight;
 	self.fullScreenRightMarginSlider.doubleValue = self.window.fullScreenButtonRightMargin;
 	self.trafficLightLeftMargin.doubleValue = self.window.trafficLightButtonsLeftMargin;
@@ -45,33 +46,36 @@
 - (void)setupCloseButton
 {
 	INWindowButton *closeButton = [INWindowButton windowButtonWithSize:NSMakeSize(14, 16) groupIdentifier:nil];
-	closeButton.activeImage = [NSImage imageNamed:@"close-active-color.tiff"];
-	closeButton.activeNotKeyWindowImage = [NSImage imageNamed:@"close-activenokey-color.tiff"];
-	closeButton.inactiveImage = [NSImage imageNamed:@"close-inactive-disabled-color.tiff"];
-	closeButton.pressedImage = [NSImage imageNamed:@"close-pd-color.tiff"];
-	closeButton.rolloverImage = [NSImage imageNamed:@"close-rollover-color.tiff"];
+	closeButton.normalImage = [NSImage imageNamed:@"close-normal.tiff"];
+	closeButton.notKeyImage = [NSImage imageNamed:@"close-not-key.tiff"];
+	closeButton.disabledImage = [NSImage imageNamed:@"close-disabled.tiff"];
+	closeButton.pressedImage = [NSImage imageNamed:@"close-pressed.tiff"];
+	closeButton.rolloverImage = [NSImage imageNamed:@"close-rollover.tiff"];
+	closeButton.normalEditedImage = [NSImage imageNamed:@"close-normal-edited.tiff"];
+	closeButton.notKeyEditedImage = [NSImage imageNamed:@"close-not-key-edited.tiff"];
+	closeButton.pressedEditedImage = [NSImage imageNamed:@"close-pressed-edited.tiff"];
 	self.window.closeButton = closeButton;
 }
 
 - (void)setupMinimizeButton
 {
 	INWindowButton *button = [INWindowButton windowButtonWithSize:NSMakeSize(14, 16) groupIdentifier:nil];
-	button.activeImage = [NSImage imageNamed:@"minimize-active-color.tiff"];
-	button.activeNotKeyWindowImage = [NSImage imageNamed:@"minimize-activenokey-color.tiff"];
-	button.inactiveImage = [NSImage imageNamed:@"minimize-inactive-disabled-color.tiff"];
-	button.pressedImage = [NSImage imageNamed:@"minimize-pd-color.tiff"];
-	button.rolloverImage = [NSImage imageNamed:@"minimize-rollover-color.tiff"];
+	button.normalImage = [NSImage imageNamed:@"minimize-normal.tiff"];
+	button.notKeyImage = [NSImage imageNamed:@"minimize-not-key.tiff"];
+	button.disabledImage = [NSImage imageNamed:@"minimize-disabled.tiff"];
+	button.pressedImage = [NSImage imageNamed:@"minimize-pressed.tiff"];
+	button.rolloverImage = [NSImage imageNamed:@"minimize-rollover.tiff"];
 	self.window.minimizeButton = button;
 }
 
 - (void)setupZoomButton
 {
 	INWindowButton *button = [INWindowButton windowButtonWithSize:NSMakeSize(14, 16) groupIdentifier:nil];
-	button.activeImage = [NSImage imageNamed:@"zoom-active-color.tiff"];
-	button.activeNotKeyWindowImage = [NSImage imageNamed:@"zoom-activenokey-color.tiff"];
-	button.inactiveImage = [NSImage imageNamed:@"zoom-inactive-disabled-color.tiff"];
-	button.pressedImage = [NSImage imageNamed:@"zoom-pd-color.tiff"];
-	button.rolloverImage = [NSImage imageNamed:@"zoom-rollover-color.tiff"];
+	button.normalImage = [NSImage imageNamed:@"zoom-normal.tiff"];
+	button.notKeyImage = [NSImage imageNamed:@"zoom-not-key.tiff"];
+	button.disabledImage = [NSImage imageNamed:@"zoom-disabled.tiff"];
+	button.pressedImage = [NSImage imageNamed:@"zoom-pressed.tiff"];
+	button.rolloverImage = [NSImage imageNamed:@"zoom-rollover.tiff"];
 	self.window.zoomButton = button;
 }
 
@@ -111,6 +115,8 @@
 			self.window.styleMask |= NSTexturedBackgroundWindowMask;
 		else
 			self.window.styleMask &= ~NSTexturedBackgroundWindowMask;
+	} else if ([sender isEqual:self.edited]) {
+	  [[self window] setDocumentEdited:[sender state]];
 	}
 }
 

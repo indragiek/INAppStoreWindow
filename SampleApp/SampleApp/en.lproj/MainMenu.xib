@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="4514" systemVersion="13B42" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5056" systemVersion="13D65" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment defaultVersion="1060" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="4514"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="5056"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -680,7 +680,7 @@
                         </connections>
                     </button>
                     <button id="536">
-                        <rect key="frame" x="139" y="450" width="202" height="18"/>
+                        <rect key="frame" x="139" y="459" width="202" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="Center Full Screen Button" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="537">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -691,7 +691,7 @@
                         </connections>
                     </button>
                     <button id="540">
-                        <rect key="frame" x="139" y="410" width="202" height="18"/>
+                        <rect key="frame" x="139" y="419" width="202" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="Center Traffic Light Buttons" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="541">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -702,7 +702,7 @@
                         </connections>
                     </button>
                     <button id="556">
-                        <rect key="frame" x="139" y="430" width="202" height="18"/>
+                        <rect key="frame" x="139" y="439" width="202" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="Shows Baseline Separator" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="557">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -747,7 +747,7 @@
                         </textFieldCell>
                     </textField>
                     <button id="577">
-                        <rect key="frame" x="139" y="390" width="202" height="18"/>
+                        <rect key="frame" x="139" y="399" width="202" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="Vertical Traffic Light Buttons" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="578">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -775,7 +775,7 @@
                         </textFieldCell>
                     </textField>
                     <button id="fog-Ln-ESu">
-                        <rect key="frame" x="139" y="370" width="202" height="18"/>
+                        <rect key="frame" x="139" y="379" width="202" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="Vertically Center Title" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="9PJ-Hl-Zl3">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -803,7 +803,7 @@
                         </textFieldCell>
                     </textField>
                     <button id="msz-bD-Yi8">
-                        <rect key="frame" x="139" y="350" width="202" height="18"/>
+                        <rect key="frame" x="139" y="359" width="202" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="Textured Window" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="2gF-gB-L6R">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -812,6 +812,17 @@
                         <connections>
                             <action selector="checkboxAction:" target="494" id="83K-un-s9h"/>
                         </connections>
+                    </button>
+                    <button id="rZi-N2-FkQ">
+                        <rect key="frame" x="139" y="337" width="62" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="check" title="Edited" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="Ogc-gW-fnF">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                            <connections>
+                                <action selector="checkboxAction:" target="494" id="vuE-N7-vPj"/>
+                            </connections>
+                        </buttonCell>
                     </button>
                 </subviews>
                 <connections>
@@ -827,6 +838,7 @@
             <connections>
                 <outlet property="centerFullScreen" destination="536" id="538"/>
                 <outlet property="centerTrafficLight" destination="540" id="543"/>
+                <outlet property="edited" destination="rZi-N2-FkQ" id="UeR-vv-BJn"/>
                 <outlet property="fullScreenRightMarginSlider" destination="546" id="561"/>
                 <outlet property="sheet" destination="563" id="576"/>
                 <outlet property="showsBaselineSeparator" destination="556" id="559"/>
@@ -885,5 +897,13 @@
                 </menuItem>
             </items>
         </menu>
+        <button id="Nx4-BM-gre">
+            <rect key="frame" x="0.0" y="0.0" width="61" height="18"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <buttonCell key="cell" type="check" title="Check" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="el3-f4-17c">
+                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                <font key="font" metaFont="system"/>
+            </buttonCell>
+        </button>
     </objects>
 </document>
