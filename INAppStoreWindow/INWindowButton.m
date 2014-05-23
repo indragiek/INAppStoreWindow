@@ -187,7 +187,7 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
 		[nc addObserver:self selector:@selector(windowDidChangeFocus:) name:NSWindowDidBecomeKeyNotification object:newWindow];
 		[nc addObserver:self selector:@selector(windowDidChangeFocus:) name:NSWindowDidResignKeyNotification object:newWindow];
 		[nc addObserver:self selector:@selector(windowDidMiniaturize:) name:NSWindowDidMiniaturizeNotification object:newWindow];
-    [nc addObserver:self selector:@selector(windowDidSetDocumentEdited:) name:@"windowDidSetDocumentEdited" object:newWindow];
+		[nc addObserver:self selector:@selector(windowDidSetDocumentEdited:) name:@"windowDidSetDocumentEdited" object:newWindow];
 		if ([NSWindow instancesRespondToSelector:@selector(toggleFullScreen:)]) {
 			[nc addObserver:self selector:@selector(windowWillEnterFullScreen:) name:NSWindowWillEnterFullScreenNotification object:newWindow];
 			[nc addObserver:self selector:@selector(windowWillExitFullScreen:) name:NSWindowWillExitFullScreenNotification object:newWindow];
@@ -198,7 +198,7 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
 - (void)windowDidChangeFocus:(NSNotification *)n
 {
 	[self updateImage];
-  [self.group resetMouseCaptures];
+	[self.group resetMouseCaptures];
 }
 
 - (void)windowWillEnterFullScreen:(NSNotification *)n
@@ -220,7 +220,7 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
 
 - (void)windowDidSetDocumentEdited:(NSNotification *)n
 {
-  [self updateImage];
+	[self updateImage];
 }
 
 #pragma mark - Event Handling
@@ -260,33 +260,32 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
 - (void)updateImage
 {
 	if ([self.group shouldDisplayRollOver] && [self isEnabled]) {
-    if ([self.window isDocumentEdited] && self.normalEditedImage) {
-      self.image = self.normalEditedImage;
-    } else {
-      self.image = self.rolloverImage;
-    }
-    if ([self.window isDocumentEdited] && self.pressedEditedImage) {
-      self.alternateImage = self.pressedEditedImage;
-    } else {
-      self.alternateImage = self.pressedImage;
-    }
+		if ([self.window isDocumentEdited] && self.normalEditedImage) {
+			self.image = self.normalEditedImage;
+		} else {
+			self.image = self.rolloverImage;
+		}
+		if ([self.window isDocumentEdited] && self.pressedEditedImage) {
+			self.alternateImage = self.pressedEditedImage;
+		} else {
+			self.alternateImage = self.pressedImage;
+		}
 	} else if ([self.window isKeyWindow]) {
-    if ([self isEnabled]) {
-      if ([self.window isDocumentEdited] && self.normalEditedImage) {
-        self.image = self.normalEditedImage;
-      } else {
-        self.image = self.normalImage;
-      }
-    } else {
-      self.image = self.disabledImage;
-    }
+		if ([self isEnabled]) {
+			if ([self.window isDocumentEdited] && self.normalEditedImage) {
+				self.image = self.normalEditedImage;
+			} else {
+				self.image = self.normalImage;
+			}
+		} else {
+			self.image = self.disabledImage;
+		}
 	} else {
-    if ([self.window isDocumentEdited] && self.notKeyEditedImage) {
-      self.image = self.notKeyEditedImage;
-    } else {
-      self.image = self.notKeyImage;
-    }
+		if ([self.window isDocumentEdited] && self.notKeyEditedImage) {
+			self.image = self.notKeyEditedImage;
+		} else {
+			self.image = self.notKeyImage;
+		}
 	}
 }
-
 @end

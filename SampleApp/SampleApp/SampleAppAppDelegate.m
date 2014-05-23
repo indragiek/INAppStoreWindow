@@ -116,7 +116,7 @@
 		else
 			self.window.styleMask &= ~NSTexturedBackgroundWindowMask;
 	} else if ([sender isEqual:self.edited]) {
-	  [[self window] setDocumentEdited:[sender state]];
+		[[self window] setDocumentEdited:[sender state]];
 	}
 }
 

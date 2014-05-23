@@ -621,8 +621,8 @@ NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
 }
 
 -(void)setDocumentEdited:(BOOL)flag {
-  [super setDocumentEdited:flag];
-  [[NSNotificationCenter defaultCenter] postNotificationName:@"windowDidSetDocumentEdited" object:self];
+	[super setDocumentEdited:flag];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"windowDidSetDocumentEdited" object:self];
 }
 
 - (void)setToolbar:(NSToolbar *)toolbar
