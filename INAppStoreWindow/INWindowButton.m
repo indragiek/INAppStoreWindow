@@ -141,7 +141,7 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
 
 - (void)windowButtonGroupDidUpdateRolloverStateNotification:(NSNotification *)n
 {
-	[self updateRollOverImage];
+	[self updateImage];
 }
 
 #pragma mark - Tracking Area
@@ -187,6 +187,7 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
 		[nc addObserver:self selector:@selector(windowDidChangeFocus:) name:NSWindowDidBecomeKeyNotification object:newWindow];
 		[nc addObserver:self selector:@selector(windowDidChangeFocus:) name:NSWindowDidResignKeyNotification object:newWindow];
 		[nc addObserver:self selector:@selector(windowDidMiniaturize:) name:NSWindowDidMiniaturizeNotification object:newWindow];
+		[nc addObserver:self selector:@selector(windowDidSetDocumentEdited:) name:@"windowDidSetDocumentEdited" object:newWindow];
 		if ([NSWindow instancesRespondToSelector:@selector(toggleFullScreen:)]) {
 			[nc addObserver:self selector:@selector(windowWillEnterFullScreen:) name:NSWindowWillEnterFullScreenNotification object:newWindow];
 			[nc addObserver:self selector:@selector(windowWillExitFullScreen:) name:NSWindowWillExitFullScreenNotification object:newWindow];
@@ -197,6 +198,7 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
 - (void)windowDidChangeFocus:(NSNotification *)n
 {
 	[self updateImage];
+	[self.group resetMouseCaptures];
 }
 
 - (void)windowWillEnterFullScreen:(NSNotification *)n
@@ -216,6 +218,11 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
 	[self.group resetMouseCaptures];
 }
 
+- (void)windowDidSetDocumentEdited:(NSNotification *)n
+{
+	[self updateImage];
+}
+
 #pragma mark - Event Handling
 
 - (void)viewDidEndLiveResize
@@ -228,63 +235,57 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
 {
 	[super mouseEntered:theEvent];
 	[self.group didCaptureMousePointer];
-	[self updateRollOverImage];
+	[self updateImage];
 }
 
 - (void)mouseExited:(NSEvent *)theEvent
 {
 	[super mouseExited:theEvent];
 	[self.group didReleaseMousePointer];
-	[self updateRollOverImage];
+	[self updateImage];
 }
 
 #pragma mark - Button Appearance
-
-- (void)setPressedImage:(NSImage *)pressedImage
-{
-	self.alternateImage = pressedImage;
-}
-
-- (NSImage *)pressedImage
-{
-	return self.alternateImage;
-}
 
 - (void)setEnabled:(BOOL)enabled
 {
 	[super setEnabled:enabled];
 	if (enabled) {
-		self.image = self.activeImage;
+		self.image = self.normalImage;
 	} else {
-		self.image = self.inactiveImage;
-	}
-}
-
-- (void)updateRollOverImage
-{
-	if ([self.group shouldDisplayRollOver] && [self isEnabled]) {
-		self.image = self.rolloverImage;
-	} else {
-		[self updateImage];
+		self.image = self.disabledImage;
 	}
 }
 
 - (void)updateImage
 {
-	if ([self.window isKeyWindow]) {
-		[self updateActiveImage];
+	if ([self.group shouldDisplayRollOver] && [self isEnabled]) {
+		if ([self.window isDocumentEdited] && self.normalEditedImage) {
+			self.image = self.normalEditedImage;
+		} else {
+			self.image = self.rolloverImage;
+		}
+		if ([self.window isDocumentEdited] && self.pressedEditedImage) {
+			self.alternateImage = self.pressedEditedImage;
+		} else {
+			self.alternateImage = self.pressedImage;
+		}
+	} else if ([self.window isKeyWindow]) {
+		if ([self isEnabled]) {
+			if ([self.window isDocumentEdited] && self.normalEditedImage) {
+				self.image = self.normalEditedImage;
+			} else {
+				self.image = self.normalImage;
+			}
+		} else {
+			self.image = self.disabledImage;
+		}
 	} else {
-		self.image = self.activeNotKeyWindowImage;
+		if ([self.window isDocumentEdited] && self.notKeyEditedImage) {
+			self.image = self.notKeyEditedImage;
+		} else {
+			self.image = self.notKeyImage;
+		}
 	}
 }
-
-- (void)updateActiveImage
-{
-	if ([self isEnabled]) {
-		self.image = self.activeImage;
-	} else {
-		self.image = self.inactiveImage;
-	}
-}
-
 @end

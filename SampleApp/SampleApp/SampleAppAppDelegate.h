@@ -26,6 +26,7 @@
 @property (assign) IBOutlet NSSlider *titleBarHeight;
 @property (assign) IBOutlet NSButton *showsBaselineSeparator;
 @property (assign) IBOutlet NSButton *texturedWindow;
+@property (assign) IBOutlet NSButton *edited;
 @property (nonatomic, retain) NSMutableArray *windowControllers;
 
 - (IBAction)createWindowController:(id)sender;

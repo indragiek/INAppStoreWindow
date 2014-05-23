@@ -23,17 +23,7 @@
 /**
  An image for the normal state.
  */
-@property (nonatomic, strong) NSImage *activeImage;
-
-/**
- An image for the normal state, but displayed when receiver's window in not a key.
- */
-@property (nonatomic, strong) NSImage *activeNotKeyWindowImage;
-
-/**
- An image used in disabled state.
- */
-@property (nonatomic, strong) NSImage *inactiveImage;
+@property (nonatomic, strong) NSImage *normalImage;
 
 /**
  An image used when user hovers receiver with mouse pointer.
@@ -44,6 +34,31 @@
  An image for the pressed state.
  */
 @property (nonatomic, strong) NSImage *pressedImage;
+
+/**
+ An image for the normal state, but displayed when receiver's window in not a key.
+ */
+@property (nonatomic, strong) NSImage *notKeyImage;
+
+/**
+ An image used in disabled state.
+ */
+@property (nonatomic, strong) NSImage *disabledImage;
+
+/**
+ An image for the normal edited state.
+ */
+@property (nonatomic, strong) NSImage *normalEditedImage;
+
+/**
+ An image for the pressed edited state.
+ */
+@property (nonatomic, strong) NSImage *pressedEditedImage;
+
+/**
+ An image for the edited state, but displayed when receiver's window in not a key.
+ */
+@property (nonatomic, strong) NSImage *notKeyEditedImage;
 
 /**
  @param size Designated size of the button. System size is 14x16 and you are considered to use it.
