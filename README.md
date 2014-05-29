@@ -130,7 +130,7 @@ self.window.inactiveBaselineSeparatorColor = [NSColor colorWithCalibratedWhite: 
 ```
 ## Extensions
 
-Additional extensions for `INAppStoreWindow` are provided in the **Extensions** folder. 
+Additional extensions for `INAppStoreWindow` are provided in the **Extensions** subfolder. 
 
 ### NSDocument+INAppStoreWindowFixes
 

@@ -65,9 +65,6 @@
 
 /* Begin PBXFileReference section */
 		030C7A5F15EE8D730050DFB5 /* SampleDocumentApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SampleDocumentApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		030C7A6315EE8D730050DFB5 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
-		030C7A6415EE8D730050DFB5 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		030C7A6515EE8D730050DFB5 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		030C7A6815EE8D730050DFB5 /* SampleDocumentApp-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SampleDocumentApp-Info.plist"; sourceTree = "<group>"; };
 		030C7A6A15EE8D730050DFB5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		030C7A6C15EE8D730050DFB5 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -77,16 +74,14 @@
 		030C7A7315EE8D730050DFB5 /* Document.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Document.m; sourceTree = "<group>"; };
 		030C7A7615EE8D730050DFB5 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/Document.xib; sourceTree = "<group>"; };
 		030C7A7915EE8D730050DFB5 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		03657F30187A4D1500C969BA /* INAppStoreWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = INAppStoreWindow.h; path = ../../INAppStoreWindow/INAppStoreWindow.h; sourceTree = "<group>"; };
-		03657F31187A4D1500C969BA /* INAppStoreWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = INAppStoreWindow.m; path = ../../INAppStoreWindow/INAppStoreWindow.m; sourceTree = "<group>"; };
-		03657F32187A4D1500C969BA /* INWindowButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = INWindowButton.h; path = ../../INAppStoreWindow/INWindowButton.h; sourceTree = "<group>"; };
-		03657F33187A4D1500C969BA /* INWindowButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = INWindowButton.m; path = ../../INAppStoreWindow/INWindowButton.m; sourceTree = "<group>"; };
-		03657F39187A4D6B00C969BA /* NSDocument+INAppStoreWindowFixes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDocument+INAppStoreWindowFixes.h"; path = "../../Extensions/NSDocument+INAppStoreWindowFixes.h"; sourceTree = "<group>"; };
-		03657F3A187A4D6B00C969BA /* NSDocument+INAppStoreWindowFixes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDocument+INAppStoreWindowFixes.m"; path = "../../Extensions/NSDocument+INAppStoreWindowFixes.m"; sourceTree = "<group>"; };
+		03657F30187A4D1500C969BA /* INAppStoreWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INAppStoreWindow.h; sourceTree = "<group>"; };
+		03657F31187A4D1500C969BA /* INAppStoreWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INAppStoreWindow.m; sourceTree = "<group>"; };
+		03657F32187A4D1500C969BA /* INWindowButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INWindowButton.h; sourceTree = "<group>"; };
+		03657F33187A4D1500C969BA /* INWindowButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INWindowButton.m; sourceTree = "<group>"; };
+		03657F39187A4D6B00C969BA /* NSDocument+INAppStoreWindowFixes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDocument+INAppStoreWindowFixes.h"; sourceTree = "<group>"; };
+		03657F3A187A4D6B00C969BA /* NSDocument+INAppStoreWindowFixes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDocument+INAppStoreWindowFixes.m"; sourceTree = "<group>"; };
 		03970EF51315CE4400F15C7E /* SampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SampleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		03970EF91315CE4400F15C7E /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
-		03970EFC1315CE4400F15C7E /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
-		03970EFE1315CE4400F15C7E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		03970F011315CE4400F15C7E /* SampleApp-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SampleApp-Info.plist"; sourceTree = "<group>"; };
 		03970F031315CE4400F15C7E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		03970F051315CE4400F15C7E /* SampleApp-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SampleApp-Prefix.pch"; sourceTree = "<group>"; };
@@ -98,10 +93,10 @@
 		03970F1A1315CECF00F15C7E /* SampleWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SampleWindowController.h; sourceTree = "<group>"; };
 		03970F1B1315CECF00F15C7E /* SampleWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SampleWindowController.m; sourceTree = "<group>"; };
 		03970F1D1315D2CB00F15C7E /* SampleWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SampleWindow.xib; sourceTree = "<group>"; };
-		14F93E5B1884433200FAF7C8 /* INTitlebarView+CoreUIRendering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "INTitlebarView+CoreUIRendering.h"; path = "../../Extensions/INTitlebarView+CoreUIRendering.h"; sourceTree = "<group>"; };
-		14F93E5C1884433200FAF7C8 /* INTitlebarView+CoreUIRendering.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "INTitlebarView+CoreUIRendering.m"; path = "../../Extensions/INTitlebarView+CoreUIRendering.m"; sourceTree = "<group>"; };
-		14F93E5F1884477000FAF7C8 /* INAppStoreWindowSwizzling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = INAppStoreWindowSwizzling.h; path = ../../Extensions/INAppStoreWindowSwizzling.h; sourceTree = "<group>"; };
-		14F93E601884477000FAF7C8 /* INAppStoreWindowSwizzling.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = INAppStoreWindowSwizzling.c; path = ../../Extensions/INAppStoreWindowSwizzling.c; sourceTree = "<group>"; };
+		14F93E5B1884433200FAF7C8 /* INTitlebarView+CoreUIRendering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "INTitlebarView+CoreUIRendering.h"; sourceTree = "<group>"; };
+		14F93E5C1884433200FAF7C8 /* INTitlebarView+CoreUIRendering.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "INTitlebarView+CoreUIRendering.m"; sourceTree = "<group>"; };
+		14F93E5F1884477000FAF7C8 /* INAppStoreWindowSwizzling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INAppStoreWindowSwizzling.h; sourceTree = "<group>"; };
+		14F93E601884477000FAF7C8 /* INAppStoreWindowSwizzling.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = INAppStoreWindowSwizzling.c; sourceTree = "<group>"; };
 		E924073D16A2F4F200989DF3 /* close-active-color.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "close-active-color.tiff"; sourceTree = "<group>"; };
 		E924073E16A2F4F200989DF3 /* close-activenokey-color.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "close-activenokey-color.tiff"; sourceTree = "<group>"; };
 		E924073F16A2F4F200989DF3 /* close-inactive-disabled-color.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "close-inactive-disabled-color.tiff"; sourceTree = "<group>"; };
@@ -139,37 +134,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		030C7A6215EE8D730050DFB5 /* Other Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				030C7A6315EE8D730050DFB5 /* AppKit.framework */,
-				030C7A6415EE8D730050DFB5 /* CoreData.framework */,
-				030C7A6515EE8D730050DFB5 /* Foundation.framework */,
-			);
-			name = "Other Frameworks";
-			sourceTree = "<group>";
-		};
 		030C7A6615EE8D730050DFB5 /* SampleDocumentApp */ = {
 			isa = PBXGroup;
 			children = (
-				03657F38187A4D1F00C969BA /* Extensions */,
 				030C7A7215EE8D730050DFB5 /* Document.h */,
 				030C7A7315EE8D730050DFB5 /* Document.m */,
 				030C7A7515EE8D730050DFB5 /* Document.xib */,
 				030C7A7815EE8D730050DFB5 /* MainMenu.xib */,
 				030C7A6715EE8D730050DFB5 /* Supporting Files */,
 			);
-			path = SampleDocumentApp;
+			name = SampleDocumentApp;
+			path = Examples/SampleDocumentApp;
 			sourceTree = "<group>";
 		};
 		030C7A6715EE8D730050DFB5 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				030C7A6815EE8D730050DFB5 /* SampleDocumentApp-Info.plist */,
-				030C7A6915EE8D730050DFB5 /* InfoPlist.strings */,
-				030C7A6C15EE8D730050DFB5 /* main.m */,
-				030C7A6E15EE8D730050DFB5 /* SampleDocumentApp-Prefix.pch */,
 				030C7A6F15EE8D730050DFB5 /* Credits.rtf */,
+				030C7A6915EE8D730050DFB5 /* InfoPlist.strings */,
+				030C7A6815EE8D730050DFB5 /* SampleDocumentApp-Info.plist */,
+				030C7A6E15EE8D730050DFB5 /* SampleDocumentApp-Prefix.pch */,
+				030C7A6C15EE8D730050DFB5 /* main.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -184,12 +169,13 @@
 				03657F39187A4D6B00C969BA /* NSDocument+INAppStoreWindowFixes.h */,
 				03657F3A187A4D6B00C969BA /* NSDocument+INAppStoreWindowFixes.m */,
 			);
-			name = Extensions;
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		03970EEA1315CE4400F15C7E = {
 			isa = PBXGroup;
 			children = (
+				03970F161315CE8300F15C7E /* INAppStoreWindow */,
 				03970EFF1315CE4400F15C7E /* SampleApp */,
 				030C7A6615EE8D730050DFB5 /* SampleDocumentApp */,
 				03970EF81315CE4400F15C7E /* Frameworks */,
@@ -210,10 +196,7 @@
 		03970EF81315CE4400F15C7E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				03970EFC1315CE4400F15C7E /* AppKit.framework */,
-				03970EFE1315CE4400F15C7E /* Foundation.framework */,
 				03970EF91315CE4400F15C7E /* Cocoa.framework */,
-				030C7A6215EE8D730050DFB5 /* Other Frameworks */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -221,27 +204,27 @@
 		03970EFF1315CE4400F15C7E /* SampleApp */ = {
 			isa = PBXGroup;
 			children = (
-				03970F161315CE8300F15C7E /* INAppStoreWindow */,
 				03970F0B1315CE4400F15C7E /* SampleAppAppDelegate.h */,
 				03970F0C1315CE4400F15C7E /* SampleAppAppDelegate.m */,
 				03970F1A1315CECF00F15C7E /* SampleWindowController.h */,
 				03970F1B1315CECF00F15C7E /* SampleWindowController.m */,
-				E924073C16A2F4EB00989DF3 /* Resources */,
-				03970F001315CE4400F15C7E /* Supporting Files */,
 				03970F0E1315CE4400F15C7E /* MainMenu.xib */,
 				03970F1D1315D2CB00F15C7E /* SampleWindow.xib */,
+				E924073C16A2F4EB00989DF3 /* Resources */,
+				03970F001315CE4400F15C7E /* Supporting Files */,
 			);
-			path = SampleApp;
+			name = SampleApp;
+			path = Examples/SampleApp;
 			sourceTree = "<group>";
 		};
 		03970F001315CE4400F15C7E /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				03970F011315CE4400F15C7E /* SampleApp-Info.plist */,
+				03970F081315CE4400F15C7E /* Credits.rtf */,
 				03970F021315CE4400F15C7E /* InfoPlist.strings */,
+				03970F011315CE4400F15C7E /* SampleApp-Info.plist */,
 				03970F051315CE4400F15C7E /* SampleApp-Prefix.pch */,
 				03970F061315CE4400F15C7E /* main.m */,
-				03970F081315CE4400F15C7E /* Credits.rtf */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -249,12 +232,13 @@
 		03970F161315CE8300F15C7E /* INAppStoreWindow */ = {
 			isa = PBXGroup;
 			children = (
+				03657F38187A4D1F00C969BA /* Extensions */,
 				03657F30187A4D1500C969BA /* INAppStoreWindow.h */,
 				03657F31187A4D1500C969BA /* INAppStoreWindow.m */,
 				03657F32187A4D1500C969BA /* INWindowButton.h */,
 				03657F33187A4D1500C969BA /* INWindowButton.m */,
 			);
-			name = INAppStoreWindow;
+			path = INAppStoreWindow;
 			sourceTree = "<group>";
 		};
 		E924073C16A2F4EB00989DF3 /* Resources */ = {
@@ -325,7 +309,7 @@
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Indragie Karunaratne";
 			};
-			buildConfigurationList = 03970EEF1315CE4400F15C7E /* Build configuration list for PBXProject "SampleApp" */;
+			buildConfigurationList = 03970EEF1315CE4400F15C7E /* Build configuration list for PBXProject "INAppStoreWindow" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -502,14 +486,14 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "SampleDocumentApp/SampleDocumentApp-Prefix.pch";
+				GCC_PREFIX_HEADER = "Examples/SampleDocumentApp/SampleDocumentApp-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				INFOPLIST_FILE = "SampleDocumentApp/SampleDocumentApp-Info.plist";
+				INFOPLIST_FILE = "Examples/SampleDocumentApp/SampleDocumentApp-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -529,9 +513,9 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "SampleDocumentApp/SampleDocumentApp-Prefix.pch";
+				GCC_PREFIX_HEADER = "Examples/SampleDocumentApp/SampleDocumentApp-Prefix.pch";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				INFOPLIST_FILE = "SampleDocumentApp/SampleDocumentApp-Info.plist";
+				INFOPLIST_FILE = "Examples/SampleDocumentApp/SampleDocumentApp-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -597,8 +581,8 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "SampleApp/SampleApp-Prefix.pch";
-				INFOPLIST_FILE = "SampleApp/SampleApp-Info.plist";
+				GCC_PREFIX_HEADER = "Examples/SampleApp/SampleApp-Prefix.pch";
+				INFOPLIST_FILE = "Examples/SampleApp/SampleApp-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -614,8 +598,8 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "SampleApp/SampleApp-Prefix.pch";
-				INFOPLIST_FILE = "SampleApp/SampleApp-Info.plist";
+				GCC_PREFIX_HEADER = "Examples/SampleApp/SampleApp-Prefix.pch";
+				INFOPLIST_FILE = "Examples/SampleApp/SampleApp-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -633,7 +617,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		03970EEF1315CE4400F15C7E /* Build configuration list for PBXProject "SampleApp" */ = {
+		03970EEF1315CE4400F15C7E /* Build configuration list for PBXProject "INAppStoreWindow" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				03970F111315CE4400F15C7E /* Debug */,
