@@ -106,6 +106,8 @@
 		self.window.verticallyCenterTitle = [sender state];
 	} else if ([sender isEqual:self.showsBaselineSeparator]) {
 		self.window.showsBaselineSeparator = [sender state];
+	} else if ([sender isEqual:self.showsStatusSeparator]) {
+		self.window.showsBottomBarSeparator = [sender state];
 	} else if ([sender isEqual:self.texturedWindow]) {
 		if ([sender state] == NSOnState)
 			self.window.styleMask |= NSTexturedBackgroundWindowMask;
@@ -118,6 +120,8 @@
 {
 	if ([sender isEqual:self.titleBarHeight]) {
 		self.window.titleBarHeight = round([sender doubleValue]);
+	} else if ([sender isEqual:self.bottomBarHeight]) {
+		self.window.bottomBarHeight = round([sender doubleValue]);
 	} else if ([sender isEqual:self.fullScreenRightMarginSlider]) {
 		self.window.fullScreenButtonRightMargin = [sender doubleValue];
 	} else if ([sender isEqual:self.trafficLightLeftMargin]) {

@@ -24,7 +24,9 @@
 @property (assign) IBOutlet NSSlider *trafficLightLeftMargin;
 @property (assign) IBOutlet NSSlider *trafficLightSeparation;
 @property (assign) IBOutlet NSSlider *titleBarHeight;
+@property (assign) IBOutlet NSSlider *bottomBarHeight;
 @property (assign) IBOutlet NSButton *showsBaselineSeparator;
+@property (assign) IBOutlet NSButton *showsStatusSeparator;
 @property (assign) IBOutlet NSButton *texturedWindow;
 @property (nonatomic, retain) NSMutableArray *windowControllers;
 

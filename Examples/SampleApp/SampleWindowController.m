@@ -21,10 +21,12 @@
 	INAppStoreWindow *aWindow = (INAppStoreWindow *) [self window];
 	aWindow.titleBarHeight = 40.0;
 	aWindow.trafficLightButtonsLeftMargin = 13.0;
-	aWindow.titleBarDrawingBlock = ^(BOOL drawsAsMainWindow, CGRect drawingRect, CGPathRef clippingPath) {
+	aWindow.titleBarDrawingBlock = ^(BOOL drawsAsMainWindow, CGRect drawingRect, CGRectEdge edge, CGPathRef clippingPath) {
 		CGContextRef ctx = [[NSGraphicsContext currentContext] graphicsPort];
-		CGContextAddPath(ctx, clippingPath);
-		CGContextClip(ctx);
+		if (clippingPath) {
+			CGContextAddPath(ctx, clippingPath);
+			CGContextClip(ctx);
+		}
 
 		NSGradient *gradient = nil;
 		if (drawsAsMainWindow) {
@@ -43,6 +45,9 @@
 #endif
 		NSRectFill(NSMakeRect(NSMinX(drawingRect), NSMinY(drawingRect), NSWidth(drawingRect), 1));
 	};
+
+	aWindow.bottomBarDrawingBlock = aWindow.titleBarDrawingBlock;
+	aWindow.bottomBarHeight = aWindow.titleBarHeight;
 
 	NSView *titleBarView = aWindow.titleBarView;
 	NSSize segmentSize = NSMakeSize(104, 25);
