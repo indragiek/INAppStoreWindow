@@ -381,16 +381,12 @@ NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
 	
 	if (versionsButton) {
     	NSRect versionsButtonFrame = [self convertRect:versionsButton.frame fromView:versionsButton.superview];
-    	NSView *themeFrame = [window.contentView superview];
-    	for (NSView *tmp in [themeFrame subviews]) {
-    		if ([tmp isKindOfClass:[NSTextField class]]) {
-    			if ([[(NSTextField *)tmp stringValue] isEqualToString:@"\u2014"]) {
-    				NSTextField *txt = ((NSTextField *)tmp);
-    				versionsButtonFrame = [self convertRect:[txt frame] fromView:[txt superview]];
-    				break;
-    			}
-    		}
+
+        NSTextField *titleDivider = [window titleDivider];
+        if (titleDivider) {
+            versionsButtonFrame = [self convertRect:[titleDivider frame] fromView:[titleDivider superview]];
     	}
+
     	if (NSMaxX(titleTextRect) > NSMinX(versionsButtonFrame)) {
     		titleTextRect.size.width = NSMinX(versionsButtonFrame) - NSMinX(titleTextRect) - INTitleMargins.width;
     	}
@@ -875,6 +871,19 @@ NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
 			[[self themeFrameView] addSubview:_fullScreenButton];
 		}
 	}
+}
+
+- (NSTextField *)titleDivider
+{
+    for (NSTextField *divider in [[self.contentView superview] subviews]) {
+        if ([divider isKindOfClass:[NSTextField class]]) {
+            if ([[divider stringValue] isEqualToString:@"\u2014"]) {
+                return divider;
+            }
+        }
+    }
+
+    return nil;
 }
 
 - (void)setStyleMask:(NSUInteger)styleMask

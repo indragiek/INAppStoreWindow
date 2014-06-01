@@ -150,6 +150,11 @@ typedef void (^INAppStoreWindowTitleBarDrawingBlock)(BOOL drawsAsMainWindow,
 @property (nonatomic, strong) INWindowButton *fullScreenButton;
 
 /**
+ The divider line between the window title and document versions button.
+ */
+@property (nonatomic, readonly) NSTextField *titleDivider;
+
+/**
  The font used to draw the window's title text.
  */
 @property (nonatomic, strong) NSFont *titleFont;
