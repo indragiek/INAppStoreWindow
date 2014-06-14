@@ -715,11 +715,6 @@ NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
 	}
 }
 
-- (NSView *)titleBarView
-{
-	return _titleBarView;
-}
-
 - (void)setTitleBarHeight:(CGFloat)newTitleBarHeight
 {
 	[self setTitleBarHeight:newTitleBarHeight adjustWindowFrame:YES];
@@ -750,11 +745,6 @@ NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
 		if ((self.styleMask & NSTexturedBackgroundWindowMask) == NSTexturedBackgroundWindowMask)
 			[self.contentView displayIfNeeded];
 	}
-}
-
-- (CGFloat)titleBarHeight
-{
-	return _titleBarHeight;
 }
 
 - (void)setBottomBarView:(NSView *)bottomBarView
@@ -789,11 +779,6 @@ NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
 	}
 }
 
-- (BOOL)showsBaselineSeparator
-{
-	return _showsBaselineSeparator;
-}
-
 - (void)setShowsBottomBarSeparator:(BOOL)showsBottomBarSeparator
 {
 	if (_showsBottomBarSeparator != showsBottomBarSeparator) {
@@ -812,12 +797,6 @@ NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
 	}
 }
 
-- (CGFloat)trafficLightButtonsLeftMargin
-{
-	return _trafficLightButtonsLeftMargin;
-}
-
-
 - (void)setFullScreenButtonRightMargin:(CGFloat)newFullScreenButtonRightMargin
 {
 	if (_fullScreenButtonRightMargin != newFullScreenButtonRightMargin) {
@@ -826,11 +805,6 @@ NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
 		[self _layoutTrafficLightsAndContent];
 		[self _displayWindowAndTitlebar];
 	}
-}
-
-- (CGFloat)fullScreenButtonRightMargin
-{
-	return _fullScreenButtonRightMargin;
 }
 
 - (void)setShowsTitle:(BOOL)showsTitle
