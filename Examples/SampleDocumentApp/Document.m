@@ -37,6 +37,7 @@
 	INAppStoreWindow *window = (INAppStoreWindow *) [controller window];
 	window.titleBarHeight = 40.f;
 	window.centerTrafficLightButtons = YES;
+	window.bottomBarHeight = window.titleBarHeight;
 	// Add any code here that needs to be executed once the windowController has loaded the document's window.
 }
 
