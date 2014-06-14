@@ -8,6 +8,7 @@
 //
 
 #import "INAppStoreWindow.h"
+#import "INAppStoreWindowCompatibility.h"
 #import "INAppStoreWindowSwizzling.h"
 #import "INWindowBackgroundView+CoreUIRendering.h"
 

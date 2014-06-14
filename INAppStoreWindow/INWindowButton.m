@@ -7,6 +7,7 @@
 //	code of this project.
 //
 
+#import "INAppStoreWindowCompatibility.h"
 #import "INWindowButton.h"
 
 #pragma mark - Window Button Group

@@ -93,6 +93,7 @@
 		03970F1A1315CECF00F15C7E /* SampleWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SampleWindowController.h; sourceTree = "<group>"; };
 		03970F1B1315CECF00F15C7E /* SampleWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SampleWindowController.m; sourceTree = "<group>"; };
 		03970F1D1315D2CB00F15C7E /* SampleWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SampleWindow.xib; sourceTree = "<group>"; };
+		14739470194C31330012F94C /* INAppStoreWindowCompatibility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = INAppStoreWindowCompatibility.h; sourceTree = "<group>"; };
 		14F93E5B1884433200FAF7C8 /* INWindowBackgroundView+CoreUIRendering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "INWindowBackgroundView+CoreUIRendering.h"; sourceTree = "<group>"; };
 		14F93E5C1884433200FAF7C8 /* INWindowBackgroundView+CoreUIRendering.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "INWindowBackgroundView+CoreUIRendering.m"; sourceTree = "<group>"; };
 		14F93E5F1884477000FAF7C8 /* INAppStoreWindowSwizzling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INAppStoreWindowSwizzling.h; sourceTree = "<group>"; };
@@ -233,6 +234,7 @@
 			isa = PBXGroup;
 			children = (
 				03657F38187A4D1F00C969BA /* Extensions */,
+				14739470194C31330012F94C /* INAppStoreWindowCompatibility.h */,
 				03657F30187A4D1500C969BA /* INAppStoreWindow.h */,
 				03657F31187A4D1500C969BA /* INAppStoreWindow.m */,
 				03657F32187A4D1500C969BA /* INWindowButton.h */,
