@@ -9,30 +9,10 @@
 //
 
 #import "INAppStoreWindow.h"
+#import "INAppStoreWindowCompatibility.h"
 #import "INWindowButton.h"
 
 #import <objc/runtime.h>
-
-#if __MAC_OS_X_VERSION_MAX_ALLOWED < 1070
-enum { NSWindowDocumentVersionsButton = 6, NSWindowFullScreenButton = 7 };
-enum { NSFullScreenWindowMask = 1 << 14 };
-extern NSString * const NSAccessibilityFullScreenButtonSubrole;
-extern NSString * const NSWindowWillEnterFullScreenNotification;
-extern NSString * const NSWindowDidEnterFullScreenNotification;
-extern NSString * const NSWindowWillExitFullScreenNotification;
-extern NSString * const NSWindowDidExitFullScreenNotification;
-extern NSString * const NSWindowWillEnterVersionBrowserNotification;
-extern NSString * const NSWindowDidEnterVersionBrowserNotification;
-extern NSString * const NSWindowWillExitVersionBrowserNotification;
-extern NSString * const NSWindowDidExitVersionBrowserNotification;
-#define NSAppKitVersionNumber10_7 1138
-#endif
-
-#if __MAC_OS_X_VERSION_MAX_ALLOWED < 1090
-@interface NSData (INBase64BackwardCompatibility)
-- (id)initWithBase64Encoding:(NSString *)base64String;
-@end
-#endif
 
 const NSInteger kINAppStoreWindowSmallBottomBarHeight = 22;
 const NSInteger kINAppStoreWindowLargeBottomBarHeight = 32;
