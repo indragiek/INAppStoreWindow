@@ -106,7 +106,7 @@
 		self.window.verticallyCenterTitle = [sender state];
 	} else if ([sender isEqual:self.showsBaselineSeparator]) {
 		self.window.showsBaselineSeparator = [sender state];
-	} else if ([sender isEqual:self.showsStatusSeparator]) {
+	} else if ([sender isEqual:self.showsBottomBarSeparator]) {
 		self.window.showsBottomBarSeparator = [sender state];
 	} else if ([sender isEqual:self.texturedWindow]) {
 		if ([sender state] == NSOnState)

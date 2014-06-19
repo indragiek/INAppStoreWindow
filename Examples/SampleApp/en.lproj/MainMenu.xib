@@ -1470,7 +1470,7 @@
 							<object class="NSButtonCell" key="NSCell" id="699158758">
 								<int key="NSCellFlags">-2080374784</int>
 								<int key="NSCellFlags2">0</int>
-								<string key="NSContents">Shows Status Separator</string>
+								<string key="NSContents">Shows Bottom Bar Separator</string>
 								<reference key="NSSupport" ref="323712760"/>
 								<reference key="NSControlView" ref="289461751"/>
 								<int key="NSButtonFlags">1211912448</int>
@@ -1744,7 +1744,7 @@
 							<object class="NSTextFieldCell" key="NSCell" id="807199571">
 								<int key="NSCellFlags">68157504</int>
 								<int key="NSCellFlags2">272630784</int>
-								<string key="NSContents">Status Bar Height</string>
+								<string key="NSContents">Bottom Bar Height</string>
 								<reference key="NSSupport" ref="323712760"/>
 								<reference key="NSControlView" ref="127786433"/>
 								<reference key="NSBackgroundColor" ref="636289225"/>
@@ -2734,7 +2734,7 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
-						<string key="label">showsStatusSeparator</string>
+						<string key="label">showsBottomBarSeparator</string>
 						<reference key="source" ref="621444262"/>
 						<reference key="destination" ref="289461751"/>
 					</object>
@@ -2742,7 +2742,7 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
-						<string key="label">statusBarHeight</string>
+						<string key="label">bottomBarHeight</string>
 						<reference key="source" ref="621444262"/>
 						<reference key="destination" ref="1071848139"/>
 					</object>
@@ -4665,7 +4665,7 @@
 						<string key="fullScreenRightMarginSlider">NSSlider</string>
 						<string key="sheet">NSPanel</string>
 						<string key="showsBaselineSeparator">NSButton</string>
-						<string key="showsStatusSeparator">NSButton</string>
+						<string key="showsBottomBarSeparator">NSButton</string>
 						<string key="texturedWindow">NSButton</string>
 						<string key="titleBarHeight">NSSlider</string>
 						<string key="trafficLightLeftMargin">NSSlider</string>
@@ -4699,8 +4699,8 @@
 							<string key="name">showsBaselineSeparator</string>
 							<string key="candidateClassName">NSButton</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="showsStatusSeparator">
-							<string key="name">showsStatusSeparator</string>
+						<object class="IBToOneOutletInfo" key="showsBottomBarSeparator">
+							<string key="name">showsBottomBarSeparator</string>
 							<string key="candidateClassName">NSButton</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="texturedWindow">
