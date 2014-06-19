@@ -18,13 +18,20 @@ typedef CFTypeRef CUIRendererRef;
 typedef void (*_CUIDraw)(CUIRendererRef renderer, CGRect frame, CGContextRef context, CFDictionaryRef options, CFDictionaryRef *result);
 static _CUIDraw CUIDraw = 0;
 
-static const NSString *kCUIWidgetWindowFrame = @"kCUIWidgetWindowFrame";
-static const NSString *kCUIWindowFrameBottomBarHeightKey = @"kCUIWindowFrameBottomBarHeightKey";
-static const NSString *kCUIWindowFrameDrawBottomBarSeparatorKey = @"kCUIWindowFrameDrawBottomBarSeparatorKey";
-static const NSString *kCUIWindowFrameDrawTitleSeparatorKey = @"kCUIWindowFrameDrawTitleSeparatorKey";
-static const NSString *kCUIWindowFrameRoundedBottomCornersKey = @"kCUIWindowFrameRoundedBottomCornersKey";
-static const NSString *kCUIWindowFrameRoundedTopCornersKey = @"kCUIWindowFrameRoundedTopCornersKey";
-static const NSString *kCUIWindowFrameUnifiedTitleBarHeightKey = @"kCUIWindowFrameUnifiedTitleBarHeightKey";
+static NSString * const kCUIIsFlippedKey = @"is.flipped";
+static NSString * const kCUIStateActive = @"normal";
+static NSString * const kCUIStateInactive = @"inactive";
+static NSString * const kCUIStateKey = @"state";
+static NSString * const kCUIWidgetKey = @"widget";
+static NSString * const kCUIWidgetWindowFrame = @"kCUIWidgetWindowFrame";
+static NSString * const kCUIWindowFrameBottomBarHeightKey = @"kCUIWindowFrameBottomBarHeightKey";
+static NSString * const kCUIWindowFrameDrawBottomBarSeparatorKey = @"kCUIWindowFrameDrawBottomBarSeparatorKey";
+static NSString * const kCUIWindowFrameDrawTitleSeparatorKey = @"kCUIWindowFrameDrawTitleSeparatorKey";
+static NSString * const kCUIWindowFrameRoundedBottomCornersKey = @"kCUIWindowFrameRoundedBottomCornersKey";
+static NSString * const kCUIWindowFrameRoundedTopCornersKey = @"kCUIWindowFrameRoundedTopCornersKey";
+static NSString * const kCUIWindowFrameUnifiedTitleBarHeightKey = @"kCUIWindowFrameUnifiedTitleBarHeightKey";
+static NSString * const kCUIWindowTypeDocument = @"regularwin";
+static NSString * const kCUIWindowTypeKey = @"windowtype";
 
 @interface NSWindow (NSWindowPrivate)
 
@@ -46,27 +53,50 @@ static const NSString *kCUIWindowFrameUnifiedTitleBarHeightKey = @"kCUIWindowFra
 
 + (void)load
 {
-	NSBundle *coreUIBundle = [NSBundle bundleWithIdentifier:@"com.apple.coreui"];
-	CFBundleRef bundle = CFBundleCreate(kCFAllocatorDefault, (__bridge CFURLRef)coreUIBundle.bundleURL);
-	if ((CUIDraw = CFBundleGetFunctionPointerForName(bundle, (__bridge CFStringRef)@"CUIDraw")) &&
+	CFBundleRef bundle = CFBundleGetBundleWithIdentifier(CFSTR("com.apple.coreui"));
+	if ((CUIDraw = CFBundleGetFunctionPointerForName(bundle, CFSTR("CUIDraw"))) &&
 		[NSWindow respondsToSelector:@selector(coreUIRenderer)]) {
 		INAppStoreWindowSwizzle(self,
 								@selector(drawWindowBackgroundLayersInRect:forEdge:showsSeparator:clippingPath:),
 								@selector(drawCUIWindowBackgroundLayersInRect:forEdge:showsSeparator:clippingPath:));
+
+		[self loadConstant:&kCUIIsFlippedKey named:@"kCUIIsFlippedKey" fromBundle:bundle];
+		[self loadConstant:&kCUIStateActive named:@"kCUIStateActive" fromBundle:bundle];
+		[self loadConstant:&kCUIStateInactive named:@"kCUIStateInactive" fromBundle:bundle];
+		[self loadConstant:&kCUIStateKey named:@"kCUIStateKey" fromBundle:bundle];
+		[self loadConstant:&kCUIWidgetKey named:@"kCUIWidgetKey" fromBundle:bundle];
+		[self loadConstant:&kCUIWidgetWindowFrame named:@"kCUIWidgetWindowFrame" fromBundle:bundle];
+		[self loadConstant:&kCUIWindowFrameBottomBarHeightKey named:@"kCUIWindowFrameBottomBarHeightKey" fromBundle:bundle];
+		[self loadConstant:&kCUIWindowFrameDrawBottomBarSeparatorKey named:@"kCUIWindowFrameDrawBottomBarSeparatorKey" fromBundle:bundle];
+		[self loadConstant:&kCUIWindowFrameDrawTitleSeparatorKey named:@"kCUIWindowFrameDrawTitleSeparatorKey" fromBundle:bundle];
+		[self loadConstant:&kCUIWindowFrameRoundedBottomCornersKey named:@"kCUIWindowFrameRoundedBottomCornersKey" fromBundle:bundle];
+		[self loadConstant:&kCUIWindowFrameRoundedTopCornersKey named:@"kCUIWindowFrameRoundedTopCornersKey" fromBundle:bundle];
+		[self loadConstant:&kCUIWindowFrameUnifiedTitleBarHeightKey named:@"kCUIWindowFrameUnifiedTitleBarHeightKey" fromBundle:bundle];
+		[self loadConstant:&kCUIWindowTypeDocument named:@"kCUIWindowTypeDocument" fromBundle:bundle];
+		[self loadConstant:&kCUIWindowTypeKey named:@"kCUIWindowTypeKey" fromBundle:bundle];
 	} else {
 		NSLog(@"Failed to load CoreUI, falling back to custom drawing");
 	}
-	CFRelease(bundle);
+}
+
++ (void)loadConstant:(NSString * const *)constant named:(NSString *)constantName fromBundle:(CFBundleRef)bundle
+{
+	NSString * const *_constant = (NSString * const *)(CFBundleGetDataPointerForName(bundle, (__bridge CFStringRef)(constantName)));
+	if (_constant) {
+		*((NSString **)constant) = *_constant;
+	} else {
+		NSLog(@"Failed to load %@, using fallback value %@", constantName, *constant);
+	}
 }
 
 - (void)drawCUIWindowBackgroundLayersInRect:(CGRect)drawingRect forEdge:(CGRectEdge)edge showsSeparator:(BOOL)showsSeparator clippingPath:(CGPathRef)clippingPath
 {
 	INAppStoreWindow *window = (INAppStoreWindow *)self.window;
 	NSMutableDictionary *options = [NSMutableDictionary dictionaryWithDictionary:
-									@{@"state": (window.isMainWindow ? @"normal" : @"inactive"),
-									  @"widget": kCUIWidgetWindowFrame,
-									  @"windowtype": @"regularwin",
-									  @"is.flipped": @(self.isFlipped)}];
+									@{kCUIStateKey: (window.isMainWindow ? kCUIStateActive : kCUIStateInactive),
+									  kCUIWidgetKey: kCUIWidgetWindowFrame,
+									  kCUIWindowTypeKey: kCUIWindowTypeDocument,
+									  kCUIIsFlippedKey: @(self.isFlipped)}];
 	if (edge == CGRectMaxYEdge) {
 		options[kCUIWindowFrameUnifiedTitleBarHeightKey] = @(window.titleBarHeight + window.toolbarHeight);
 		options[kCUIWindowFrameDrawTitleSeparatorKey] = @(showsSeparator);
