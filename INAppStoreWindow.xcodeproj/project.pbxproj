@@ -27,10 +27,12 @@
 		03970F101315CE4400F15C7E /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 03970F0E1315CE4400F15C7E /* MainMenu.xib */; };
 		03970F1C1315CECF00F15C7E /* SampleWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 03970F1B1315CECF00F15C7E /* SampleWindowController.m */; };
 		03970F1E1315D2CB00F15C7E /* SampleWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 03970F1D1315D2CB00F15C7E /* SampleWindow.xib */; };
+		140B90C2195E0DC9009D9445 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 140B90C1195E0DC8009D9445 /* Carbon.framework */; };
+		140B90C3195E0DE0009D9445 /* INWindowBackgroundView+CoreUIRendering.m in Sources */ = {isa = PBXBuildFile; fileRef = 14F93E5C1884433200FAF7C8 /* INWindowBackgroundView+CoreUIRendering.m */; };
+		140B90C4195E0DE1009D9445 /* INWindowBackgroundView+CoreUIRendering.m in Sources */ = {isa = PBXBuildFile; fileRef = 14F93E5C1884433200FAF7C8 /* INWindowBackgroundView+CoreUIRendering.m */; };
+		14732BB41960C41D00593899 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 140B90C1195E0DC8009D9445 /* Carbon.framework */; };
 		14F93E611884477000FAF7C8 /* INAppStoreWindowSwizzling.c in Sources */ = {isa = PBXBuildFile; fileRef = 14F93E601884477000FAF7C8 /* INAppStoreWindowSwizzling.c */; };
 		14F93E621884477000FAF7C8 /* INAppStoreWindowSwizzling.c in Sources */ = {isa = PBXBuildFile; fileRef = 14F93E601884477000FAF7C8 /* INAppStoreWindowSwizzling.c */; };
-		14F93E631884493200FAF7C8 /* INWindowBackgroundView+CoreUIRendering.m in Sources */ = {isa = PBXBuildFile; fileRef = 14F93E5C1884433200FAF7C8 /* INWindowBackgroundView+CoreUIRendering.m */; };
-		14F93E641884493300FAF7C8 /* INWindowBackgroundView+CoreUIRendering.m in Sources */ = {isa = PBXBuildFile; fileRef = 14F93E5C1884433200FAF7C8 /* INWindowBackgroundView+CoreUIRendering.m */; };
 		E924075116A2F4F200989DF3 /* close-active-color.tiff in Resources */ = {isa = PBXBuildFile; fileRef = E924073D16A2F4F200989DF3 /* close-active-color.tiff */; };
 		E924075216A2F4F200989DF3 /* close-active-color.tiff in Resources */ = {isa = PBXBuildFile; fileRef = E924073D16A2F4F200989DF3 /* close-active-color.tiff */; };
 		E924075316A2F4F200989DF3 /* close-activenokey-color.tiff in Resources */ = {isa = PBXBuildFile; fileRef = E924073E16A2F4F200989DF3 /* close-activenokey-color.tiff */; };
@@ -93,6 +95,7 @@
 		03970F1A1315CECF00F15C7E /* SampleWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SampleWindowController.h; sourceTree = "<group>"; };
 		03970F1B1315CECF00F15C7E /* SampleWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SampleWindowController.m; sourceTree = "<group>"; };
 		03970F1D1315D2CB00F15C7E /* SampleWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SampleWindow.xib; sourceTree = "<group>"; };
+		140B90C1195E0DC8009D9445 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
 		14739470194C31330012F94C /* INAppStoreWindowCompatibility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = INAppStoreWindowCompatibility.h; sourceTree = "<group>"; };
 		14F93E5B1884433200FAF7C8 /* INWindowBackgroundView+CoreUIRendering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "INWindowBackgroundView+CoreUIRendering.h"; sourceTree = "<group>"; };
 		14F93E5C1884433200FAF7C8 /* INWindowBackgroundView+CoreUIRendering.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "INWindowBackgroundView+CoreUIRendering.m"; sourceTree = "<group>"; };
@@ -120,6 +123,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				14732BB41960C41D00593899 /* Carbon.framework in Frameworks */,
 				030C7A6115EE8D730050DFB5 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -128,6 +132,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				140B90C2195E0DC9009D9445 /* Carbon.framework in Frameworks */,
 				03970EFA1315CE4400F15C7E /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -197,6 +202,7 @@
 		03970EF81315CE4400F15C7E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				140B90C1195E0DC8009D9445 /* Carbon.framework */,
 				03970EF91315CE4400F15C7E /* Cocoa.framework */,
 			);
 			name = Frameworks;
@@ -391,7 +397,7 @@
 			files = (
 				03657F3B187A4D6B00C969BA /* NSDocument+INAppStoreWindowFixes.m in Sources */,
 				03657F35187A4D1500C969BA /* INAppStoreWindow.m in Sources */,
-				14F93E631884493200FAF7C8 /* INWindowBackgroundView+CoreUIRendering.m in Sources */,
+				140B90C3195E0DE0009D9445 /* INWindowBackgroundView+CoreUIRendering.m in Sources */,
 				030C7A6D15EE8D730050DFB5 /* main.m in Sources */,
 				03657F37187A4D1500C969BA /* INWindowButton.m in Sources */,
 				030C7A7415EE8D730050DFB5 /* Document.m in Sources */,
@@ -405,7 +411,7 @@
 			files = (
 				03970F071315CE4400F15C7E /* main.m in Sources */,
 				03970F0D1315CE4400F15C7E /* SampleAppAppDelegate.m in Sources */,
-				14F93E641884493300FAF7C8 /* INWindowBackgroundView+CoreUIRendering.m in Sources */,
+				140B90C4195E0DE1009D9445 /* INWindowBackgroundView+CoreUIRendering.m in Sources */,
 				03657F36187A4D1500C969BA /* INWindowButton.m in Sources */,
 				03657F34187A4D1500C969BA /* INAppStoreWindow.m in Sources */,
 				03970F1C1315CECF00F15C7E /* SampleWindowController.m in Sources */,
