@@ -1276,7 +1276,12 @@ NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
 	NSRect contentRect = [self contentRectForFrameRect:windowFrame];
 
 	if ((self.styleMask & NSFullScreenWindowMask) == NSFullScreenWindowMask) {
-		contentRect.size.height = NSHeight(windowFrame);
+		if (self.hideTitleBarInFullScreen) {
+            contentRect.size.height = NSHeight(windowFrame);
+        }
+        else {
+            contentRect.size.height = NSHeight(windowFrame) - self.titleBarHeight - self.toolbarHeight;
+        }
 	} else {
 		contentRect.size.height = NSHeight(windowFrame) - self.titleBarHeight - self.toolbarHeight;
 	}
