@@ -5,7 +5,7 @@
 
 The MAS application has since transitioned away from this design, but `INAppStoreWindow` is still being actively developed to provide extensive additional customization options for `NSWindow` title bars.
 
-![INAppStoreWindow](https://raw.github.com/indragiek/INAppStoreWindow/master/images/screenshot.png)
+![INAppStoreWindow](images/screenshot.png)
 
 **Features of INAppStoreWindow:**
 
@@ -105,7 +105,7 @@ You can enable title drawing by setting `showsTitle` property to `YES`. For NSDo
 
 A lot of time and effort has gone into making the custom titlebar in INAppStoreWindow function just right, it would be a shame to have to re-implement all this work just to draw your own custom title bar. So INAppStoreWindow has a `titleBarDrawingBlock` property that can be set to a block containing your own drawing code!
 
-[![Custom Window](https://raw.github.com/indragiek/INAppStoreWindow/master/images/custom-window.png)](http://dribbble.com/shots/541256-Notepad-App-Mockup)
+[![Custom Window](images/custom-window.png)](http://dribbble.com/shots/541256-Notepad-App-Mockup)
 
 ```obj-c
 [self.window setTitleBarDrawingBlock:^(BOOL drawsAsMainWindow, CGRect drawingRect, CGPathRef clippingPath){
