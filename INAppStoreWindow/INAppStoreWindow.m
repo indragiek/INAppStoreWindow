@@ -12,6 +12,7 @@
 #import "INAppStoreWindowCompatibility.h"
 #import "INWindowButton.h"
 
+#import <Carbon/Carbon.h>
 #import <objc/runtime.h>
 
 const NSInteger kINAppStoreWindowSmallBottomBarHeight = 22;
@@ -339,39 +340,91 @@ NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
 		NSDictionary *titleTextStyles = nil;
 		[self getTitleFrame:&titleTextRect textAttributes:&titleTextStyles forWindow:window];
 
-		if (window.verticallyCenterTitle) {
-			titleTextRect.origin.y = floor(NSMidY(drawingRect) - (NSHeight(titleTextRect) / 2.f) + 1);
-		}
+		if (titleTextStyles) {
+			if (window.verticallyCenterTitle) {
+				titleTextRect.origin.y = floor(NSMidY(drawingRect) - (NSHeight(titleTextRect) / 2.f) + 1);
+			}
 
-		[window.title drawInRect:titleTextRect withAttributes:titleTextStyles];
+			[window.title drawInRect:titleTextRect withAttributes:titleTextStyles];
+		} else {
+			[self drawNativeWindowTitleInRect:titleTextRect];
+		}
 	}
+}
+
+- (void)getNativeTitleTextInfo:(out HIThemeTextInfo *)titleTextInfo
+{
+	INAppStoreWindow *window = (INAppStoreWindow *)self.window;
+	BOOL drawsAsMainWindow = (window.isMainWindow && [NSApplication sharedApplication].isActive);
+	titleTextInfo->version = 1;
+	titleTextInfo->state = drawsAsMainWindow ? kThemeStateActive : kThemeStateUnavailableInactive;
+	titleTextInfo->fontID = kThemeWindowTitleFont;
+	titleTextInfo->horizontalFlushness = kHIThemeTextHorizontalFlushCenter;
+	titleTextInfo->verticalFlushness = kHIThemeTextVerticalFlushCenter;
+	titleTextInfo->options = kHIThemeTextBoxOptionEngraved;
+	titleTextInfo->truncationPosition = kHIThemeTextTruncationDefault;
+	titleTextInfo->truncationMaxLines = 1;
+}
+
+- (void)drawNativeWindowTitleInRect:(NSRect)titleTextRect
+{
+	INAppStoreWindow *window = (INAppStoreWindow *)self.window;
+
+	HIThemeTextInfo titleTextInfo;
+	[self getNativeTitleTextInfo:&titleTextInfo];
+
+	// Let kHIThemeTextVerticalFlushCenter handle the vertical alignment instead of manually calculating it
+	titleTextRect.size.height = window.verticallyCenterTitle ? self.bounds.size.height : window._minimumTitlebarHeight;
+	titleTextRect.origin.y = self.isFlipped ? 0 : self.bounds.size.height - titleTextRect.size.height;
+
+	HIThemeDrawTextBox((__bridge CFTypeRef)(window.title), &titleTextRect, &titleTextInfo, [[NSGraphicsContext currentContext] graphicsPort], self.isFlipped ? kHIThemeOrientationNormal : kHIThemeOrientationInverted);
 }
 
 - (void)getTitleFrame:(out NSRect *)frame textAttributes:(out NSDictionary **)attributes forWindow:(in INAppStoreWindow *)window
 {
 	BOOL drawsAsMainWindow = (window.isMainWindow && [NSApplication sharedApplication].isActive);
+	BOOL isUsingCustomTitleDrawing = window.titleTextShadow
+								  || window.inactiveTitleTextShadow
+								  || window.titleTextColor
+								  || window.inactiveTitleTextColor
+								  || window.titleFont;
 
-	NSShadow *titleTextShadow = drawsAsMainWindow ? window.titleTextShadow : window.inactiveTitleTextShadow;
-	if (titleTextShadow == nil) {
-		titleTextShadow = [[NSShadow alloc] init];
-		titleTextShadow.shadowBlurRadius = 0.0;
-		titleTextShadow.shadowOffset = NSMakeSize(0, -1);
-		titleTextShadow.shadowColor = [NSColor colorWithDeviceWhite:1.0 alpha:0.5];
+	NSSize titleSize;
+	NSRect titleTextRect;
+	if (isUsingCustomTitleDrawing)
+	{
+		NSShadow *titleTextShadow = drawsAsMainWindow ? window.titleTextShadow : window.inactiveTitleTextShadow;
+		if (titleTextShadow == nil) {
+			titleTextShadow = [[NSShadow alloc] init];
+			titleTextShadow.shadowBlurRadius = 0.0;
+			titleTextShadow.shadowOffset = NSMakeSize(0, -1);
+			titleTextShadow.shadowColor = [NSColor colorWithDeviceWhite:1.0 alpha:0.5];
+		}
+
+		NSColor *titleTextColor = drawsAsMainWindow ? window.titleTextColor : window.inactiveTitleTextColor;
+		titleTextColor = titleTextColor ? titleTextColor : [INAppStoreWindow defaultTitleTextColor:drawsAsMainWindow];
+
+		NSFont *titleFont = window.titleFont ?: [NSFont titleBarFontOfSize:[NSFont systemFontSizeForControlSize:NSRegularControlSize]];
+
+		NSMutableParagraphStyle *titleParagraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+		[titleParagraphStyle setLineBreakMode:NSLineBreakByTruncatingTail];
+		NSDictionary *titleTextStyles = @{NSFontAttributeName : titleFont,
+										  NSForegroundColorAttributeName : titleTextColor,
+										  NSShadowAttributeName : titleTextShadow,
+										  NSParagraphStyleAttributeName : titleParagraphStyle};
+		titleSize = [window.title sizeWithAttributes:titleTextStyles];
+
+		if (attributes) {
+			*attributes = titleTextStyles;
+		}
+	}
+	else
+	{
+		HIThemeTextInfo titleTextInfo;
+		[self getNativeTitleTextInfo:&titleTextInfo];
+		HIThemeGetTextDimensions((__bridge CFTypeRef)(window.title), 0, &titleTextInfo, &titleSize.width, &titleSize.height, NULL);
 	}
 
-	NSColor *titleTextColor = drawsAsMainWindow ? window.titleTextColor : window.inactiveTitleTextColor;
-	titleTextColor = titleTextColor ? titleTextColor : [INAppStoreWindow defaultTitleTextColor:drawsAsMainWindow];
-
-	NSFont *titleFont = window.titleFont ?: [NSFont titleBarFontOfSize:[NSFont systemFontSizeForControlSize:NSRegularControlSize]];
-
-	NSMutableParagraphStyle *titleParagraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-	[titleParagraphStyle setLineBreakMode:NSLineBreakByTruncatingTail];
-	NSDictionary *titleTextStyles = @{NSFontAttributeName : titleFont,
-									  NSForegroundColorAttributeName : titleTextColor,
-									  NSShadowAttributeName : titleTextShadow,
-									  NSParagraphStyleAttributeName : titleParagraphStyle};
-	NSSize titleSize = [window.title sizeWithAttributes:titleTextStyles];
-	NSRect titleTextRect;
 	titleTextRect.size = titleSize;
 
 	NSButton *docIconButton = [window standardWindowButton:NSWindowDocumentIconButton];
@@ -430,9 +483,6 @@ NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
 
 	if (frame) {
 		*frame = titleTextRect;
-	}
-	if (attributes) {
-		*attributes = titleTextStyles;
 	}
 }
 
