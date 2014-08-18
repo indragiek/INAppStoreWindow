@@ -286,6 +286,11 @@ typedef void (^INAppStoreWindowBackgroundDrawingBlock)(BOOL drawsAsMainWindow, C
  */
 @property (nonatomic, copy) INAppStoreWindowBackgroundDrawingBlock bottomBarDrawingBlock;
 
+/**
+ Whether to draw a noise pattern overlay on the title bar on Lion+.
+ */
+@property (nonatomic) BOOL drawsTitlePatternOverlay;
+
 /*!
  Default system gradient used to draw a window's title bar.
  @param drawsAsMainWindow \c YES to return the gradient used when the window is drawn in its main
