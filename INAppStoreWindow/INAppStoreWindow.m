@@ -270,7 +270,7 @@ NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
 			[self drawSeparatorInRect:[self baselineSeparatorFrameForRect:drawingRect edge:drawingEdge] forEdge:drawingEdge];
 		}
 
-		if (INRunningLion()) {
+		if (INRunningLion() && window.drawsTitlePatternOverlay) {
 			[self drawWindowPatternOverlayColorInRect:drawingRect forEdge:drawingEdge];
 		}
 	}
@@ -1055,6 +1055,7 @@ NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
 	_trafficLightButtonsTopMargin = 3.f;
 	_fullScreenButtonTopMargin = 3.f;
 	_trafficLightSeparation = self._defaultTrafficLightSeparation;
+	_drawsTitlePatternOverlay = YES;
 	super.delegate = _delegateProxy;
 
 	/** -----------------------------------------
