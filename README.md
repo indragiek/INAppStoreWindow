@@ -108,7 +108,7 @@ A lot of time and effort has gone into making the custom titlebar in INAppStoreW
 [![Custom Window](images/custom-window.png)](http://dribbble.com/shots/541256-Notepad-App-Mockup)
 
 ```obj-c
-[self.window setTitleBarDrawingBlock:^(BOOL drawsAsMainWindow, CGRect drawingRect, CGPathRef clippingPath){
+[self.window setTitleBarDrawingBlock:^(BOOL drawsAsMainWindow, CGRect drawingRect, CGRectEdge edge, CGPathRef clippingPath){
     // Custom drawing code!    
 }];
 ```
