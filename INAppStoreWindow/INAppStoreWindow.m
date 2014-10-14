@@ -45,6 +45,10 @@ NS_INLINE bool INRunningLion() {
 	return (NSInteger)NSAppKitVersionNumber >= NSAppKitVersionNumber10_7;
 }
 
+NS_INLINE bool INRunningYosemite() {
+    return (NSInteger)NSAppKitVersionNumber > NSAppKitVersionNumber10_9;
+}
+
 NS_INLINE CGFloat INMidHeight(NSRect aRect) {
 	return (aRect.size.height * (CGFloat) 0.5);
 }
@@ -270,7 +274,7 @@ NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
 			[self drawSeparatorInRect:[self baselineSeparatorFrameForRect:drawingRect edge:drawingEdge] forEdge:drawingEdge];
 		}
 
-		if (INRunningLion() && window.drawsTitlePatternOverlay) {
+		if (INRunningLion() && !INRunningYosemite() && window.drawsTitlePatternOverlay) {
 			[self drawWindowPatternOverlayColorInRect:drawingRect forEdge:drawingEdge];
 		}
 	}
