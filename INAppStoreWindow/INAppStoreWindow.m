@@ -45,6 +45,10 @@ NS_INLINE bool INRunningLion() {
 	return (NSInteger)NSAppKitVersionNumber >= NSAppKitVersionNumber10_7;
 }
 
+#ifndef NSAppKitVersionNumber10_9
+#define NSAppKitVersionNumber10_9 1265
+#endif
+
 NS_INLINE bool INRunningYosemite() {
     return (NSInteger)NSAppKitVersionNumber > NSAppKitVersionNumber10_9;
 }
