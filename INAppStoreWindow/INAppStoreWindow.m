@@ -1166,9 +1166,14 @@ NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
 		minimizeFrame.origin.y = NSMaxY(zoomFrame) + self.trafficLightSeparation - 2.f;
 		closeFrame.origin.y = NSMaxY(minimizeFrame) + self.trafficLightSeparation - 2.f;
 	}
-	close.frame = closeFrame;
-	minimize.frame = minimizeFrame;
-	zoom.frame = zoomFrame;
+
+	// On Yosemite, if the window is in full screen mode, the window buttons are in a different window
+	// and should not be set here.
+	if ([[close superview] superview] == nil) {
+		close.frame = closeFrame;
+		minimize.frame = minimizeFrame;
+		zoom.frame = zoomFrame;
+	}
 
 	NSButton *docIconButton = [self standardWindowButton:NSWindowDocumentIconButton];
 	if (docIconButton) {
