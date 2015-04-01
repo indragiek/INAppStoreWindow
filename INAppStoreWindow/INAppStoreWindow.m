@@ -149,11 +149,22 @@ NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
 
 	static dispatch_once_t oncePredicate;
 	dispatch_once(&oncePredicate, ^{
-		NSBitmapImageRep *rep = [[NSBitmapImageRep alloc] initWithData:[[NSData alloc] initWithBase64Encoding:INWindowBackgroundPatternOverlayLayer]];
+	NSBitmapImageRep *rep = nil;
+
+// initWithBase64EncodedString:options: is available in OS X v10.9 and later
+#if __MAC_OS_X_VERSION_MAX_ALLOWED >= __MAC_10_9
+	rep = [[NSBitmapImageRep alloc] initWithData:[[NSData alloc] initWithBase64EncodedString: INWindowBackgroundPatternOverlayLayer options: 0]];
+#else
+	rep = [[NSBitmapImageRep alloc] initWithData:[[NSData alloc] initWithBase64Encoding:INWindowBackgroundPatternOverlayLayer]];
+#endif
 		NSImage *image = [[NSImage alloc] initWithSize:rep.size];
 		[image addRepresentation:rep];
-		[image addRepresentation:[[NSBitmapImageRep alloc] initWithData:[[NSData alloc] initWithBase64Encoding:INWindowBackgroundPatternOverlayLayer2x]]];
 
+#if __MAC_OS_X_VERSION_MAX_ALLOWED >= __MAC_10_9
+		[image addRepresentation:[[NSBitmapImageRep alloc] initWithData:[[NSData alloc] initWithBase64EncodedString: INWindowBackgroundPatternOverlayLayer2x options: 0]]];
+#else
+		[image addRepresentation:[[NSBitmapImageRep alloc] initWithData:[[NSData alloc] initWithBase64Encoding:INWindowBackgroundPatternOverlayLayer2x]]];
+#endif
 		noiseColor = [NSColor colorWithPatternImage:image];
 	});
 
