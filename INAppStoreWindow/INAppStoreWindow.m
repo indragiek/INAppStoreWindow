@@ -153,7 +153,8 @@ NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
 
 // initWithBase64EncodedString:options: is available in OS X v10.9 and later
 #if __MAC_OS_X_VERSION_MAX_ALLOWED >= __MAC_10_9
-	rep = [[NSBitmapImageRep alloc] initWithData:[[NSData alloc] initWithBase64EncodedString: INWindowBackgroundPatternOverlayLayer options: 0]];
+	rep = [[NSBitmapImageRep alloc] initWithData:[[NSData alloc] initWithBase64EncodedString: INWindowBackgroundPatternOverlayLayer
+																					 options: NSDataBase64DecodingIgnoreUnknownCharacters]];
 #else
 	rep = [[NSBitmapImageRep alloc] initWithData:[[NSData alloc] initWithBase64Encoding:INWindowBackgroundPatternOverlayLayer]];
 #endif
@@ -161,7 +162,8 @@ NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
 		[image addRepresentation:rep];
 
 #if __MAC_OS_X_VERSION_MAX_ALLOWED >= __MAC_10_9
-		[image addRepresentation:[[NSBitmapImageRep alloc] initWithData:[[NSData alloc] initWithBase64EncodedString: INWindowBackgroundPatternOverlayLayer2x options: 0]]];
+		[image addRepresentation:[[NSBitmapImageRep alloc] initWithData:[[NSData alloc] initWithBase64EncodedString: INWindowBackgroundPatternOverlayLayer2x
+																											options: NSDataBase64DecodingIgnoreUnknownCharacters]]];
 #else
 		[image addRepresentation:[[NSBitmapImageRep alloc] initWithData:[[NSData alloc] initWithBase64Encoding:INWindowBackgroundPatternOverlayLayer2x]]];
 #endif
