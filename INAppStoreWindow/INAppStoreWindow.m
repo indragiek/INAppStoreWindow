@@ -151,21 +151,28 @@ NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
 	dispatch_once(&oncePredicate, ^{
 	NSBitmapImageRep *rep = nil;
 
+	NSData* layerInBase64 = nil;
 // initWithBase64EncodedString:options: is available in OS X v10.9 and later
 #if __MAC_OS_X_VERSION_MAX_ALLOWED >= __MAC_10_9
-	rep = [[NSBitmapImageRep alloc] initWithData:[[NSData alloc] initWithBase64EncodedString: INWindowBackgroundPatternOverlayLayer options: NSDataBase64DecodingIgnoreUnknownCharacters]];
+	layerInBase64 = [[NSData alloc] initWithBase64EncodedString: INWindowBackgroundPatternOverlayLayer options: NSDataBase64DecodingIgnoreUnknownCharacters];
 #else
-	rep = [[NSBitmapImageRep alloc] initWithData:[[NSData alloc] initWithBase64Encoding:INWindowBackgroundPatternOverlayLayer]];
+	data = [[ NSData alloc] initWithBase64Encoding: INWindowBackgroundPatternOverlayLayer];
 #endif
-		NSImage *image = [[NSImage alloc] initWithSize:rep.size];
-		[image addRepresentation:rep];
+	rep = [[NSBitmapImageRep alloc] initWithData: layerInBase64];
 
+	NSImage *image = [[NSImage alloc] initWithSize:rep.size];
+	[image addRepresentation:rep];
+
+	NSData* layer2xInBase64 = nil;
+// Same as above
 #if __MAC_OS_X_VERSION_MAX_ALLOWED >= __MAC_10_9
-		[image addRepresentation:[[NSBitmapImageRep alloc] initWithData:[[NSData alloc] initWithBase64EncodedString: INWindowBackgroundPatternOverlayLayer2x options: NSDataBase64DecodingIgnoreUnknownCharacters]]];
+	layer2xInBase64 = [[NSData alloc] initWithBase64EncodedString: INWindowBackgroundPatternOverlayLayer2x options: NSDataBase64DecodingIgnoreUnknownCharacters];
 #else
-		[image addRepresentation:[[NSBitmapImageRep alloc] initWithData:[[NSData alloc] initWithBase64Encoding:INWindowBackgroundPatternOverlayLayer2x]]];
+	layer2xInBase64 = [[NSData alloc] initWithBase64Encoding:INWindowBackgroundPatternOverlayLayer2x];
 #endif
-		noiseColor = [NSColor colorWithPatternImage:image];
+	[image addRepresentation:[[NSBitmapImageRep alloc] initWithData: layer2xInBase64]];
+
+	noiseColor = [NSColor colorWithPatternImage:image];
 	});
 
 	return noiseColor;
