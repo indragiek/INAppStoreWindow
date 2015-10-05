@@ -552,13 +552,20 @@ NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
 		return;
 	}
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 	NSPoint where = [window convertBaseToScreen:theEvent.locationInWindow];
+#pragma clang diagnostic pop
+	
 	NSPoint origin = window.frame.origin;
 	CGFloat deltaX = 0.0;
 	CGFloat deltaY = 0.0;
 	while ((theEvent = [NSApp nextEventMatchingMask:NSLeftMouseDownMask | NSLeftMouseDraggedMask | NSLeftMouseUpMask untilDate:[NSDate distantFuture] inMode:NSEventTrackingRunLoopMode dequeue:YES]) && (theEvent.type != NSLeftMouseUp)) {
 		@autoreleasepool {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 			NSPoint now = [window convertBaseToScreen:theEvent.locationInWindow];
+#pragma clang diagnostic pop
 			deltaX += now.x - where.x;
 			deltaY += now.y - where.y;
 			if (fabs(deltaX) >= _mouseDragDetectionThreshold || fabs(deltaY) >= _mouseDragDetectionThreshold) {
