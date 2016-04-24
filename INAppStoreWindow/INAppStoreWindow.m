@@ -607,6 +607,9 @@ NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
 	INAppStoreWindowDelegateProxy *_delegateProxy;
 	INMovableByBackgroundContainerView *_titleBarContainer;
 	INMovableByBackgroundContainerView *_bottomBarContainer;
+    
+    NSString *loadName;
+    NSRect framePatch;
 }
 
 @synthesize titleBarView = _titleBarView;
@@ -793,6 +796,10 @@ NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
 		if ((self.styleMask & NSTexturedBackgroundWindowMask) == NSTexturedBackgroundWindowMask) {
 			[self.contentView displayIfNeeded];
 		}
+        
+        if (loadName) {
+            [self setFrame:framePatch display:NO];
+        }
 	}
 }
 
@@ -1033,6 +1040,18 @@ NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
 	_preventWindowFrameChange = NO;
 }
 
+-(BOOL)setFrameUsingName:(NSString *)name
+{
+    BOOL result = NO;
+    if ([loadName isEqualToString:name]) {
+        return [super setFrameUsingName:name];
+    }
+    NSString *rectVal = [[NSUserDefaults standardUserDefaults] valueForKey:[@"NSWindow Frame " stringByAppendingString:name]];
+    framePatch = NSRectFromString(rectVal);
+    loadName = name;
+    return result;
+}
+
 - (void)setFrame:(NSRect)frameRect display:(BOOL)flag
 {
 	if (!_preventWindowFrameChange)
@@ -1101,6 +1120,8 @@ NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
 	[self _createBottomBarView];
 	[self _layoutTrafficLightsAndContent];
 	[self _setupTrafficLightsTrackingArea];
+    
+    loadName = @"";
 }
 
 - (NSButton *)_windowButtonToLayout:(NSWindowButton)defaultButtonType orUserProvided:(NSButton *)userButton
