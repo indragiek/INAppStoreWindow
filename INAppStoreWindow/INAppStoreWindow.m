@@ -558,13 +558,14 @@ NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
 		return;
 	}
 
-	NSPoint where = [window convertBaseToScreen:theEvent.locationInWindow];
+	NSPoint where = [self convertPoint:theEvent.locationInWindow inWindow:window];
+
 	NSPoint origin = window.frame.origin;
 	CGFloat deltaX = 0.0;
 	CGFloat deltaY = 0.0;
 	while ((theEvent = [NSApp nextEventMatchingMask:NSLeftMouseDownMask | NSLeftMouseDraggedMask | NSLeftMouseUpMask untilDate:[NSDate distantFuture] inMode:NSEventTrackingRunLoopMode dequeue:YES]) && (theEvent.type != NSLeftMouseUp)) {
 		@autoreleasepool {
-			NSPoint now = [window convertBaseToScreen:theEvent.locationInWindow];
+			NSPoint now = [self convertPoint:theEvent.locationInWindow inWindow:window];
 			deltaX += now.x - where.x;
 			deltaY += now.y - where.y;
 			if (fabs(deltaX) >= _mouseDragDetectionThreshold || fabs(deltaY) >= _mouseDragDetectionThreshold) {
@@ -579,6 +580,30 @@ NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
 		}
 	}
 }
+
+- (CGPoint)convertPoint:(CGPoint)point inWindow:(NSWindow *)window {
+	// What we do here is we check at runtime if we are running on 10.7 and use the new rect conversion.
+	// If not, then we call the old method. Though if we're targeting 10.7 or up, we should suppress the warning.
+	// Another option would be to use #if version checks.
+	CGPoint convertedPoint = CGPointZero;
+	if ([window respondsToSelector:@selector(convertRectFromScreen:)]) {
+		CGRect convertedFrame = self.frame;
+		convertedFrame = [window convertRectFromScreen:convertedFrame];
+		convertedFrame.origin = point;
+		convertedFrame = [window convertRectToScreen:convertedFrame];
+
+		convertedPoint = convertedFrame.origin;
+	}
+	else {
+		#pragma clang diagnostic push
+		#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+		convertedPoint = [window convertBaseToScreen:point];
+		#pragma clang diagnostic pop
+	}
+
+	return convertedPoint;
+}
+
 @end
 
 @interface INAppStoreWindowContentView : NSView
